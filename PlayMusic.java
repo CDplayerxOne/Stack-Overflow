@@ -78,15 +78,15 @@ public class PlayMusic {
         }
     }
 
-    //plays the finish music
-    static void playFinishMusic(){
+    //plays the end music
+    static void playEndMusic(){
         try {
-            // open finish music file
+            // open end music file
             File file = new File("Music/EndMusic.wav");
             AudioInputStream audio = AudioSystem.getAudioInputStream(file);
             endMusic = AudioSystem.getClip();
 
-            // open and play the finish music
+            // open and play the end music
             endMusic.open(audio);
             endMusic.addLineListener(event -> {
                 // Restart the music if it stops
