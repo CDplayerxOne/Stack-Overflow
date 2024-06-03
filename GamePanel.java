@@ -14,6 +14,9 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
   public Image image;
   public Image background;
   public Graphics graphics;
+  private boolean menuScreen = true;
+  private boolean gameRunning = false;
+  private boolean finished = false;
   // public PlayerBall ball;
 
   public GamePanel() {
@@ -76,6 +79,11 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
         checkCollision();
         repaint();
         delta--;
+      }
+
+      if (menuScreen){
+        PlayMusic.playMenuMusic();
+        menuScreen = false;
       }
     }
   }
