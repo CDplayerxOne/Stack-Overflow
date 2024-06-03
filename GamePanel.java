@@ -14,9 +14,10 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
   public Image image;
   public Image background;
   public Graphics graphics;
-  private boolean menuScreen = true;
+  private boolean menuScreen = false;
   private boolean gameRunning = false;
   private boolean finished = false;
+  private boolean infoScreen = true;
   // public PlayerBall ball;
 
   public GamePanel() {
@@ -33,11 +34,6 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 
     gameThread = new Thread(this);
     gameThread.start();
-
-    try {
-      background = ImageIO.read(new File("Images/background.png"));
-    } catch (Exception e) {
-    }
   }
 
   public void paint(Graphics g) {
@@ -49,10 +45,11 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
   }
 
   public void draw(Graphics g) {
-    g.drawImage(background, 0, 0, null);
-    g.setColor(Color.RED);
-    g.fillRect(90, 20, 400, 750);
-    // ball.draw(g);
+    if (menuScreen) {
+      g.drawImage(background, 0, 0, null);
+      // ball.draw(g);
+    }
+
   }
 
   public void move() {
@@ -80,15 +77,11 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
         repaint();
         delta--;
       }
-
-      if (menuScreen){
-        PlayMusic.playMenuMusic();
-        menuScreen = false;
-      }
     }
   }
 
   public void keyPressed(KeyEvent e) {
+    gameStarter(e);
     // ball.keyPressed(e);
   }
 
@@ -98,5 +91,20 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 
   public void keyTyped(KeyEvent e) {
 
+  }
+
+  public void gameStarter(KeyEvent e) {
+    if (infoScreen) {
+      if (e.getKeyCode() == KeyEvent.VK_SPACE) {
+        infoScreen = false;
+        menuScreen = true;
+        PlayMusic.playMenuMusic();
+
+        try {
+          background = ImageIO.read(new File("Images/Background.png"));
+        } catch (Exception x) {
+        }
+      }
+    }
   }
 }

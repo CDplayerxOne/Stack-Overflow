@@ -85,7 +85,7 @@ public class Block extends Rectangle {
   }
 
   public void setStatus(int s) {
-    this.status = s;
+    status = s;
   }
 
   public void draw(Graphics g) {
