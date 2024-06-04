@@ -1,3 +1,9 @@
+/*
+ * Description: used to play music
+ * Author: Corey Dai and Jeffrey Zhu
+ * Date: June 4th 2024
+ */
+
 //import libraries
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;

@@ -1,7 +1,12 @@
-class Main {
-  public static void main(String[] args) {
+/*
+ * Description: runs the GameFrame class constructor
+ * Author: Corey Dai and Jeffrey Zhu
+ * Date: June 4th 2024
+ */
 
-    new GameFrame();
-    
-  }
+class Main {
+
+  //runs the GameFrame class constructor
+  public static void main(String[] args) {new GameFrame();}
+
 }

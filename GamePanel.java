@@ -1,12 +1,19 @@
+/*
+ * Description: child of JPanel and creates the window for displaying the game
+ * Author: Corey Dai and Jeffrey Zhu
+ * Date: June 4th 2024
+ */
+
+//import libraries
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
-
 import javax.swing.*;
 import javax.imageio.*;
 
 public class GamePanel extends JPanel implements Runnable, KeyListener {
 
+  //declare objects, variables, and constants
   public static final int GAME_WIDTH = 1024;
   public static final int GAME_HEIGHT = 768;
 
@@ -17,8 +24,10 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
   public Graphics graphics;
   public Block block;
   private boolean menuScreen = false;
+
+  //gameRunning and finished game states not implemented yet
   private boolean gameRunning = false;
-  private boolean finished = false;
+  private boolean end = false;
   private boolean infoScreen = true;
   // public PlayerBall ball;
 
@@ -46,18 +55,20 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 
   }
 
+  //paints aspects depending on game state
   public void paint(Graphics g) {
     image = createImage(GAME_WIDTH, GAME_HEIGHT);
+
+    //update the positions and moves images onto the screen
     graphics = image.getGraphics();
     draw(graphics);
     g.drawImage(image, 0, 0, this);
-
   }
 
+  //draws elements depending on game state
   public void draw(Graphics g) {
     if (infoScreen) {
       g.drawImage(infoScreenBackground.getScaledInstance(1024, 768, Image.SCALE_DEFAULT), 0, 0, null);
-      // ball.draw(g);
     }
 
     if (menuScreen) {
@@ -74,19 +85,17 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
         g.drawLine(120, GAME_HEIGHT - 735 + i * 35, 505, GAME_HEIGHT - 735 + i * 35);
 
       }
-      // ball.draw(g);
       block.draw(g);
     }
-
   }
 
-  public void move() {
-    // ball.move();
-  }
+  //not implemented yet
+  public void move() {}
 
-  public void checkCollision() {
-  }
+  //not implemented yet
+  public void checkCollision() {}
 
+  //makes the game continue running without end
   public void run() {
     long lastTime = System.nanoTime();
     double amountOfTicks = 60;
@@ -108,21 +117,20 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
     }
   }
 
+  //calls other methods and objects for when the user presses their keyboard key
   public void keyPressed(KeyEvent e) {
     gameStarter(e);
     block.keyPressed(e);
-    // ball.keyPressed(e);
   }
 
+  //calls other methods for when the user releases their keyboard key
   public void keyReleased(KeyEvent e) {
-    // ball.keyReleased(e);
     block.keyReleased(e);
   }
 
-  public void keyTyped(KeyEvent e) {
+  public void keyTyped(KeyEvent e) {}
 
-  }
-
+  //method to change the state of the game
   public void gameStarter(KeyEvent e) {
     if (infoScreen) {
       if (e.getKeyCode() == KeyEvent.VK_SPACE) {
