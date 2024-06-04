@@ -23,13 +23,12 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
   public Image infoScreenBackground;
   public Graphics graphics;
   public Block block;
+  private boolean infoScreen = true;
   private boolean menuScreen = false;
 
   //gameRunning and finished game states not implemented yet
   private boolean gameRunning = false;
   private boolean end = false;
-  private boolean infoScreen = true;
-  // public PlayerBall ball;
 
   public GamePanel() {
     // ball = new PlayerBall(GAME_WIDTH / 2, GAME_HEIGHT / 2);
@@ -92,9 +91,6 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
   //not implemented yet
   public void move() {}
 
-  //not implemented yet
-  public void checkCollision() {}
-
   //makes the game continue running without end
   public void run() {
     long lastTime = System.nanoTime();
@@ -110,7 +106,6 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 
       if (delta >= 1) {
         move();
-        checkCollision();
         repaint();
         delta--;
       }

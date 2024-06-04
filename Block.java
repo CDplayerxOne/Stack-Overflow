@@ -14,21 +14,13 @@ public class Block extends Rectangle {
     private final int[][] TYPES = {{1, 0, 1, 0, 1, 0, 1, 0}, {0, 1, 1, 0, 0, 0, 1, 1}, {2, 0, 0, 1, 1, 0, 0, 0},
             {1, 0, 1, 1, 1, 0, 0, 0}, {2, 0, 0, 0, 2, 0, 0, 0}};
     private final Color[] COLOURS = {Color.RED, Color.CYAN, Color.YELLOW, Color.MAGENTA, Color.GREEN};
-    private final int type;
-    private static int status;
+    private int status;
+    private int type;
     private final int[] centerPiece = {120, 100};
     private int[] supportingPieces;
     public final int yVelocity = 35;
     public final int xVelocity = 35;
     public static final int BLOCKLENGTH = 35; // length of block
-
-    public int[] getCenterPiece() {
-        return centerPiece;
-    }
-
-    public int[] getSupportingPieces() {
-        return supportingPieces;
-    }
 
     public Block(int x, int y, int type) {
         super(x, y, BLOCKLENGTH, BLOCKLENGTH);
@@ -53,6 +45,17 @@ public class Block extends Rectangle {
             default:
                 break;
         }
+    }
+
+    //returns location of the centerPiece
+    public int[] getCenterPiece() {
+        return centerPiece;
+    }
+
+
+    //returns location of supporting pieces
+    public int[] getSupportingPieces() {
+        return supportingPieces;
     }
 
     public void keyPressed(KeyEvent e) {
