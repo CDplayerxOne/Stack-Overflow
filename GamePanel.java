@@ -15,6 +15,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
   public Image background;
   public Image infoScreenBackground;
   public Graphics graphics;
+  public Block block;
   private boolean menuScreen = false;
   private boolean gameRunning = false;
   private boolean finished = false;
@@ -26,6 +27,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
     this.setFocusable(true);
     this.addKeyListener(this);
 
+    block = new Block(100, 200, 3);
     // addMouseListener(new MouseAdapter() {
     // public void mousePressed(MouseEvent e) {
     // ball.mousePressed(e);
@@ -53,14 +55,27 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
   }
 
   public void draw(Graphics g) {
-    if (infoScreen){
-      g.drawImage(infoScreenBackground.getScaledInstance(1024,768, Image.SCALE_DEFAULT), 0, 0, null);
+    if (infoScreen) {
+      g.drawImage(infoScreenBackground.getScaledInstance(1024, 768, Image.SCALE_DEFAULT), 0, 0, null);
       // ball.draw(g);
     }
 
     if (menuScreen) {
       g.drawImage(background, 0, 0, null);
+
+      // grid lines
+      for (int i = 0; i < 11; i++) {
+        g.setColor(Color.LIGHT_GRAY);
+        g.drawLine(120 + i * 35, GAME_HEIGHT - 735, 120 + i * 35, GAME_HEIGHT);
+
+      }
+      for (int i = 0; i < 21; i++) {
+        g.setColor(Color.LIGHT_GRAY);
+        g.drawLine(120, GAME_HEIGHT - 735 + i * 35, 505, GAME_HEIGHT - 735 + i * 35);
+
+      }
       // ball.draw(g);
+      block.draw(g);
     }
 
   }
@@ -95,11 +110,13 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 
   public void keyPressed(KeyEvent e) {
     gameStarter(e);
+    block.keyPressed(e);
     // ball.keyPressed(e);
   }
 
   public void keyReleased(KeyEvent e) {
     // ball.keyReleased(e);
+    block.keyReleased(e);
   }
 
   public void keyTyped(KeyEvent e) {
