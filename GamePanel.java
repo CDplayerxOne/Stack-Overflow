@@ -52,6 +52,8 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
     } catch (Exception x) {
     }
 
+    PlayMusic.playMenuMusic();
+
   }
 
   //paints aspects depending on game state
@@ -67,10 +69,14 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
   //draws elements depending on game state
   public void draw(Graphics g) {
     if (infoScreen) {
-      g.drawImage(infoScreenBackground.getScaledInstance(1024, 768, Image.SCALE_DEFAULT), 0, 0, null);
+      g.drawImage(infoScreenBackground.getScaledInstance(1025, 768, Image.SCALE_DEFAULT), 0, 0, null);
     }
 
-    if (menuScreen) {
+    if (menuScreen){
+
+    }
+
+    if (gameRunning) {
       g.drawImage(background, 0, 0, null);
 
       // grid lines
@@ -114,7 +120,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 
   //calls other methods and objects for when the user presses their keyboard key
   public void keyPressed(KeyEvent e) {
-    gameStarter(e);
+    changeGameState(e);
     block.keyPressed(e);
   }
 
@@ -126,14 +132,26 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
   public void keyTyped(KeyEvent e) {}
 
   //method to change the state of the game
-  public void gameStarter(KeyEvent e) {
+  public void changeGameState(KeyEvent e) {
+
     if (infoScreen) {
       if (e.getKeyCode() == KeyEvent.VK_SPACE) {
         infoScreen = false;
         menuScreen = true;
-        PlayMusic.playMenuMusic();
       }
     }
+
+    if (menuScreen){
+      if (e.getKeyCode() == KeyEvent.VK_SPACE){
+        PlayMusic.stopMenuMusic();
+        menuScreen = false;
+        gameRunning = true;
+        PlayMusic.playGameMusic();
+      }
+    }
+
+
+
   }
 
 }
