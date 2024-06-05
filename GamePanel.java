@@ -13,7 +13,7 @@ import javax.imageio.*;
 
 public class GamePanel extends JPanel implements Runnable, KeyListener {
 
-  //declare objects, variables, and constants
+  // declare objects, variables, and constants
   public static final int GAME_WIDTH = 1024;
   public static final int GAME_HEIGHT = 768;
 
@@ -21,12 +21,13 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
   public Image image;
   public Image background;
   public Image infoScreenBackground;
+  public Image menuScreenBackground;
   public Graphics graphics;
   public Block block;
   private boolean infoScreen = true;
   private boolean menuScreen = false;
 
-  //gameRunning and finished game states not implemented yet
+  // gameRunning and finished game states not implemented yet
   private boolean gameRunning = false;
   private boolean end = false;
 
@@ -49,6 +50,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
     try {
       background = ImageIO.read(new File("Images/Background.png"));
       infoScreenBackground = ImageIO.read(new File("Images/infoScreen.png"));
+      menuScreenBackground = ImageIO.read(new File("Images/menuScreen.png"));
     } catch (Exception x) {
     }
 
@@ -56,24 +58,24 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 
   }
 
-  //paints aspects depending on game state
+  // paints aspects depending on game state
   public void paint(Graphics g) {
     image = createImage(GAME_WIDTH, GAME_HEIGHT);
 
-    //update the positions and moves images onto the screen
+    // update the positions and moves images onto the screen
     graphics = image.getGraphics();
     draw(graphics);
     g.drawImage(image, 0, 0, this);
   }
 
-  //draws elements depending on game state
+  // draws elements depending on game state
   public void draw(Graphics g) {
     if (infoScreen) {
       g.drawImage(infoScreenBackground.getScaledInstance(1025, 768, Image.SCALE_DEFAULT), 0, 0, null);
     }
 
-    if (menuScreen){
-
+    if (menuScreen) {
+      g.drawImage(menuScreenBackground.getScaledInstance(1025, 768, Image.SCALE_DEFAULT), 0, 0, null);
     }
 
     if (gameRunning) {
@@ -94,10 +96,11 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
     }
   }
 
-  //not implemented yet
-  public void move() {}
+  // not implemented yet
+  public void move() {
+  }
 
-  //makes the game continue running without end
+  // makes the game continue running without end
   public void run() {
     long lastTime = System.nanoTime();
     double amountOfTicks = 60;
@@ -111,6 +114,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
       lastTime = now;
 
       if (delta >= 1) {
+        block.autoFall();
         move();
         repaint();
         delta--;
@@ -118,22 +122,24 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
     }
   }
 
-  //calls other methods and objects for when the user presses their keyboard key
+  // calls other methods and objects for when the user presses their keyboard key
   public void keyPressed(KeyEvent e) {
     changeGameState(e);
     block.keyPressed(e);
   }
 
-  //calls other methods for when the user releases their keyboard key
+  // calls other methods for when the user releases their keyboard key
   public void keyReleased(KeyEvent e) {
     block.keyReleased(e);
   }
 
-  public void keyTyped(KeyEvent e) {}
+  public void keyTyped(KeyEvent e) {
+  }
 
-  //method to change the state of the game
+  // method to change the state of the game
   public void changeGameState(KeyEvent e) {
 
+    // trasition from start info screen to menu screen
     if (infoScreen) {
       if (e.getKeyCode() == KeyEvent.VK_SPACE) {
         infoScreen = false;
@@ -141,16 +147,15 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
       }
     }
 
-    if (menuScreen){
-      if (e.getKeyCode() == KeyEvent.VK_SPACE){
+    // transition from memnu to start game
+    if (menuScreen) {
+      if (e.getKeyCode() == KeyEvent.VK_ENTER) {
         PlayMusic.stopMenuMusic();
         menuScreen = false;
         gameRunning = true;
         PlayMusic.playGameMusic();
       }
     }
-
-
 
   }
 

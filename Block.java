@@ -10,21 +10,23 @@ import java.awt.event.*;
 
 public class Block extends Rectangle {
 
-    //declare objects, variables, and constants
-    private final int[][] TYPES = {{1, 0, 1, 0, 1, 0, 1, 0}, {0, 1, 1, 0, 0, 0, 1, 1}, {2, 0, 0, 1, 1, 0, 0, 0},
-            {1, 0, 1, 1, 1, 0, 0, 0}, {2, 0, 0, 0, 2, 0, 0, 0}};
-    private final Color[] COLOURS = {Color.RED, Color.CYAN, Color.YELLOW, Color.MAGENTA, Color.GREEN};
+    // declare objects, variables, and constants
+    private final int[][] TYPES = { { 1, 0, 1, 0, 1, 0, 1, 0 }, { 0, 1, 1, 0, 0, 0, 1, 1 }, { 2, 0, 0, 1, 1, 0, 0, 0 },
+            { 1, 0, 1, 1, 1, 0, 0, 0 }, { 2, 0, 0, 0, 2, 0, 0, 0 } };
+    private final Color[] COLOURS = { Color.RED, Color.CYAN, Color.YELLOW, Color.MAGENTA, Color.GREEN };
     private int status;
     private int type;
-    private final int[] centerPiece = {121, 104};
+    private final int[] centerPiece = { 121, 104 };
     private int[] supportingPieces;
-    public final int yVelocity = 35;
-    public final int xVelocity = 35;
+    private final int yVelocity = 35;
+    private final int xVelocity = 35;
     public static final int BLOCKLENGTH = 35; // length of block
+    private int internalCount = 0;
 
     public Block(int x, int y, int type) {
         super(x, y, BLOCKLENGTH, BLOCKLENGTH);
         this.type = type;
+        status = 0;
         switch (type) {
             case 0:
                 supportingPieces = TYPES[0];
@@ -47,13 +49,12 @@ public class Block extends Rectangle {
         }
     }
 
-    //returns location of the centerPiece
+    // returns location of the centerPiece
     public int[] getCenterPiece() {
         return centerPiece;
     }
 
-
-    //returns location of supporting pieces
+    // returns location of supporting pieces
     public int[] getSupportingPieces() {
         return supportingPieces;
     }
@@ -67,17 +68,17 @@ public class Block extends Rectangle {
 
         // accelerate downwards
         if (e.getKeyCode() == KeyEvent.VK_DOWN) {
-            move(0,1);
+            move(0, 1);
         }
 
         // move the block the left
         if (e.getKeyCode() == KeyEvent.VK_LEFT) {
-            move(-1,0);
+            move(-1, 0);
         }
 
         // move the block to the right
         if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
-            move(1,0);
+            move(1, 0);
         }
 
         // hold the block and change status
@@ -91,22 +92,32 @@ public class Block extends Rectangle {
         }
 
         if (e.getKeyCode() == KeyEvent.VK_DOWN) {
-            move(0,0);
+            move(0, 0);
         }
 
         if (e.getKeyCode() == KeyEvent.VK_LEFT) {
-            move(0,0);
+            move(0, 0);
         }
 
         if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
-            move(0,0);
+            move(0, 0);
         }
     }
 
-    //moves the block according to its x and y velocity
+    // moves the block according to its x and y velocity
     public void move(int xVel, int yVel) {
         centerPiece[0] += xVel * xVelocity;
         centerPiece[1] += yVel * yVelocity;
+    }
+
+    public void autoFall() {
+        // Every 33 frames
+        internalCount++;
+        if (internalCount == 33) {
+            // move down
+            centerPiece[1] += 35;
+            internalCount = 0;
+        }
     }
 
     public void rotate() {
@@ -126,22 +137,22 @@ public class Block extends Rectangle {
         // System.out.println();
     }
 
-    //returns type of the block
+    // returns type of the block
     public int getType() {
         return status;
     }
 
-    //returns the yVelocity of the block
+    // returns the yVelocity of the block
     public int getVelocity() {
         return yVelocity;
     }
 
-    //modifies the status of the block
+    // modifies the status of the block
     public void setStatus(int s) {
         status = s;
     }
 
-    //draws the current location of the block on the screen
+    // draws the current location of the block on the screen
     public void draw(Graphics g) {
 
         // Center Piece
