@@ -16,7 +16,7 @@ public class Block extends Rectangle {
     private final Color[] COLOURS = {Color.RED, Color.CYAN, Color.YELLOW, Color.MAGENTA, Color.GREEN};
     private int status;
     private int type;
-    private final int[] centerPiece = {120, 100};
+    private final int[] centerPiece = {121, 104};
     private int[] supportingPieces;
     public final int yVelocity = 35;
     public final int xVelocity = 35;
