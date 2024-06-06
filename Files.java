@@ -1,53 +1,41 @@
-// Author: Corey Dai
-// Project/Assignment: GameShow
-// Date: June 5th, 2024
-// Description: methods for creating, reading and writing to files 
+/*
+ * Description: used to save the high scores
+ * Author: Corey Dai and Jeffrey Zhu
+ * Date: June 4th 2024
+ */
 
-import java.io.File;
-import java.io.FileWriter;
-import java.util.Scanner;
+import java.io.*;
+import java.util.*;
 
 public class Files {
-
-	// Creating files
-	public static void createFile() {
-		// creates a file call highScore.txt and if there is an error, outputs the
-		// error.
-		try {
-			File highScore = new File("highScores.txt");
-			highScore.createNewFile();
-		} catch (Exception e) {
-			System.out.println("WARNING: HIGH SCORES CANNOT BE SAVED");
-		}
-	}
 
 	// Takes a high score as an argument and writes it to the file
 	public static void writeFile(int hs) {
 		// Writes in the high score and outputs an error if there is an error.
-		try {
-			FileWriter writer = new FileWriter("highScores.txt");
-			writer.write(hs + "");
-			writer.close();
-			System.out.println("New High Score: " + hs);
+		try (BufferedWriter writer = new BufferedWriter(new FileWriter("highScores.txt", true))) {
+			writer.write(Integer.toString(hs));
+			writer.newLine();
 		} catch (Exception e) {
-			System.out.println("Could not write high score");
 		}
 	}
 
-	// Reads the current high score from the file
-	public static int readFile() {
+	// Returns the score in a certain place after the list of scores is sorted by
+	// highest to lowest
+	public static int findScore(int place) {
+		ArrayList<Integer> scores = new ArrayList<>();
+		String line;
 
-		// Reads the current high score and returns it.
 		try {
-			File highScore = new File("highScores.txt");
-			Scanner reader = new Scanner(highScore);
-			int score = 0;
-			score = Integer.parseInt(reader.next());
-			reader.close();
-			return score;
+			BufferedReader reader = new BufferedReader(new FileReader("highScores.txt"));
+			while ((line = reader.readLine()) != null) {
+				scores.add(Integer.valueOf(line));
+			}
+
 		} catch (Exception e) {
-			return -1;
 		}
 
+		Collections.sort(scores);
+
+		return scores.get(scores.size() - place);
 	}
 }

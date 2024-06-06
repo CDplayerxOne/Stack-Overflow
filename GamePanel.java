@@ -36,7 +36,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
     this.setFocusable(true);
     this.addKeyListener(this);
 
-    block = new Block(100, 200, 3);
+    block = new Block(296, 104, 4);
     // addMouseListener(new MouseAdapter() {
     // public void mousePressed(MouseEvent e) {
     // ball.mousePressed(e);
