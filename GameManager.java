@@ -9,6 +9,10 @@ public class GameManager {
 		blocks.add(new Block(500, 200, (int) Math.random() * 8));
 	}
 
+	public static ArrayList<Block> getBlocks(){
+		return blocks;
+	}
+
 	public static void updatePosition() {
 		// loop through all active blocks
 		for (Block block : blocks) {

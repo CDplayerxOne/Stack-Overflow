@@ -24,6 +24,8 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
   public Image menuScreenBackground;
   public Graphics graphics;
   public Block block;
+
+  public GameManager manager;
   private boolean infoScreen = true;
   private boolean menuScreen = false;
 
@@ -36,13 +38,16 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
     this.setFocusable(true);
     this.addKeyListener(this);
 
-    block = new Block(296, 104, 4);
+//    block = new Block(5, 2, 4);
+    GameManager.generateBlock();
     // addMouseListener(new MouseAdapter() {
     // public void mousePressed(MouseEvent e) {
     // ball.mousePressed(e);
     // }
     // });
     this.setPreferredSize(new Dimension(GAME_WIDTH, GAME_HEIGHT));
+
+    manager = new GameManager();
 
     gameThread = new Thread(this);
     gameThread.start();
@@ -92,7 +97,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
         g.drawLine(120, GAME_HEIGHT - 735 + i * 35, 505, GAME_HEIGHT - 735 + i * 35);
 
       }
-      block.draw(g);
+      manager.draw(g);
     }
   }
 
@@ -114,7 +119,9 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
       lastTime = now;
 
       if (delta >= 1) {
-        block.autoFall();
+        for(Block b : GameManager.blocks){
+          b.autoFall();
+        }
         move();
         repaint();
         delta--;
@@ -125,12 +132,18 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
   // calls other methods and objects for when the user presses their keyboard key
   public void keyPressed(KeyEvent e) {
     changeGameState(e);
-    block.keyPressed(e);
+    for(Block b : GameManager.getBlocks()){
+      b.keyPressed(e);
+
+    }
   }
 
   // calls other methods for when the user releases their keyboard key
   public void keyReleased(KeyEvent e) {
-    block.keyReleased(e);
+    for(Block b : GameManager.getBlocks()){
+      b.keyReleased(e);
+    }
+
   }
 
   public void keyTyped(KeyEvent e) {
