@@ -15,7 +15,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 
   // declare objects, variables, and constants
   public static final int GAME_WIDTH = 1024;
-  public static final int GAME_HEIGHT = 768;
+  public static final int GAME_HEIGHT = 770;
 
   public Thread gameThread;
   public Image image;
@@ -38,7 +38,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
     this.setFocusable(true);
     this.addKeyListener(this);
 
-//    block = new Block(5, 2, 4);
+    // block = new Block(5, 2, 4);
     GameManager.generateBlock();
     // addMouseListener(new MouseAdapter() {
     // public void mousePressed(MouseEvent e) {
@@ -76,11 +76,11 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
   // draws elements depending on game state
   public void draw(Graphics g) {
     if (infoScreen) {
-      g.drawImage(infoScreenBackground.getScaledInstance(1025, 768, Image.SCALE_DEFAULT), 0, 0, null);
+      g.drawImage(infoScreenBackground.getScaledInstance(1025, 770, Image.SCALE_DEFAULT), 0, 0, null);
     }
 
     if (menuScreen) {
-      g.drawImage(menuScreenBackground.getScaledInstance(1025, 768, Image.SCALE_DEFAULT), 0, 0, null);
+      g.drawImage(menuScreenBackground.getScaledInstance(1025, 770, Image.SCALE_DEFAULT), 0, 0, null);
     }
 
     if (gameRunning) {
@@ -89,12 +89,12 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
       // grid lines
       for (int i = 0; i < 11; i++) {
         g.setColor(Color.LIGHT_GRAY);
-        g.drawLine(120 + i * 35, GAME_HEIGHT - 735, 120 + i * 35, GAME_HEIGHT);
+        g.drawLine(120 + i * 35, GAME_HEIGHT - 560, 120 + i * 35, GAME_HEIGHT);
 
       }
       for (int i = 0; i < 21; i++) {
         g.setColor(Color.LIGHT_GRAY);
-        g.drawLine(120, GAME_HEIGHT - 735 + i * 35, 505, GAME_HEIGHT - 735 + i * 35);
+        g.drawLine(120, GAME_HEIGHT - 560 + i * 35, 505, GAME_HEIGHT - 560 + i * 35);
 
       }
       manager.draw(g);
@@ -119,8 +119,10 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
       lastTime = now;
 
       if (delta >= 1) {
-        for(Block b : GameManager.blocks){
-          b.autoFall();
+        if (gameRunning) {
+          for (Block b : GameManager.blocks) {
+            b.autoFall();
+          }
         }
         move();
         repaint();
@@ -132,7 +134,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
   // calls other methods and objects for when the user presses their keyboard key
   public void keyPressed(KeyEvent e) {
     changeGameState(e);
-    for(Block b : GameManager.getBlocks()){
+    for (Block b : GameManager.getBlocks()) {
       b.keyPressed(e);
 
     }
@@ -140,7 +142,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 
   // calls other methods for when the user releases their keyboard key
   public void keyReleased(KeyEvent e) {
-    for(Block b : GameManager.getBlocks()){
+    for (Block b : GameManager.getBlocks()) {
       b.keyReleased(e);
     }
 

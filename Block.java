@@ -7,27 +7,27 @@
 //import libraries
 import java.awt.*;
 import java.awt.event.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+
+// ! NOTE for later: Draw method will draw differently based on status!
 
 public class Block extends Rectangle {
 
     // declare objects, variables, and constants
     private final int[][] TYPES = { { 1, 0, 1, 0, 1, 0, 1, 0 }, { 0, 1, 1, 0, 0, 0, 1, 1 }, { 2, 0, 0, 1, 1, 0, 0, 0 },
             { 1, 0, 1, 1, 1, 0, 0, 0 }, { 2, 0, 0, 0, 2, 0, 0, 0 } };
-    private final int[][] STARTING_POSITIONS = { { 5, 1 }, { 5, 1 }, { 5, 2 }, { 5, 1 }, { 4, 2 } };
+    private final int[][] STARTING_POSITIONS = { { 5, 1 }, { 5, 1 }, { 5, 2 }, { 5, 1 }, { 5, 2 } };
     private final Color[] COLOURS = { Color.RED, Color.CYAN, Color.YELLOW, Color.MAGENTA, Color.GREEN };
     private int status;
     private int type;
     private int[] centerPiece;
     private int[] supportingPieces;
-    private final int yVelocity = 35;
-    private final int xVelocity = 35;
     public static final int BLOCKLENGTH = 35; // length of block
     private int internalCount = 0;
 
-    public Block(int x, int y, int type) {
-        super(x, y, BLOCKLENGTH, BLOCKLENGTH);
+    public Block(int type) {
         this.type = type;
-        this.centerPiece = new int[] { x, y };
         status = 0;
         switch (type) {
             case 0:
@@ -62,8 +62,57 @@ public class Block extends Rectangle {
     }
 
     // returns location of supporting pieces
-    public int[] getSupportingPieces() {
-        return supportingPieces;
+    public ArrayList<int[]> getSupportingPieces() {
+        ArrayList<int[]> pieces = new ArrayList<int[]>();
+        for (int i = 0; i < supportingPieces[0]; i++) {
+            int[] coordinate = new int[2];
+            coordinate[0] = centerPiece[0];
+            coordinate[1] = centerPiece[1] - (i + 1);
+            pieces.add(coordinate);
+        }
+        for (int i = 0; i < supportingPieces[1]; i++) {
+            int[] coordinate = new int[2];
+            coordinate[0] = centerPiece[0] + (i + 1);
+            coordinate[1] = centerPiece[1] - (i + 1);
+            pieces.add(coordinate);
+        }
+        for (int i = 0; i < supportingPieces[2]; i++) {
+            int[] coordinate = new int[2];
+            coordinate[0] = centerPiece[0] + (i + 1);
+            coordinate[1] = centerPiece[1];
+            pieces.add(coordinate);
+        }
+        for (int i = 0; i < supportingPieces[3]; i++) {
+            int[] coordinate = new int[2];
+            coordinate[0] = centerPiece[0] + (i + 1);
+            coordinate[1] = centerPiece[1] + (i + 1);
+            pieces.add(coordinate);
+        }
+        for (int i = 0; i < supportingPieces[4]; i++) {
+            int[] coordinate = new int[2];
+            coordinate[0] = centerPiece[0];
+            coordinate[1] = centerPiece[1] + (i + 1);
+            pieces.add(coordinate);
+        }
+        for (int i = 0; i < supportingPieces[5]; i++) {
+            int[] coordinate = new int[2];
+            coordinate[0] = centerPiece[0] - (i + 1);
+            coordinate[1] = centerPiece[1] + (i + 1);
+            pieces.add(coordinate);
+        }
+        for (int i = 0; i < supportingPieces[6]; i++) {
+            int[] coordinate = new int[2];
+            coordinate[0] = centerPiece[0] - (i + 1);
+            coordinate[1] = centerPiece[1];
+            pieces.add(coordinate);
+        }
+        for (int i = 0; i < supportingPieces[7]; i++) {
+            int[] coordinate = new int[2];
+            coordinate[0] = centerPiece[0] - (i + 1);
+            coordinate[1] = centerPiece[1] - (i + 1);
+            pieces.add(coordinate);
+        }
+        return pieces;
     }
 
     public int getStatus() {
@@ -119,15 +168,19 @@ public class Block extends Rectangle {
     public void move(int xVel, int yVel) {
         centerPiece[0] += xVel;
         centerPiece[1] += yVel;
+        GameManager.updatePosition();
     }
 
     public void autoFall() {
         // Every 33 frames
         internalCount++;
         if (internalCount == 33) {
+            System.out.println("ok: " + Arrays.toString(GameManager.currentCenterPiece));
             // move down
             centerPiece[1] += 1;
+            System.out.println("ok: " + Arrays.toString(GameManager.currentCenterPiece));
             internalCount = 0;
+            GameManager.updatePosition();
         }
     }
 
@@ -146,6 +199,7 @@ public class Block extends Rectangle {
         // System.out.print(supportingPieces[i] + " ");
         // }
         // System.out.println();
+        GameManager.updatePosition();
     }
 
     // returns type of the block
@@ -154,9 +208,6 @@ public class Block extends Rectangle {
     }
 
     // returns the yVelocity of the block
-    public int getVelocity() {
-        return yVelocity;
-    }
 
     // modifies the status of the block
     public void setStatus(int s) {
@@ -168,18 +219,18 @@ public class Block extends Rectangle {
 
         // Center Piece
         g.setColor(Color.black);
-        g.fillRect(120 + (centerPiece[0] + 1) * 35, (centerPiece[1] + 1) * 35, BLOCKLENGTH, BLOCKLENGTH);
+        g.fillRect(120 + (centerPiece[0]) * 35, (centerPiece[1]) * 35, BLOCKLENGTH, BLOCKLENGTH);
         g.setColor(COLOURS[type]);
-        g.fillRect((centerPiece[0] + 1) * 35 + 123, (centerPiece[1] + 1) * 35 + 3, BLOCKLENGTH - 6, BLOCKLENGTH - 6);
+        g.fillRect((centerPiece[0]) * 35 + 123, (centerPiece[1]) * 35 + 3, BLOCKLENGTH - 6, BLOCKLENGTH - 6);
 
         // Supporting Pieces
         // 0 slot
         for (int i = 0; i < supportingPieces[0]; i++) {
             g.setColor(Color.black);
-            g.fillRect(120 + (centerPiece[0] + 1) * 35, (centerPiece[1] + 1) * 35 - (i + 1) * 35, BLOCKLENGTH,
+            g.fillRect(120 + (centerPiece[0]) * 35, (centerPiece[1]) * 35 - (i + 1) * 35, BLOCKLENGTH,
                     BLOCKLENGTH);
             g.setColor(COLOURS[type]);
-            g.fillRect((centerPiece[0] + 1) * 35 + 123, (centerPiece[1] + 1) * 35 - (i + 1) * 35 + 3, BLOCKLENGTH - 6,
+            g.fillRect((centerPiece[0]) * 35 + 123, (centerPiece[1]) * 35 - (i + 1) * 35 + 3, BLOCKLENGTH - 6,
                     BLOCKLENGTH - 6);
         }
 
@@ -187,11 +238,11 @@ public class Block extends Rectangle {
         for (int i = 0; i < supportingPieces[1]; i++) {
 
             g.setColor(Color.black);
-            g.fillRect(120 + (centerPiece[0] + 1) * 35 + (i + 1) * 35, (centerPiece[1] + 1) * 35 - (i + 1) * 35,
+            g.fillRect(120 + (centerPiece[0]) * 35 + (i + 1) * 35, (centerPiece[1]) * 35 - (i + 1) * 35,
                     BLOCKLENGTH,
                     BLOCKLENGTH);
             g.setColor(COLOURS[type]);
-            g.fillRect(120 + (centerPiece[0] + 1) * 35 + (i + 1) * 35 + 3, (centerPiece[1] + 1) * 35 - (i + 1) * 35 + 3,
+            g.fillRect(120 + (centerPiece[0]) * 35 + (i + 1) * 35 + 3, (centerPiece[1]) * 35 - (i + 1) * 35 + 3,
                     BLOCKLENGTH - 6, BLOCKLENGTH - 6);
         }
 
@@ -199,10 +250,10 @@ public class Block extends Rectangle {
         for (int i = 0; i < supportingPieces[2]; i++) {
 
             g.setColor(Color.black);
-            g.fillRect(120 + (centerPiece[0] + 1) * 35 + (i + 1) * 35, (centerPiece[1] + 1) * 35, BLOCKLENGTH,
+            g.fillRect(120 + (centerPiece[0]) * 35 + (i + 1) * 35, (centerPiece[1]) * 35, BLOCKLENGTH,
                     BLOCKLENGTH);
             g.setColor(COLOURS[type]);
-            g.fillRect((centerPiece[0] + 1) * 35 + (i + 1) * 35 + 123, (centerPiece[1] + 1) * 35 + 3, BLOCKLENGTH - 6,
+            g.fillRect((centerPiece[0]) * 35 + (i + 1) * 35 + 123, (centerPiece[1]) * 35 + 3, BLOCKLENGTH - 6,
                     BLOCKLENGTH - 6);
         }
 
@@ -210,11 +261,11 @@ public class Block extends Rectangle {
         for (int i = 0; i < supportingPieces[3]; i++) {
 
             g.setColor(Color.black);
-            g.fillRect(120 + (centerPiece[0] + 1) * 35 + (i + 1) * 35, (centerPiece[1] + 1) * 35 + (i + 1) * 35,
+            g.fillRect(120 + (centerPiece[0]) * 35 + (i + 1) * 35, (centerPiece[1]) * 35 + (i + 1) * 35,
                     BLOCKLENGTH,
                     BLOCKLENGTH);
             g.setColor(COLOURS[type]);
-            g.fillRect((centerPiece[0] + 1) * 35 + (i + 1) * 35 + 123, (centerPiece[1] + 1) * 35 + (i + 1) * 35 + 3,
+            g.fillRect((centerPiece[0]) * 35 + (i + 1) * 35 + 123, (centerPiece[1]) * 35 + (i + 1) * 35 + 3,
                     BLOCKLENGTH - 6, BLOCKLENGTH - 6);
         }
 
@@ -222,10 +273,10 @@ public class Block extends Rectangle {
         for (int i = 0; i < supportingPieces[4]; i++) {
 
             g.setColor(Color.black);
-            g.fillRect(120 + (centerPiece[0] + 1) * 35, (centerPiece[1] + 1) * 35 + (i + 1) * 35, BLOCKLENGTH,
+            g.fillRect(120 + (centerPiece[0]) * 35, (centerPiece[1]) * 35 + (i + 1) * 35, BLOCKLENGTH,
                     BLOCKLENGTH);
             g.setColor(COLOURS[type]);
-            g.fillRect((centerPiece[0] + 1) * 35 + 123, (centerPiece[1] + 1) * 35 + (i + 1) * 35 + 3, BLOCKLENGTH - 6,
+            g.fillRect((centerPiece[0]) * 35 + 123, (centerPiece[1]) * 35 + (i + 1) * 35 + 3, BLOCKLENGTH - 6,
                     BLOCKLENGTH - 6);
         }
 
@@ -233,11 +284,11 @@ public class Block extends Rectangle {
         for (int i = 0; i < supportingPieces[5]; i++) {
 
             g.setColor(Color.black);
-            g.fillRect(120 + (centerPiece[0] + 1) * 35 - (i + 1) * 35, 120 + (centerPiece[1] + 1) * 35 + (i + 1) * 35,
+            g.fillRect(120 + (centerPiece[0]) * 35 - (i + 1) * 35, (centerPiece[1]) * 35 + (i + 1) * 35,
                     BLOCKLENGTH,
                     BLOCKLENGTH);
             g.setColor(COLOURS[type]);
-            g.fillRect((centerPiece[0] + 1) * 35 - (i + 1) * 35 + 123, (centerPiece[1] + 1) * 35 + (i + 1) * 35 + 3,
+            g.fillRect((centerPiece[0]) * 35 - (i + 1) * 35 + 123, (centerPiece[1]) * 35 + (i + 1) * 35 + 3,
                     BLOCKLENGTH - 6,
                     BLOCKLENGTH - 6);
         }
@@ -246,10 +297,10 @@ public class Block extends Rectangle {
         for (int i = 0; i < supportingPieces[6]; i++) {
 
             g.setColor(Color.black);
-            g.fillRect(120 + (centerPiece[0] + 1) * 35 - (i + 1) * 35, (centerPiece[1] + 1) * 35, BLOCKLENGTH,
+            g.fillRect(120 + (centerPiece[0]) * 35 - (i + 1) * 35, (centerPiece[1]) * 35, BLOCKLENGTH,
                     BLOCKLENGTH);
             g.setColor(COLOURS[type]);
-            g.fillRect((centerPiece[0] + 1) * 35 - (i + 1) * 35 + 123, (centerPiece[1] + 1) * 35 + 3, BLOCKLENGTH - 6,
+            g.fillRect((centerPiece[0]) * 35 - (i + 1) * 35 + 123, (centerPiece[1]) * 35 + 3, BLOCKLENGTH - 6,
                     BLOCKLENGTH - 6);
         }
 
@@ -257,11 +308,11 @@ public class Block extends Rectangle {
         for (int i = 0; i < supportingPieces[7]; i++) {
 
             g.setColor(Color.black);
-            g.fillRect(120 + (centerPiece[0] + 1) * 35 - (i + 1) * 35, (centerPiece[1] + 1) * 35 - (i + 1) * 35,
+            g.fillRect(120 + (centerPiece[0]) * 35 - (i + 1) * 35, (centerPiece[1]) * 35 - (i + 1) * 35,
                     BLOCKLENGTH,
                     BLOCKLENGTH);
             g.setColor(COLOURS[type]);
-            g.fillRect((centerPiece[0] + 1) * 35 - (i + 1) * 35 + 123, (centerPiece[1] + 1) * 35 - (i + 1) * 35 + 3,
+            g.fillRect((centerPiece[0]) * 35 - (i + 1) * 35 + 123, (centerPiece[1]) * 35 - (i + 1) * 35 + 3,
                     BLOCKLENGTH - 6,
                     BLOCKLENGTH - 6);
         }
