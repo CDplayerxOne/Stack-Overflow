@@ -186,20 +186,30 @@ public class Block extends Rectangle {
 
     public void rotate() {
         int[] tempArray = new int[8];
-        tempArray[0] = supportingPieces[6];
-        tempArray[1] = supportingPieces[7];
-        tempArray[2] = supportingPieces[0];
-        tempArray[3] = supportingPieces[1];
-        tempArray[4] = supportingPieces[2];
-        tempArray[5] = supportingPieces[3];
-        tempArray[6] = supportingPieces[4];
-        tempArray[7] = supportingPieces[5];
-        supportingPieces = tempArray;
-        // for (int i = 0; i < supportingPieces.length; i++) {
-        // System.out.print(supportingPieces[i] + " ");
-        // }
-        // System.out.println();
-        GameManager.updatePosition();
+
+        if (checkRotationVailidity()) {
+            tempArray[0] = supportingPieces[6];
+            tempArray[1] = supportingPieces[7];
+            tempArray[2] = supportingPieces[0];
+            tempArray[3] = supportingPieces[1];
+            tempArray[4] = supportingPieces[2];
+            tempArray[5] = supportingPieces[3];
+            tempArray[6] = supportingPieces[4];
+            tempArray[7] = supportingPieces[5];
+            supportingPieces = tempArray;
+            GameManager.updatePosition();
+        }
+    }
+
+    public boolean checkRotationVailidity() {
+        ArrayList<int[]> pieces = getSupportingPieces();
+
+        for (int i = 0; i < 8; i++) {
+            if (pieces.get(i)[0] < supportingPieces[0]) {
+                return false;
+            }
+        }
+        return true;
     }
 
     // returns type of the block

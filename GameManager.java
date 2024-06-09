@@ -51,6 +51,7 @@ public class GameManager {
 	public static void updatePosition() {
 		// loop through all active blocks
 		// Update the position of the center piece on the grid
+
 		for (Block current : blocks) {
 			if (current.getStatus() == 0) {
 				System.out.println("past " + Arrays.toString(currentCenterPiece));
