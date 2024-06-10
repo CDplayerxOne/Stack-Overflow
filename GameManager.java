@@ -8,6 +8,8 @@ public class GameManager {
 	public static int[][] grid = new int[11][22];
 	public static int[] currentCenterPiece = new int[2];
 	public static ArrayList<int[]> currentSupportPieces = new ArrayList<int[]>();
+	public static int currentBlock = 0;
+	public static boolean next = false;
 
 	public GameManager() {
 		// Fill the grid with 0s
@@ -19,10 +21,14 @@ public class GameManager {
 	}
 
 	public static void generateBlock() {
+		System.out.println(next + "yay");
 		// Create a new block
 		Block newBlock = new Block((int) (Math.random() * 5));
+		// Block newBlock = new Block(2);
 
 		blocks.add(newBlock);
+
+		currentBlock += 1;
 
 		// Populate current position
 		currentCenterPiece = newBlock.getCenterPiece();
@@ -30,17 +36,18 @@ public class GameManager {
 
 		// Update the position of the center piece on the grid
 		grid[newBlock.getCenterPiece()[0]][newBlock.getCenterPiece()[1]] = 6;
-		System.out.println("Center Piece: " + Arrays.toString(newBlock.getCenterPiece()));
+		// System.out.println("Center Piece: " +
+		// Arrays.toString(newBlock.getCenterPiece()));
 
 		// Update the position of each supporting piece on the grid
 		for (int[] piece : newBlock.getSupportingPieces()) {
-			System.out.println("Support Piece: " + Arrays.toString(piece));
+			// System.out.println("Support Piece: " + Arrays.toString(piece));
 			grid[piece[0]][piece[1]] = 1;
 		}
 		for (int[] item : grid) {
-			System.out.println(Arrays.toString(item));
+			// System.out.println(Arrays.toString(item));
 		}
-		System.out.println("current" + Arrays.toString(currentCenterPiece));
+		// System.out.println("current" + Arrays.toString(currentCenterPiece));
 
 	}
 
@@ -54,7 +61,7 @@ public class GameManager {
 
 		for (Block current : blocks) {
 			if (current.getActive()) {
-				System.out.println("past " + Arrays.toString(currentCenterPiece));
+				// System.out.println("past " + Arrays.toString(currentCenterPiece));
 
 				// Clear its old position
 				grid[currentCenterPiece[0]][currentCenterPiece[1] - 1] = 0;
@@ -66,21 +73,22 @@ public class GameManager {
 
 				// Populate the grid with new position
 				grid[current.getCenterPiece()[0]][current.getCenterPiece()[1]] = 1;
-				System.out.println("Center Piece: " + Arrays.toString(current.getCenterPiece()));
+				// System.out.println("Center Piece: " +
+				// Arrays.toString(current.getCenterPiece()));
 
 				// Update the position of each supporting piece on the grid
 				for (int[] piece : current.getSupportingPieces()) {
-					System.out.println("Support Piece: " + Arrays.toString(piece));
+					// System.out.println("Support Piece: " + Arrays.toString(piece));
 					grid[piece[0]][piece[1]] = 1;
 				}
 				for (int[] item : grid) {
-					System.out.println(Arrays.toString(item));
+					// System.out.println(Arrays.toString(item));
 				}
 
 				// Keep track of the current position
 				currentCenterPiece = current.getCenterPiece();
 				currentSupportPieces = current.getSupportingPieces();
-				System.out.println("current" + Arrays.toString(currentCenterPiece));
+				// System.out.println("current" + Arrays.toString(currentCenterPiece));
 			}
 		}
 	}

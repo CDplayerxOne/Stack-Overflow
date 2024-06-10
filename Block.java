@@ -16,10 +16,10 @@ import java.util.Arrays;
 public class Block extends Rectangle {
 
     // declare objects, variables, and constants
-    private final int[][] TYPES = {{1, 0, 1, 0, 1, 0, 1, 0}, {0, 1, 1, 0, 0, 0, 1, 1}, {2, 0, 0, 1, 1, 0, 0, 0},
-            {1, 0, 1, 1, 1, 0, 0, 0}, {2, 0, 0, 0, 2, 0, 0, 0}};
-    private final int[][] STARTING_POSITIONS = {{5, 1}, {5, 1}, {5, 2}, {5, 1}, {5, 2}};
-    private final Color[] COLOURS = {Color.RED, Color.CYAN, Color.YELLOW, Color.MAGENTA, Color.GREEN};
+    private final int[][] TYPES = { { 1, 0, 1, 0, 1, 0, 1, 0 }, { 0, 1, 1, 0, 0, 0, 1, 1 }, { 2, 0, 0, 1, 1, 0, 0, 0 },
+            { 1, 0, 1, 1, 1, 0, 0, 0 }, { 2, 0, 0, 0, 2, 0, 0, 0 } };
+    private final int[][] STARTING_POSITIONS = { { 5, 1 }, { 5, 1 }, { 5, 2 }, { 5, 1 }, { 5, 2 } };
+    private final Color[] COLOURS = { Color.RED, Color.CYAN, Color.YELLOW, Color.MAGENTA, Color.GREEN };
     private boolean isActive;
     private final int type;
     private int[] centerPiece;
@@ -124,22 +124,30 @@ public class Block extends Rectangle {
         // CW block roatation
         if (e.getKeyCode() == KeyEvent.VK_UP) {
             // implement in rotate
-            rotate();
+            if (isActive) {
+                rotate();
+            }
         }
 
         // accelerate downwards
         if (e.getKeyCode() == KeyEvent.VK_DOWN) {
-            move(0, 1);
+            if (isActive) {
+                move(0, 1);
+            }
         }
 
         // move the block the left
         if (e.getKeyCode() == KeyEvent.VK_LEFT) {
-            move(-1, 0);
+            if (isActive) {
+                move(-1, 0);
+            }
         }
 
         // move the block to the right
         if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
-            move(1, 0);
+            if (isActive) {
+                move(1, 0);
+            }
         }
 
         // hold the block and change status
@@ -167,13 +175,13 @@ public class Block extends Rectangle {
 
     // moves the block according to its x and y velocity
     public void move(int xVel, int yVel) {
-        if (xVel > 0){
-            if (checkMoveVailidityRight()){
+        if (xVel > 0) {
+            if (checkMoveVailidityRight()) {
                 centerPiece[0] += xVel;
                 centerPiece[1] += yVel;
             }
-        } else{
-            if (checkMoveVailidityLeft()){
+        } else {
+            if (checkMoveVailidityLeft()) {
                 centerPiece[0] += xVel;
                 centerPiece[1] += yVel;
             }
@@ -181,22 +189,25 @@ public class Block extends Rectangle {
         GameManager.updatePosition();
     }
 
-    public boolean checkMoveVailidityRight(){
-        if ((getCenterPiece()[0] + supportingPieces[1] < 10) && (getCenterPiece()[0] + supportingPieces[2] < 10) && (getCenterPiece()[0] + supportingPieces[3] < 10)){
+    public boolean checkMoveVailidityRight() {
+        if ((getCenterPiece()[0] + supportingPieces[1] < 10) && (getCenterPiece()[0] + supportingPieces[2] < 10)
+                && (getCenterPiece()[0] + supportingPieces[3] < 10)) {
             return true;
         }
         return false;
     }
 
-    public boolean checkMoveVailidityLeft(){
-        if ((getCenterPiece()[0] - supportingPieces[5] > 0) && (getCenterPiece()[0] - supportingPieces[6] > 0) && (getCenterPiece()[0] - supportingPieces[7] > 0)){
+    public boolean checkMoveVailidityLeft() {
+        if ((getCenterPiece()[0] - supportingPieces[5] > 0) && (getCenterPiece()[0] - supportingPieces[6] > 0)
+                && (getCenterPiece()[0] - supportingPieces[7] > 0)) {
             return true;
         }
         return false;
     }
 
     public void autoFall() {
-        if ((getCenterPiece()[1] + supportingPieces[3] < 21) && (getCenterPiece()[1] + supportingPieces[4] < 21) && (getCenterPiece()[1] + supportingPieces[5] < 21)){
+        if ((getCenterPiece()[1] + supportingPieces[3] < 21) && (getCenterPiece()[1] + supportingPieces[4] < 21)
+                && (getCenterPiece()[1] + supportingPieces[5] < 21)) {
             // Every 33 frames
             internalCount++;
             if (internalCount == 33) {
@@ -208,12 +219,17 @@ public class Block extends Rectangle {
                 GameManager.updatePosition();
             }
         } else {
-            //change status here
+            // change status here
+            if (isActive) {
+                GameManager.next = true;
+            }
             isActive = false;
+
+            // GameManager.generateBlock();
         }
     }
 
-    //method to rotate the block
+    // method to rotate the block
     public void rotate() {
         int[] tempArray = new int[8];
 
@@ -232,7 +248,10 @@ public class Block extends Rectangle {
     }
 
     public boolean checkRotationVailidity() {
-        if ((supportingPieces[7]+getCenterPiece()[0] < 11) && (supportingPieces[0]+getCenterPiece()[0] < 11) && (supportingPieces[1]+getCenterPiece()[0] < 11) && (getCenterPiece()[0] - supportingPieces[3] > -1) && (getCenterPiece()[0] - supportingPieces[4] > -1) && (getCenterPiece()[0] - supportingPieces[5] > -1)){
+        if ((supportingPieces[7] + getCenterPiece()[0] < 11) && (supportingPieces[0] + getCenterPiece()[0] < 11)
+                && (supportingPieces[1] + getCenterPiece()[0] < 11) && (getCenterPiece()[0] - supportingPieces[3] > -1)
+                && (getCenterPiece()[0] - supportingPieces[4] > -1)
+                && (getCenterPiece()[0] - supportingPieces[5] > -1)) {
             return true;
         }
         return false;

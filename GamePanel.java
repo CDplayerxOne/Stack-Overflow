@@ -124,6 +124,10 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
             b.autoFall();
           }
         }
+        if (GameManager.next) {
+          GameManager.generateBlock();
+          GameManager.next = false;
+        }
         move();
         repaint();
         delta--;
