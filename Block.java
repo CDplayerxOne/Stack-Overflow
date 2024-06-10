@@ -205,18 +205,36 @@ public class Block extends Rectangle {
         return false;
     }
 
+    public boolean checkVerticalCollision() {
+        boolean collision = false;
+        boolean cont = true;
+        for (int i = -1; i < 2; i++) {
+            if ((centerPiece[1] + supportingPieces[i + 4] + 1) <= 21) {
+                if (supportingPieces[i + 4] != 0
+                        && GameManager.getGrid()[centerPiece[0] + i][centerPiece[1] + supportingPieces[i + 4]
+                                + 1] == 1) {
+                    collision = true;
+                    cont = false;
+
+                }
+            }
+        }
+
+        return collision;
+    }
+
     public void autoFall() {
         if ((getCenterPiece()[1] + supportingPieces[3] < 21) && (getCenterPiece()[1] + supportingPieces[4] < 21)
-                && (getCenterPiece()[1] + supportingPieces[5] < 21)) {
+                && (getCenterPiece()[1] + supportingPieces[5] < 21) && !checkVerticalCollision()) {
+
             // Every 33 frames
             internalCount++;
             if (internalCount == 33) {
-                System.out.println("ok: " + Arrays.toString(GameManager.currentCenterPiece));
                 // move down
                 centerPiece[1] += 1;
-                System.out.println("ok: " + Arrays.toString(GameManager.currentCenterPiece));
                 internalCount = 0;
                 GameManager.updatePosition();
+                System.out.println(checkVerticalCollision() + " collision");
             }
         } else {
             // change status here
