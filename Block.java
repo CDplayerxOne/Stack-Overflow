@@ -8,6 +8,7 @@
 
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -214,13 +215,21 @@ public class Block extends Rectangle {
                         && GameManager.getGrid()[centerPiece[0] + i][centerPiece[1] + supportingPieces[i + 4]
                                 + 1] == 1) {
                     collision = true;
+                    if (isActive) {
+                        GameManager.next = true;
+                    }
+                    isActive = false;
                     cont = false;
-
                 }
             }
         }
 
         return collision;
+    }
+
+    public boolean checkHorizontalCollision() {
+
+        return true;
     }
 
     public void autoFall() {
