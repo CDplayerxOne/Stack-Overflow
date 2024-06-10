@@ -5,6 +5,7 @@
  */
 
 //import libraries
+
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
@@ -15,12 +16,12 @@ import java.util.Arrays;
 public class Block extends Rectangle {
 
     // declare objects, variables, and constants
-    private final int[][] TYPES = { { 1, 0, 1, 0, 1, 0, 1, 0 }, { 0, 1, 1, 0, 0, 0, 1, 1 }, { 2, 0, 0, 1, 1, 0, 0, 0 },
-            { 1, 0, 1, 1, 1, 0, 0, 0 }, { 2, 0, 0, 0, 2, 0, 0, 0 } };
-    private final int[][] STARTING_POSITIONS = { { 5, 1 }, { 5, 1 }, { 5, 2 }, { 5, 1 }, { 5, 2 } };
-    private final Color[] COLOURS = { Color.RED, Color.CYAN, Color.YELLOW, Color.MAGENTA, Color.GREEN };
-    private int status;
-    private int type;
+    private final int[][] TYPES = {{1, 0, 1, 0, 1, 0, 1, 0}, {0, 1, 1, 0, 0, 0, 1, 1}, {2, 0, 0, 1, 1, 0, 0, 0},
+            {1, 0, 1, 1, 1, 0, 0, 0}, {2, 0, 0, 0, 2, 0, 0, 0}};
+    private final int[][] STARTING_POSITIONS = {{5, 1}, {5, 1}, {5, 2}, {5, 1}, {5, 2}};
+    private final Color[] COLOURS = {Color.RED, Color.CYAN, Color.YELLOW, Color.MAGENTA, Color.GREEN};
+    private boolean isActive;
+    private final int type;
     private int[] centerPiece;
     private int[] supportingPieces;
     public static final int BLOCKLENGTH = 35; // length of block
@@ -28,7 +29,7 @@ public class Block extends Rectangle {
 
     public Block(int type) {
         this.type = type;
-        status = 0;
+        isActive = true;
         switch (type) {
             case 0:
                 supportingPieces = TYPES[0];
@@ -63,7 +64,7 @@ public class Block extends Rectangle {
 
     // returns location of supporting pieces
     public ArrayList<int[]> getSupportingPieces() {
-        ArrayList<int[]> pieces = new ArrayList<int[]>();
+        ArrayList<int[]> pieces = new ArrayList<>();
         for (int i = 0; i < supportingPieces[0]; i++) {
             int[] coordinate = new int[2];
             coordinate[0] = centerPiece[0];
@@ -115,8 +116,8 @@ public class Block extends Rectangle {
         return pieces;
     }
 
-    public int getStatus() {
-        return status;
+    public boolean getActive() {
+        return isActive;
     }
 
     public void keyPressed(KeyEvent e) {
@@ -166,24 +167,53 @@ public class Block extends Rectangle {
 
     // moves the block according to its x and y velocity
     public void move(int xVel, int yVel) {
-        centerPiece[0] += xVel;
-        centerPiece[1] += yVel;
+        if (xVel > 0){
+            if (checkMoveVailidityRight()){
+                centerPiece[0] += xVel;
+                centerPiece[1] += yVel;
+            }
+        } else{
+            if (checkMoveVailidityLeft()){
+                centerPiece[0] += xVel;
+                centerPiece[1] += yVel;
+            }
+        }
         GameManager.updatePosition();
     }
 
+    public boolean checkMoveVailidityRight(){
+        if ((getCenterPiece()[0] + supportingPieces[1] < 10) && (getCenterPiece()[0] + supportingPieces[2] < 10) && (getCenterPiece()[0] + supportingPieces[3] < 10)){
+            return true;
+        }
+        return false;
+    }
+
+    public boolean checkMoveVailidityLeft(){
+        if ((getCenterPiece()[0] - supportingPieces[5] > 0) && (getCenterPiece()[0] - supportingPieces[6] > 0) && (getCenterPiece()[0] - supportingPieces[7] > 0)){
+            return true;
+        }
+        return false;
+    }
+
     public void autoFall() {
-        // Every 33 frames
-        internalCount++;
-        if (internalCount == 33) {
-            System.out.println("ok: " + Arrays.toString(GameManager.currentCenterPiece));
-            // move down
-            centerPiece[1] += 1;
-            System.out.println("ok: " + Arrays.toString(GameManager.currentCenterPiece));
-            internalCount = 0;
-            GameManager.updatePosition();
+        if ((getCenterPiece()[1] + supportingPieces[3] < 21) && (getCenterPiece()[1] + supportingPieces[4] < 21) && (getCenterPiece()[1] + supportingPieces[5] < 21)){
+            // Every 33 frames
+            internalCount++;
+            if (internalCount == 33) {
+                System.out.println("ok: " + Arrays.toString(GameManager.currentCenterPiece));
+                // move down
+                centerPiece[1] += 1;
+                System.out.println("ok: " + Arrays.toString(GameManager.currentCenterPiece));
+                internalCount = 0;
+                GameManager.updatePosition();
+            }
+        } else {
+            //change status here
+            isActive = false;
         }
     }
 
+    //method to rotate the block
     public void rotate() {
         int[] tempArray = new int[8];
 
@@ -202,27 +232,13 @@ public class Block extends Rectangle {
     }
 
     public boolean checkRotationVailidity() {
-        ArrayList<int[]> pieces = getSupportingPieces();
-
-        for (int i = 0; i < 8; i++) {
-            if (pieces.get(i)[0] < supportingPieces[0]) {
-                return false;
-            }
+        if ((supportingPieces[7]+getCenterPiece()[0] < 11) && (supportingPieces[0]+getCenterPiece()[0] < 11) && (supportingPieces[1]+getCenterPiece()[0] < 11) && (getCenterPiece()[0] - supportingPieces[3] > -1) && (getCenterPiece()[0] - supportingPieces[4] > -1) && (getCenterPiece()[0] - supportingPieces[5] > -1)){
+            return true;
         }
-        return true;
-    }
-
-    // returns type of the block
-    public int getType() {
-        return status;
+        return false;
     }
 
     // returns the yVelocity of the block
-
-    // modifies the status of the block
-    public void setStatus(int s) {
-        status = s;
-    }
 
     // draws the current location of the block on the screen
     public void draw(Graphics g) {

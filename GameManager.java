@@ -53,7 +53,7 @@ public class GameManager {
 		// Update the position of the center piece on the grid
 
 		for (Block current : blocks) {
-			if (current.getStatus() == 0) {
+			if (current.getActive()) {
 				System.out.println("past " + Arrays.toString(currentCenterPiece));
 
 				// Clear its old position
