@@ -183,13 +183,13 @@ public class Block extends Rectangle {
             if (checkMoveVailidityRight()) {
                 centerPiece[0] += xVel;
                 centerPiece[1] += yVel;
-                GameManager.updatePosition();
+                GameManager.updatePosition(1);
             }
         } else {
             if (checkMoveVailidityLeft()) {
                 centerPiece[0] += xVel;
                 centerPiece[1] += yVel;
-                GameManager.updatePosition();
+                GameManager.updatePosition(2);
             }
         }
     }
@@ -360,7 +360,7 @@ public class Block extends Rectangle {
                     // move down
                     centerPiece[1] += 1;
                     internalCount = 0;
-                    GameManager.updatePosition();
+                    GameManager.updatePosition(0);
                     System.out.println(checkVerticalCollision() + " collision");
                 }
             }
@@ -389,7 +389,7 @@ public class Block extends Rectangle {
             tempArray[6] = supportingPieces[4];
             tempArray[7] = supportingPieces[5];
             supportingPieces = tempArray;
-            GameManager.updatePosition();
+            GameManager.updatePosition(0);
         }
     }
 

@@ -55,7 +55,7 @@ public class GameManager {
 		return blocks;
 	}
 
-	public static void updatePosition() {
+	public static void updatePosition(int type) {
 		// loop through all active blocks
 		// Update the position of the center piece on the grid
 
@@ -66,6 +66,14 @@ public class GameManager {
 				// Clear its old position
 				grid[currentCenterPiece[0]][currentCenterPiece[1] - 1] = 0;
 				System.out.println(grid[currentCenterPiece[0]][currentCenterPiece[1]]);
+
+				if (type == 1) {
+					grid[currentCenterPiece[0] - 1][currentCenterPiece[1]] = 0;
+				}
+
+				if (type == 2) {
+					grid[currentCenterPiece[0] + 1][currentCenterPiece[1]] = 0;
+				}
 
 				// This is the same fix as for the vertical drag above. However, it just doesn't
 				// work
