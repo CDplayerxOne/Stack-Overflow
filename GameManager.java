@@ -67,12 +67,10 @@ public class GameManager {
 				grid[currentCenterPiece[0]][currentCenterPiece[1] - 1] = 0;
 				System.out.println(grid[currentCenterPiece[0]][currentCenterPiece[1]]);
 
+				// This is the same fix as for the vertical drag above. However, it just doesn't
+				// work
 				// grid[currentCenterPiece[0] + 1][currentCenterPiece[1] - 1] = 0;
 				// grid[currentCenterPiece[0] - 1][currentCenterPiece[1] - 1] = 0;
-
-				// if (type == 1 && (current.getType() == 2 || current.getType() == 4)) {
-
-				// }
 
 				// Clear the position of each supporting piece on the grid
 				for (int[] piece : currentSupportPieces) {
