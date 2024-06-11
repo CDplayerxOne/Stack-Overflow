@@ -21,7 +21,7 @@ public class GameManager {
 	}
 
 	public static void generateBlock() {
-		System.out.println(next + "yay");
+		System.out.println("generate");
 		// Create a new block
 		Block newBlock = new Block((int) (Math.random() * 5));
 		// Block newBlock = new Block(2);
@@ -35,7 +35,7 @@ public class GameManager {
 		currentSupportPieces = newBlock.getSupportingPieces();
 
 		// Update the position of the center piece on the grid
-		grid[newBlock.getCenterPiece()[0]][newBlock.getCenterPiece()[1]] = 6;
+		grid[newBlock.getCenterPiece()[0]][newBlock.getCenterPiece()[1]] = 1;
 		// System.out.println("Center Piece: " +
 		// Arrays.toString(newBlock.getCenterPiece()));
 
@@ -65,6 +65,14 @@ public class GameManager {
 
 				// Clear its old position
 				grid[currentCenterPiece[0]][currentCenterPiece[1] - 1] = 0;
+				System.out.println(grid[currentCenterPiece[0]][currentCenterPiece[1]]);
+
+				// grid[currentCenterPiece[0] + 1][currentCenterPiece[1] - 1] = 0;
+				// grid[currentCenterPiece[0] - 1][currentCenterPiece[1] - 1] = 0;
+
+				// if (type == 1 && (current.getType() == 2 || current.getType() == 4)) {
+
+				// }
 
 				// Clear the position of each supporting piece on the grid
 				for (int[] piece : currentSupportPieces) {
@@ -89,6 +97,10 @@ public class GameManager {
 				currentCenterPiece = current.getCenterPiece();
 				currentSupportPieces = current.getSupportingPieces();
 				// System.out.println("current" + Arrays.toString(currentCenterPiece));
+				System.out.println("update");
+				for (int[] item : grid) {
+					System.out.println(Arrays.toString(item));
+				}
 			}
 		}
 	}
