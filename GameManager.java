@@ -2,7 +2,7 @@ import java.awt.Graphics;
 import java.util.*;
 
 public class GameManager {
-	public static ArrayList<Block> blocks = new ArrayList<Block>();
+	public static ArrayList<Block> blocks = new ArrayList<>();
 	// grid
 	// 0 = empty, 1 = occupied
 	public static int[][] grid = new int[11][22];
@@ -11,6 +11,7 @@ public class GameManager {
 	public static int currentBlock = 0;
 	public static boolean next = false;
 
+	//GameManager constructor
 	public GameManager() {
 		// Fill the grid with 0s
 		for (int i = 0; i < grid.length; i++) {
@@ -20,6 +21,7 @@ public class GameManager {
 		}
 	}
 
+	//generates a block object
 	public static void generateBlock() {
 		System.out.println("generate");
 		// Create a new block
@@ -51,10 +53,12 @@ public class GameManager {
 
 	}
 
+	//returns the positions of all blocks
 	public static ArrayList<Block> getBlocks() {
 		return blocks;
 	}
 
+	//updates the position of all blocks
 	public static void updatePosition(int type) {
 		// loop through all active blocks
 		// Update the position of the center piece on the grid
@@ -111,10 +115,12 @@ public class GameManager {
 		}
 	}
 
+	//returns the grid of all occupied squares
 	public static int[][] getGrid() {
 		return grid;
 	}
 
+	//draws the blocks
 	public void draw(Graphics g) {
 		for (Block block : blocks) {
 			block.draw(g);

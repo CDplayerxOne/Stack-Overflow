@@ -16,7 +16,6 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
   // declare objects, variables, and constants
   public static final int GAME_WIDTH = 1024;
   public static final int GAME_HEIGHT = 770;
-
   public Thread gameThread;
   public Image image;
   public Image background;
@@ -152,6 +151,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 
   }
 
+  //override method for keyTyped
   public void keyTyped(KeyEvent e) {
   }
 
