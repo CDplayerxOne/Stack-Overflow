@@ -11,7 +11,7 @@ public class GameManager {
 	public static int currentBlock = 0;
 	public static boolean next = false;
 
-	//GameManager constructor
+	// GameManager constructor
 	public GameManager() {
 		// Fill the grid with 0s
 		for (int i = 0; i < grid.length; i++) {
@@ -21,9 +21,17 @@ public class GameManager {
 		}
 	}
 
-	//generates a block object
+	// generates a block object
 	public static void generateBlock() {
 		System.out.println("generate");
+
+		// end the game if you reach the top row
+		for (int i = 0; i < grid.length; i++) {
+			if (grid[i][5] == 1) {
+				GamePanel.setEnd();
+				break;
+			}
+		}
 		// Create a new block
 		Block newBlock = new Block((int) (Math.random() * 5));
 		// Block newBlock = new Block(2);
@@ -53,12 +61,12 @@ public class GameManager {
 
 	}
 
-	//returns the positions of all blocks
+	// returns the positions of all blocks
 	public static ArrayList<Block> getBlocks() {
 		return blocks;
 	}
 
-	//updates the position of all blocks
+	// updates the position of all blocks
 	public static void updatePosition(int type) {
 		// loop through all active blocks
 		// Update the position of the center piece on the grid
@@ -115,12 +123,12 @@ public class GameManager {
 		}
 	}
 
-	//returns the grid of all occupied squares
+	// returns the grid of all occupied squares
 	public static int[][] getGrid() {
 		return grid;
 	}
 
-	//draws the blocks
+	// draws the blocks
 	public void draw(Graphics g) {
 		for (Block block : blocks) {
 			block.draw(g);

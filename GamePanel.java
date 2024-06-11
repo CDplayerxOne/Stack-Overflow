@@ -29,8 +29,8 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
   private boolean menuScreen = false;
 
   // gameRunning and finished game states not implemented yet
-  private boolean gameRunning = false;
-  private boolean end = false;
+  private static boolean gameRunning = false;
+  private static boolean end = false;
 
   public GamePanel() {
     // ball = new PlayerBall(GAME_WIDTH / 2, GAME_HEIGHT / 2);
@@ -98,6 +98,15 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
       }
       manager.draw(g);
     }
+
+    if (end) {
+      g.setColor(Color.BLACK);
+      g.drawRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
+      g.setColor(Color.RED);
+      g.setFont(new Font("timesRoman", Font.PLAIN, 20));
+      g.drawString("GAME OVER", 400, 300);
+
+    }
   }
 
   // not implemented yet
@@ -151,8 +160,15 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 
   }
 
-  //override method for keyTyped
+  // override method for keyTyped
   public void keyTyped(KeyEvent e) {
+  }
+
+  // Ends the game
+  public static void setEnd() {
+    gameRunning = false;
+    end = true;
+
   }
 
   // method to change the state of the game

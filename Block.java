@@ -27,8 +27,7 @@ public class Block extends Rectangle {
     public static final int BLOCKLENGTH = 35; // length of block
     private int internalCount = 0;
 
-
-    //constructor for Block
+    // constructor for Block
     public Block(int type) {
         this.type = type;
         isActive = true;
@@ -64,7 +63,7 @@ public class Block extends Rectangle {
         return centerPiece;
     }
 
-    //method to return type of block
+    // method to return type of block
     public int getType() {
         return type;
     }
@@ -123,12 +122,12 @@ public class Block extends Rectangle {
         return pieces;
     }
 
-    //returns if the block is active or not
+    // returns if the block is active or not
     public boolean getActive() {
         return isActive;
     }
 
-    //method to respond to a key press
+    // method to respond to a key press
     public void keyPressed(KeyEvent e) {
         // CW block roatation
         if (e.getKeyCode() == KeyEvent.VK_UP) {
@@ -165,7 +164,7 @@ public class Block extends Rectangle {
         }
     }
 
-    //method to respond to a key being released
+    // method to respond to a key being released
     public void keyReleased(KeyEvent e) {
         if (e.getKeyCode() == KeyEvent.VK_UP) {
         }
@@ -186,13 +185,13 @@ public class Block extends Rectangle {
     // moves the block according to its x and y velocity
     public void move(int xVel, int yVel) {
         if (xVel > 0) {
-            if (checkMoveVailidityRight()) {
+            if (checkMoveVailidityRight() && !checkHorizontalCollision(1)) {
                 centerPiece[0] += xVel;
                 centerPiece[1] += yVel;
                 GameManager.updatePosition(1);
             }
         } else {
-            if (checkMoveVailidityLeft()) {
+            if (checkMoveVailidityLeft() && !checkHorizontalCollision(2)) {
                 centerPiece[0] += xVel;
                 centerPiece[1] += yVel;
                 GameManager.updatePosition(2);
@@ -200,7 +199,7 @@ public class Block extends Rectangle {
         }
     }
 
-    //checks if the block is restricted by the right boarder
+    // checks if the block is restricted by the right boarder
     public boolean checkMoveVailidityRight() {
         if ((getCenterPiece()[0] + supportingPieces[1] < 10) && (getCenterPiece()[0] + supportingPieces[2] < 10)
                 && (getCenterPiece()[0] + supportingPieces[3] < 10)) {
@@ -209,7 +208,7 @@ public class Block extends Rectangle {
         return false;
     }
 
-    //checks if the block is restricted by the left boarder
+    // checks if the block is restricted by the left boarder
     public boolean checkMoveVailidityLeft() {
         if ((getCenterPiece()[0] - supportingPieces[5] > 0) && (getCenterPiece()[0] - supportingPieces[6] > 0)
                 && (getCenterPiece()[0] - supportingPieces[7] > 0)) {
@@ -218,7 +217,7 @@ public class Block extends Rectangle {
         return false;
     }
 
-    //checks if the block collides with another block
+    // checks if the block collides with another block
     public boolean checkVerticalCollision() {
         boolean collision = false;
         boolean cont = true;
@@ -353,12 +352,37 @@ public class Block extends Rectangle {
         return collision;
     }
 
-    //checks if there is a horizontal collision between blocks
-    public boolean checkHorizontalCollision() {
-        return true;
+    // checks if there is a horizontal collision between blocks
+    public boolean checkHorizontalCollision(int type) {
+        boolean collision = false;
+
+        // if (type == 1
+        // && (GameManager.getGrid()[getCenterPiece()[0] + supportingPieces[1] +
+        // 1][getCenterPiece()[1]
+        // - 1] == 1)
+        // && (GameManager.getGrid()[getCenterPiece()[0] + supportingPieces[2] +
+        // 1][getCenterPiece()[1]] == 1)
+        // && (GameManager.getGrid()[getCenterPiece()[0] + supportingPieces[3] +
+        // 1][getCenterPiece()[1]
+        // + 1] == 1)) {
+        // collision = true;
+        // }
+        // if (type == 2
+        // && (GameManager.getGrid()[getCenterPiece()[0] + supportingPieces[5] +
+        // 1][getCenterPiece()[1]
+        // + 1] == 1)
+        // && (GameManager.getGrid()[getCenterPiece()[0] + supportingPieces[6] +
+        // 1][getCenterPiece()[1]] == 1)
+        // && (GameManager.getGrid()[getCenterPiece()[0] + supportingPieces[7] +
+        // 1][getCenterPiece()[1]
+        // - 1] == 1)) {
+        // collision = true;
+        // }
+
+        return collision;
     }
 
-    //moves the block while auto falling down
+    // moves the block while auto falling down
     public void autoFall() {
         if ((getCenterPiece()[1] + supportingPieces[3] < 21) && (getCenterPiece()[1] + supportingPieces[4] < 21)
                 && (getCenterPiece()[1] + supportingPieces[5] < 21)) {
@@ -403,7 +427,7 @@ public class Block extends Rectangle {
         }
     }
 
-    //checks if the block is restricted by the boarder for rotating
+    // checks if the block is restricted by the boarder for rotating
     public boolean checkRotationVailidity() {
         if ((supportingPieces[7] + getCenterPiece()[0] < 11) && (supportingPieces[0] + getCenterPiece()[0] < 11)
                 && (supportingPieces[1] + getCenterPiece()[0] < 11) && (getCenterPiece()[0] - supportingPieces[3] > -1)
