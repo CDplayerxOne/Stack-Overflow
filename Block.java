@@ -185,13 +185,13 @@ public class Block extends Rectangle {
     // moves the block according to its x and y velocity
     public void move(int xVel, int yVel) {
         if (xVel > 0) {
-            if (checkMoveVailidityRight() && !checkHorizontalCollision(1)) {
+            if (checkMoveVailidityRight() && !checkHorizontalCollisionRight()) {
                 centerPiece[0] += xVel;
                 centerPiece[1] += yVel;
                 GameManager.updatePosition(1);
             }
         } else {
-            if (checkMoveVailidityLeft() && !checkHorizontalCollision(2)) {
+            if (checkMoveVailidityLeft() && !checkHorizontalCollisionLeft()) {
                 centerPiece[0] += xVel;
                 centerPiece[1] += yVel;
                 GameManager.updatePosition(2);
@@ -225,14 +225,15 @@ public class Block extends Rectangle {
         // if the row under it is above the bottom, if itself is not 0 and if the square
         // under it is taken
         if ((centerPiece[1] + supportingPieces[4] + 1) <= 21 && supportingPieces[4] != 0
-                && GameManager.getGrid()[centerPiece[0]][centerPiece[1] + supportingPieces[4] + 1] == 1) {
+                && GameManager.getGrid()[centerPiece[0]][centerPiece[1] + supportingPieces[4]
+                        + 1] != ' ') {
 
             collision = true;
             cont = false;
             if (isActive) {
                 GameManager.next = true;
                 System.out.println("collision 1");
-                for (int[] item : GameManager.getGrid()) {
+                for (char[] item : GameManager.getGrid()) {
                     System.out.println(Arrays.toString(item));
                 }
             }
@@ -243,7 +244,7 @@ public class Block extends Rectangle {
         // if the square under it can exist. If the it itself is not 0 and if the square
         // under it is taken
         if ((centerPiece[1] + 2) <= 21 && supportingPieces[3] != 0
-                && GameManager.getGrid()[centerPiece[0] + 1][centerPiece[1] + 2] == 1 && cont) {
+                && GameManager.getGrid()[centerPiece[0] + 1][centerPiece[1] + 2] != ' ' && cont) {
 
             collision = true;
             cont = false;
@@ -258,7 +259,7 @@ public class Block extends Rectangle {
         // if the square under it can exist. If the it itself is not 0 and if the square
         // under it is taken
         if ((centerPiece[1] + 2) <= 21 && supportingPieces[5] != 0
-                && GameManager.getGrid()[centerPiece[0] - 1][centerPiece[1] + 2] == 1 && cont) {
+                && GameManager.getGrid()[centerPiece[0] - 1][centerPiece[1] + 2] != ' ' && cont) {
 
             collision = true;
             cont = false;
@@ -272,14 +273,15 @@ public class Block extends Rectangle {
 
         // if it is not the bottom row and the block below is occupied
         if ((centerPiece[1] + 1) <= 21
-                && GameManager.getGrid()[centerPiece[0]][centerPiece[1] + 1] == 1 && supportingPieces[4] == 0) {
+                && GameManager.getGrid()[centerPiece[0]][centerPiece[1] + 1] != ' '
+                && supportingPieces[4] == 0) {
 
             collision = true;
             cont = false;
             if (isActive) {
                 GameManager.next = true;
                 System.out.println("collision 4");
-                for (int[] item : GameManager.getGrid()) {
+                for (char[] item : GameManager.getGrid()) {
                     System.out.println(Arrays.toString(item));
                 }
             }
@@ -291,7 +293,7 @@ public class Block extends Rectangle {
         // if itself is not 0. If it does not go beyond 21 and if the spot under it is
         // occupied
         if ((centerPiece[1] + 1) <= 21 && supportingPieces[6] != 0
-                && GameManager.getGrid()[centerPiece[0] - 1][centerPiece[1] + 1] == 1 && cont
+                && GameManager.getGrid()[centerPiece[0] - 1][centerPiece[1] + 1] != ' ' && cont
                 && supportingPieces[5] == 0) {
 
             collision = true;
@@ -305,7 +307,7 @@ public class Block extends Rectangle {
         }
 
         if ((centerPiece[1] + 1) <= 21 && supportingPieces[2] != 0
-                && GameManager.getGrid()[centerPiece[0] + 1][centerPiece[1] + 1] == 1 && cont
+                && GameManager.getGrid()[centerPiece[0] + 1][centerPiece[1] + 1] != ' ' && cont
                 && supportingPieces[3] == 0) {
 
             collision = true;
@@ -313,7 +315,7 @@ public class Block extends Rectangle {
             if (isActive) {
                 GameManager.next = true;
                 System.out.println("collision 6");
-                for (int[] item : GameManager.getGrid()) {
+                for (char[] item : GameManager.getGrid()) {
                     System.out.println(Arrays.toString(item));
                 }
             }
@@ -322,7 +324,7 @@ public class Block extends Rectangle {
         }
 
         if ((centerPiece[1]) <= 21 && supportingPieces[7] != 0
-                && GameManager.getGrid()[centerPiece[0] - 1][centerPiece[1]] == 1 && cont
+                && GameManager.getGrid()[centerPiece[0] - 1][centerPiece[1]] != ' ' && cont
                 && supportingPieces[5] == 0 && supportingPieces[6] == 0) {
 
             collision = true;
@@ -336,7 +338,7 @@ public class Block extends Rectangle {
         }
 
         if ((centerPiece[1]) <= 21 && supportingPieces[1] != 0
-                && GameManager.getGrid()[centerPiece[0]][centerPiece[1]] == 1 && cont
+                && GameManager.getGrid()[centerPiece[0]][centerPiece[1]] != ' ' && cont
                 && supportingPieces[3] == 0 && supportingPieces[2] == 0) {
 
             collision = true;
@@ -353,33 +355,44 @@ public class Block extends Rectangle {
     }
 
     // checks if there is a horizontal collision between blocks
-    public boolean checkHorizontalCollision(int type) {
-        boolean collision = false;
+    public boolean checkHorizontalCollisionRight() {
 
-        // if (type == 1
-        // && (GameManager.getGrid()[getCenterPiece()[0] + supportingPieces[1] +
-        // 1][getCenterPiece()[1]
-        // - 1] == 1)
-        // && (GameManager.getGrid()[getCenterPiece()[0] + supportingPieces[2] +
-        // 1][getCenterPiece()[1]] == 1)
-        // && (GameManager.getGrid()[getCenterPiece()[0] + supportingPieces[3] +
-        // 1][getCenterPiece()[1]
-        // + 1] == 1)) {
-        // collision = true;
-        // }
-        // if (type == 2
-        // && (GameManager.getGrid()[getCenterPiece()[0] + supportingPieces[5] +
-        // 1][getCenterPiece()[1]
-        // + 1] == 1)
-        // && (GameManager.getGrid()[getCenterPiece()[0] + supportingPieces[6] +
-        // 1][getCenterPiece()[1]] == 1)
-        // && (GameManager.getGrid()[getCenterPiece()[0] + supportingPieces[7] +
-        // 1][getCenterPiece()[1]
-        // - 1] == 1)) {
-        // collision = true;
-        // }
+        if (getCenterPiece()[0] < 12) {
 
-        return collision;
+            if (GameManager.getGrid()[getCenterPiece()[0] + supportingPieces[1]
+                    + 1][getCenterPiece()[1] + supportingPieces[1]] != ' ') {
+                return true;
+
+            } else if (GameManager.getGrid()[getCenterPiece()[0] + supportingPieces[1]
+                    + 1][getCenterPiece()[1]] != ' ') {
+                return true;
+
+            } else if (GameManager.getGrid()[getCenterPiece()[0] + supportingPieces[1]
+                    + 1][getCenterPiece()[1] - supportingPieces[3]] != ' ') {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean checkHorizontalCollisionLeft() {
+
+        if (getCenterPiece()[0] > 0) {
+
+            if (GameManager.getGrid()[getCenterPiece()[0] - supportingPieces[1]
+                    - 1][getCenterPiece()[1] + supportingPieces[7]] != ' ') {
+                return true;
+
+            } else if (GameManager.getGrid()[getCenterPiece()[0] - supportingPieces[1]
+                    - 1][getCenterPiece()[1]] != ' ') {
+                return true;
+
+            } else if (GameManager.getGrid()[getCenterPiece()[0] - supportingPieces[1]
+                    - 1][getCenterPiece()[1] - supportingPieces[5]] != ' ') {
+                return true;
+            }
+        }
+        return false;
     }
 
     // moves the block while auto falling down
