@@ -243,7 +243,6 @@ public class Block extends Rectangle {
                 }
             }
             isActive = false;
-
         }
 
         // if the square under it can exist. If the it itself is not 0 and if the square
@@ -297,35 +296,40 @@ public class Block extends Rectangle {
         // the 6 spot
         // if itself is not 0. If it does not go beyond 21 and if the spot under it is
         // occupied
-        if ((centerPiece[1] + 1) <= 21 && supportingPieces[6] != 0
-                && GameManager.getGrid()[centerPiece[0] - 1][centerPiece[1] + 1] != ' ' && cont
-                && supportingPieces[5] == 0) {
+        for (int i = 1; i < supportingPieces[6] + 1; i++) {
+            if ((centerPiece[1] + 1) <= 21 && supportingPieces[6] != 0
+                    && GameManager.getGrid()[centerPiece[0] - i][centerPiece[1] + 1] != ' ' && cont
+                    && supportingPieces[5] == 0) {
 
-            collision = true;
-            cont = false;
-            if (isActive) {
-                GameManager.next = true;
-                System.out.println("collision 5");
+                collision = true;
+                cont = false;
+                if (isActive) {
+                    GameManager.next = true;
+                    System.out.println("collision 5");
+                }
+                isActive = false;
+
             }
-            isActive = false;
 
         }
 
-        if ((centerPiece[1] + 1) <= 21 && supportingPieces[2] != 0
-                && GameManager.getGrid()[centerPiece[0] + 1][centerPiece[1] + 1] != ' ' && cont
-                && supportingPieces[3] == 0) {
+        for (int i = 1; i < supportingPieces[2] + 1; i++) {
+            if ((centerPiece[1] + 1) <= 21 && supportingPieces[2] != 0
+                    && GameManager.getGrid()[centerPiece[0] + i][centerPiece[1] + 1] != ' ' && cont
+                    && supportingPieces[3] == 0) {
 
-            collision = true;
-            cont = false;
-            if (isActive) {
-                GameManager.next = true;
-                System.out.println("collision 6");
-                for (char[] item : GameManager.getGrid()) {
-                    System.out.println(Arrays.toString(item));
+                collision = true;
+                cont = false;
+                if (isActive) {
+                    GameManager.next = true;
+                    System.out.println("collision 6");
+                    for (char[] item : GameManager.getGrid()) {
+                        System.out.println(Arrays.toString(item));
+                    }
                 }
-            }
-            isActive = false;
+                isActive = false;
 
+            }
         }
 
         if ((centerPiece[1]) <= 21 && supportingPieces[7] != 0
@@ -368,7 +372,7 @@ public class Block extends Rectangle {
                     System.out.println(Arrays.toString(item));
                 }
                 System.out.println(
-                        GameManager.getGrid()[getCenterPiece()[0] + supportingPieces[1] + 1][getCenterPiece()[1] + 1]
+                        GameManager.getGrid()[getCenterPiece()[0] + supportingPieces[1] + 1][getCenterPiece()[1] - 1]
                                 + " fjdskfljd");
                 return true;
             } else if (GameManager.getGrid()[getCenterPiece()[0] + supportingPieces[2]
@@ -376,13 +380,13 @@ public class Block extends Rectangle {
                 System.out.println("2");
                 return true;
             } else if (GameManager.getGrid()[getCenterPiece()[0] + supportingPieces[3] + 1][getCenterPiece()[1]
-                    - 1] != ' ') {
+                    + 1] != ' ') {
                 System.out.println("3");
                 return true;
             } else if (supportingPieces[0] > supportingPieces[1]) {
 
                 for (int i = 0; i < supportingPieces[0]; i++) {
-                    if (GameManager.getGrid()[getCenterPiece()[0] + 1][getCenterPiece()[1] + 1 + i] != ' ') {
+                    if (GameManager.getGrid()[getCenterPiece()[0] + 1][getCenterPiece()[1] - 1 - i] != ' ') {
                         System.out.println("4");
                         return true;
                     }
@@ -391,7 +395,7 @@ public class Block extends Rectangle {
             } else if (supportingPieces[4] > supportingPieces[3]) {
 
                 for (int i = 0; i < supportingPieces[4]; i++) {
-                    if (GameManager.getGrid()[getCenterPiece()[0] + 1][getCenterPiece()[1] - 1 - i] != ' ') {
+                    if (GameManager.getGrid()[getCenterPiece()[0] + 1][getCenterPiece()[1] + 1 + i] != ' ') {
                         System.out.println("5");
                         return true;
                     }
@@ -407,26 +411,26 @@ public class Block extends Rectangle {
     // checks if there is a left horizontal collision between blocks
     public boolean checkHorizontalCollisionLeft() {
         if (checkMoveVailidityLeft()) {
-            if (GameManager.getGrid()[getCenterPiece()[0] - supportingPieces[7] - 1][getCenterPiece()[1] + 1] != ' ') {
+            if (GameManager.getGrid()[getCenterPiece()[0] - supportingPieces[7] - 1][getCenterPiece()[1] - 1] != ' ') {
                 return true;
             } else if (GameManager.getGrid()[getCenterPiece()[0] - supportingPieces[6]
                     - 1][getCenterPiece()[1]] != ' ') {
                 return true;
             } else if (GameManager.getGrid()[getCenterPiece()[0] - supportingPieces[5] - 1][getCenterPiece()[1]
-                    - 1] != ' ') {
+                    + 1] != ' ') {
                 return true;
             } else if (supportingPieces[0] > supportingPieces[7]) {
 
-                for (int i = 0; i < supportingPieces[7]; i++) {
-                    if (GameManager.getGrid()[getCenterPiece()[0] - 1][getCenterPiece()[1] + 1 + i] != ' ') {
+                for (int i = 0; i < supportingPieces[0]; i++) {
+                    if (GameManager.getGrid()[getCenterPiece()[0] - 1][getCenterPiece()[1] - 1 - i] != ' ') {
                         return true;
                     }
                 }
 
-            } else if (supportingPieces[4] > supportingPieces[3]) {
+            } else if (supportingPieces[4] > supportingPieces[5]) {
 
                 for (int i = 0; i < supportingPieces[4]; i++) {
-                    if (GameManager.getGrid()[getCenterPiece()[0] - 1][getCenterPiece()[1] - 1 - i] != ' ') {
+                    if (GameManager.getGrid()[getCenterPiece()[0] - 1][getCenterPiece()[1] + 1 + i] != ' ') {
                         return true;
                     }
                 }

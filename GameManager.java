@@ -90,11 +90,12 @@ public class GameManager {
 				grid[currentCenterPiece[0]][currentCenterPiece[1] - 1] = ' ';
 				System.out.println(grid[currentCenterPiece[0]][currentCenterPiece[1]]);
 
-				if (type == 1) {
+				if (type == 1 && currentCenterPiece[0] - 1 >= 0 && currentCenterPiece[1] >= 0) {
 					grid[currentCenterPiece[0] - 1][currentCenterPiece[1]] = ' ';
 				}
 
-				if (type == 2) {
+				if (type == 2 && currentCenterPiece[0] + 1 < 11 && currentCenterPiece[1] < 21) {
+
 					grid[currentCenterPiece[0] + 1][currentCenterPiece[1]] = ' ';
 				}
 
