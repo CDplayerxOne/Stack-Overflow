@@ -20,11 +20,17 @@ public class GameManager {
 				grid[i][j] = ' ';
 			}
 		}
+		for (char[] item : grid) {
+			System.out.println(Arrays.toString(item));
+		}
 	}
 
 	// generates a block object
 	public static void generateBlock() {
 		System.out.println("generate");
+		// for (char[] item : grid) {
+		// System.out.println(Arrays.toString(item));
+		// }
 
 		// Create a new block
 		Block newBlock = new Block((int) (Math.random() * 5));
@@ -48,10 +54,21 @@ public class GameManager {
 			// System.out.println("Support Piece: " + Arrays.toString(piece));
 			grid[piece[0]][piece[1]] = colours[newBlock.getType()];
 		}
-		for (char[] item : grid) {
-			// System.out.println(Arrays.toString(item));
-		}
 		// System.out.println("current" + Arrays.toString(currentCenterPiece));
+		for (int i = 0; i < 11; i++) {
+			if (getGrid()[i][5] == ' ') {
+				break;
+			} else {
+				if (i == 10) {
+					// System.out.println("ran");
+					GamePanel.setEnd();
+				}
+			}
+
+		}
+		for (char[] item : grid) {
+			System.out.println(Arrays.toString(item));
+		}
 
 	}
 
@@ -109,7 +126,7 @@ public class GameManager {
 				currentCenterPiece = current.getCenterPiece();
 				currentSupportPieces = current.getSupportingPieces();
 				// System.out.println("current" + Arrays.toString(currentCenterPiece));
-				System.out.println("update");
+				// System.out.println("update");
 				for (char[] item : grid) {
 					System.out.println(Arrays.toString(item));
 				}

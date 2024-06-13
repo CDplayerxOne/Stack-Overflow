@@ -139,6 +139,7 @@ public class Block extends Rectangle {
 
         // accelerate downwards
         if (e.getKeyCode() == KeyEvent.VK_DOWN) {
+            System.out.println(type + " " + isActive + "active");
             if (isActive) {
                 move(0, 1);
             }
@@ -153,6 +154,8 @@ public class Block extends Rectangle {
 
         // move the block to the right
         if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
+
+            System.out.println(type + " " + isActive + "active");
             if (isActive) {
                 move(1, 0);
             }
@@ -185,13 +188,15 @@ public class Block extends Rectangle {
     // moves the block according to its x and y velocity
     public void move(int xVel, int yVel) {
         if (xVel > 0) {
-            if (checkMoveVailidityRight() && !checkHorizontalCollisionRight()) {
+            if (!checkHorizontalCollisionRight()) {
+
                 centerPiece[0] += xVel;
                 centerPiece[1] += yVel;
                 GameManager.updatePosition(1);
+                System.out.println(Arrays.toString(centerPiece));
             }
         } else {
-            if (checkMoveVailidityLeft() && !checkHorizontalCollisionLeft()) {
+            if (!checkHorizontalCollisionLeft()) {
                 centerPiece[0] += xVel;
                 centerPiece[1] += yVel;
                 GameManager.updatePosition(2);
@@ -354,45 +359,82 @@ public class Block extends Rectangle {
         return collision;
     }
 
-    // checks if there is a horizontal collision between blocks
+    // checks if there is a right horizontal collision between blocks
     public boolean checkHorizontalCollisionRight() {
-
-        if (getCenterPiece()[0] < 12) {
-
-            if (GameManager.getGrid()[getCenterPiece()[0] + supportingPieces[1]
-                    + 1][getCenterPiece()[1] + supportingPieces[1]] != ' ') {
+        if (checkMoveVailidityRight()) {
+            if (GameManager.getGrid()[getCenterPiece()[0] + supportingPieces[1] + 1][getCenterPiece()[1] - 1] != ' ') {
+                System.out.println("1 235467");
+                for (char[] item : GameManager.getGrid()) {
+                    System.out.println(Arrays.toString(item));
+                }
+                System.out.println(
+                        GameManager.getGrid()[getCenterPiece()[0] + supportingPieces[1] + 1][getCenterPiece()[1] + 1]
+                                + " fjdskfljd");
                 return true;
-
-            } else if (GameManager.getGrid()[getCenterPiece()[0] + supportingPieces[1]
+            } else if (GameManager.getGrid()[getCenterPiece()[0] + supportingPieces[2]
                     + 1][getCenterPiece()[1]] != ' ') {
+                System.out.println("2");
                 return true;
+            } else if (GameManager.getGrid()[getCenterPiece()[0] + supportingPieces[3] + 1][getCenterPiece()[1]
+                    - 1] != ' ') {
+                System.out.println("3");
+                return true;
+            } else if (supportingPieces[0] > supportingPieces[1]) {
 
-            } else if (GameManager.getGrid()[getCenterPiece()[0] + supportingPieces[1]
-                    + 1][getCenterPiece()[1] - supportingPieces[3]] != ' ') {
-                return true;
+                for (int i = 0; i < supportingPieces[0]; i++) {
+                    if (GameManager.getGrid()[getCenterPiece()[0] + 1][getCenterPiece()[1] + 1 + i] != ' ') {
+                        System.out.println("4");
+                        return true;
+                    }
+                }
+
+            } else if (supportingPieces[4] > supportingPieces[3]) {
+
+                for (int i = 0; i < supportingPieces[4]; i++) {
+                    if (GameManager.getGrid()[getCenterPiece()[0] + 1][getCenterPiece()[1] - 1 - i] != ' ') {
+                        System.out.println("5");
+                        return true;
+                    }
+                }
             }
+            System.out.println("move right");
+            return false;
+        } else {
+            return true;
         }
-        return false;
     }
 
+    // checks if there is a left horizontal collision between blocks
     public boolean checkHorizontalCollisionLeft() {
-
-        if (getCenterPiece()[0] > 0) {
-
-            if (GameManager.getGrid()[getCenterPiece()[0] - supportingPieces[1]
-                    - 1][getCenterPiece()[1] + supportingPieces[7]] != ' ') {
+        if (checkMoveVailidityLeft()) {
+            if (GameManager.getGrid()[getCenterPiece()[0] - supportingPieces[7] - 1][getCenterPiece()[1] + 1] != ' ') {
                 return true;
-
-            } else if (GameManager.getGrid()[getCenterPiece()[0] - supportingPieces[1]
+            } else if (GameManager.getGrid()[getCenterPiece()[0] - supportingPieces[6]
                     - 1][getCenterPiece()[1]] != ' ') {
                 return true;
-
-            } else if (GameManager.getGrid()[getCenterPiece()[0] - supportingPieces[1]
-                    - 1][getCenterPiece()[1] - supportingPieces[5]] != ' ') {
+            } else if (GameManager.getGrid()[getCenterPiece()[0] - supportingPieces[5] - 1][getCenterPiece()[1]
+                    - 1] != ' ') {
                 return true;
+            } else if (supportingPieces[0] > supportingPieces[7]) {
+
+                for (int i = 0; i < supportingPieces[7]; i++) {
+                    if (GameManager.getGrid()[getCenterPiece()[0] - 1][getCenterPiece()[1] + 1 + i] != ' ') {
+                        return true;
+                    }
+                }
+
+            } else if (supportingPieces[4] > supportingPieces[3]) {
+
+                for (int i = 0; i < supportingPieces[4]; i++) {
+                    if (GameManager.getGrid()[getCenterPiece()[0] - 1][getCenterPiece()[1] - 1 - i] != ' ') {
+                        return true;
+                    }
+                }
             }
+            return false;
+        } else {
+            return true;
         }
-        return false;
     }
 
     // moves the block while auto falling down

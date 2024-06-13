@@ -37,6 +37,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
     this.setFocusable(true);
     this.addKeyListener(this);
 
+    manager = new GameManager();
     // block = new Block(5, 2, 4);
     GameManager.generateBlock();
     // addMouseListener(new MouseAdapter() {
@@ -45,8 +46,6 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
     // }
     // });
     this.setPreferredSize(new Dimension(GAME_WIDTH, GAME_HEIGHT));
-
-    manager = new GameManager();
 
     gameThread = new Thread(this);
     gameThread.start();
