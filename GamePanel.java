@@ -78,7 +78,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
       g.drawString("3. " + Files.findScore(3), 380, 490);
     }
 
-    if (gameRunning) {
+    if (gameRunning || end) {
       Font scoreFont = new Font("Arial", Font.BOLD, 38);
       g.setFont(scoreFont);
       g.setColor(Color.white);
