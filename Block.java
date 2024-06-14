@@ -272,6 +272,7 @@ public class Block extends Rectangle {
                     System.out.println(Arrays.toString(item));
                 }
             }
+            GameManager.score += 10;
             isActive = false;
         }
 
@@ -287,6 +288,7 @@ public class Block extends Rectangle {
                 System.out.println("collision 2");
             }
             isActive = false;
+            GameManager.score += 10;
 
         }
 
@@ -302,6 +304,7 @@ public class Block extends Rectangle {
                 System.out.println("collision 3");
             }
             isActive = false;
+            GameManager.score += 10;
 
         }
 
@@ -320,6 +323,7 @@ public class Block extends Rectangle {
                 }
             }
             isActive = false;
+            GameManager.score += 10;
 
         }
 
@@ -338,6 +342,7 @@ public class Block extends Rectangle {
                     System.out.println("collision 5");
                 }
                 isActive = false;
+                GameManager.score += 10;
                 break;
 
             }
@@ -359,6 +364,7 @@ public class Block extends Rectangle {
                     }
                 }
                 isActive = false;
+                GameManager.score += 10;
                 break;
 
             }
@@ -375,6 +381,7 @@ public class Block extends Rectangle {
                 System.out.println("collision 7");
             }
             isActive = false;
+            GameManager.score += 10;
 
         }
 
@@ -389,7 +396,7 @@ public class Block extends Rectangle {
                 System.out.println("collision 8");
             }
             isActive = false;
-
+            GameManager.score += 10;
         }
 
         return collision;
@@ -500,6 +507,7 @@ public class Block extends Rectangle {
                 GameManager.next = true;
             }
             isActive = false;
+            GameManager.score += 10;
 
             // GameManager.generateBlock();
         }

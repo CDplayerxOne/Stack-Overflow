@@ -70,6 +70,13 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
     graphics = image.getGraphics();
     draw(graphics);
     g.drawImage(image, 0, 0, this);
+
+    if (GamePanel.gameRunning) {
+      Font scoreFont = new Font("Arial", Font.BOLD, 45);
+      g.setFont(scoreFont);
+      g.setColor(Color.white);
+      g.drawString("" + GameManager.score, 700, 448);
+    }
   }
 
   // draws elements depending on game state

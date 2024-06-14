@@ -13,6 +13,7 @@ public class GameManager {
 	public static boolean next = false;
 	public static Block nextblock = new Block((int) (Math.random() * 5));
 	public static Block hold, tempBlock;
+	public static int score = 0;
 
 	// GameManager constructor
 	public GameManager() {
@@ -36,6 +37,10 @@ public class GameManager {
 
 		if (hold == null) {
 			hold = new Block(blocks.get(blocks.size() - 1).getType());
+			for (int[] i : blocks.get(blocks.size() - 1).getSupportingPieces()) {
+				grid[i[0]][i[1]] = ' ';
+			}
+			grid[currentCenterPiece[0]][currentCenterPiece[1]] = ' ';
 			blocks.remove(blocks.get(blocks.size() - 1));
 			activateBlock(nextblock);
 			generateBlock();
@@ -48,7 +53,13 @@ public class GameManager {
 	public static void switchBlock() {
 
 		tempBlock = hold;
+		System.out.println(blocks.get(blocks.size() - 1).getType() + "please");
+		for (int[] i : blocks.get(blocks.size() - 1).getSupportingPieces()) {
+			grid[i[0]][i[1]] = ' ';
+		}
+		grid[currentCenterPiece[0]][currentCenterPiece[1]] = ' ';
 		hold = new Block(blocks.get(blocks.size() - 1).getType());
+		blocks.remove(blocks.get(blocks.size() - 1));
 		activateBlock(tempBlock);
 
 	}
@@ -190,5 +201,11 @@ public class GameManager {
 		if (hold != null) {
 			hold.drawHoldingPos(g);
 		}
+
+		// for (int i = 0; i < 11; i++) {
+		// for (int j = 0; j < 22; j++) {
+		// g.fillRect(140 + (i+1)*35, j*35, i, i);
+		// }
+		// }
 	}
 }
