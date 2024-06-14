@@ -31,8 +31,6 @@ public class Block extends Rectangle {
     public static final int BLOCKLENGTH = 35; // length of block
     private int internalCount = 0;
 
-    private boolean tester = true;
-
     // constructor for Block
     public Block(int type) {
         this.type = type;
@@ -179,12 +177,8 @@ public class Block extends Rectangle {
 
         // hold the block and change status
         if (e.getKeyCode() == KeyEvent.VK_SPACE) {
-
             if (GamePanel.gameRunning()) {
-                if (tester) {
-                    GameManager.holdBlock();
-                    tester = false;
-                }
+                GameManager.holdBlock();
             }
         }
     }
@@ -272,7 +266,6 @@ public class Block extends Rectangle {
                     System.out.println(Arrays.toString(item));
                 }
             }
-            GameManager.score += 10;
             isActive = false;
         }
 
@@ -288,7 +281,6 @@ public class Block extends Rectangle {
                 System.out.println("collision 2");
             }
             isActive = false;
-            GameManager.score += 10;
 
         }
 
@@ -304,7 +296,6 @@ public class Block extends Rectangle {
                 System.out.println("collision 3");
             }
             isActive = false;
-            GameManager.score += 10;
 
         }
 
@@ -323,7 +314,6 @@ public class Block extends Rectangle {
                 }
             }
             isActive = false;
-            GameManager.score += 10;
 
         }
 
@@ -342,7 +332,6 @@ public class Block extends Rectangle {
                     System.out.println("collision 5");
                 }
                 isActive = false;
-                GameManager.score += 10;
                 break;
 
             }
@@ -364,7 +353,6 @@ public class Block extends Rectangle {
                     }
                 }
                 isActive = false;
-                GameManager.score += 10;
                 break;
 
             }
@@ -381,7 +369,6 @@ public class Block extends Rectangle {
                 System.out.println("collision 7");
             }
             isActive = false;
-            GameManager.score += 10;
 
         }
 
@@ -396,7 +383,6 @@ public class Block extends Rectangle {
                 System.out.println("collision 8");
             }
             isActive = false;
-            GameManager.score += 10;
         }
 
         return collision;
@@ -507,7 +493,6 @@ public class Block extends Rectangle {
                 GameManager.next = true;
             }
             isActive = false;
-            GameManager.score += 10;
 
             // GameManager.generateBlock();
         }
@@ -540,111 +525,6 @@ public class Block extends Rectangle {
             return true;
         }
         return false;
-    }
-
-    // draws the current location of the block on the screen
-    public void draw(Graphics g) {
-
-        // Center Piece
-        g.setColor(Color.black);
-        g.fillRect(140 + (centerPiece[0]) * 35, (centerPiece[1]) * 35, BLOCKLENGTH, BLOCKLENGTH);
-        g.setColor(COLOURS[type]);
-        g.fillRect((centerPiece[0]) * 35 + 143, (centerPiece[1]) * 35 + 3, BLOCKLENGTH - 6, BLOCKLENGTH - 6);
-
-        // Supporting Pieces
-        // 0 slot
-        for (int i = 0; i < supportingPieces[0]; i++) {
-            g.setColor(Color.black);
-            g.fillRect(140 + (centerPiece[0]) * 35, (centerPiece[1]) * 35 - (i + 1) * 35, BLOCKLENGTH,
-                    BLOCKLENGTH);
-            g.setColor(COLOURS[type]);
-            g.fillRect((centerPiece[0]) * 35 + 143, (centerPiece[1]) * 35 - (i + 1) * 35 + 3, BLOCKLENGTH - 6,
-                    BLOCKLENGTH - 6);
-        }
-
-        // 1 slot
-        for (int i = 0; i < supportingPieces[1]; i++) {
-
-            g.setColor(Color.black);
-            g.fillRect(140 + (centerPiece[0]) * 35 + (i + 1) * 35, (centerPiece[1]) * 35 - (i + 1) * 35,
-                    BLOCKLENGTH,
-                    BLOCKLENGTH);
-            g.setColor(COLOURS[type]);
-            g.fillRect(140 + (centerPiece[0]) * 35 + (i + 1) * 35 + 3, (centerPiece[1]) * 35 - (i + 1) * 35 + 3,
-                    BLOCKLENGTH - 6, BLOCKLENGTH - 6);
-        }
-
-        // 2 slot
-        for (int i = 0; i < supportingPieces[2]; i++) {
-
-            g.setColor(Color.black);
-            g.fillRect(140 + (centerPiece[0]) * 35 + (i + 1) * 35, (centerPiece[1]) * 35, BLOCKLENGTH,
-                    BLOCKLENGTH);
-            g.setColor(COLOURS[type]);
-            g.fillRect((centerPiece[0]) * 35 + (i + 1) * 35 + 143, (centerPiece[1]) * 35 + 3, BLOCKLENGTH - 6,
-                    BLOCKLENGTH - 6);
-        }
-
-        // 3 slot
-        for (int i = 0; i < supportingPieces[3]; i++) {
-
-            g.setColor(Color.black);
-            g.fillRect(140 + (centerPiece[0]) * 35 + (i + 1) * 35, (centerPiece[1]) * 35 + (i + 1) * 35,
-                    BLOCKLENGTH,
-                    BLOCKLENGTH);
-            g.setColor(COLOURS[type]);
-            g.fillRect((centerPiece[0]) * 35 + (i + 1) * 35 + 143, (centerPiece[1]) * 35 + (i + 1) * 35 + 3,
-                    BLOCKLENGTH - 6, BLOCKLENGTH - 6);
-        }
-
-        // 4 slot
-        for (int i = 0; i < supportingPieces[4]; i++) {
-
-            g.setColor(Color.black);
-            g.fillRect(140 + (centerPiece[0]) * 35, (centerPiece[1]) * 35 + (i + 1) * 35, BLOCKLENGTH,
-                    BLOCKLENGTH);
-            g.setColor(COLOURS[type]);
-            g.fillRect((centerPiece[0]) * 35 + 143, (centerPiece[1]) * 35 + (i + 1) * 35 + 3, BLOCKLENGTH - 6,
-                    BLOCKLENGTH - 6);
-        }
-
-        // 5 slot
-        for (int i = 0; i < supportingPieces[5]; i++) {
-
-            g.setColor(Color.black);
-            g.fillRect(140 + (centerPiece[0]) * 35 - (i + 1) * 35, (centerPiece[1]) * 35 + (i + 1) * 35,
-                    BLOCKLENGTH,
-                    BLOCKLENGTH);
-            g.setColor(COLOURS[type]);
-            g.fillRect((centerPiece[0]) * 35 - (i + 1) * 35 + 143, (centerPiece[1]) * 35 + (i + 1) * 35 + 3,
-                    BLOCKLENGTH - 6,
-                    BLOCKLENGTH - 6);
-        }
-
-        // 6 slot
-        for (int i = 0; i < supportingPieces[6]; i++) {
-
-            g.setColor(Color.black);
-            g.fillRect(140 + (centerPiece[0]) * 35 - (i + 1) * 35, (centerPiece[1]) * 35, BLOCKLENGTH,
-                    BLOCKLENGTH);
-            g.setColor(COLOURS[type]);
-            g.fillRect((centerPiece[0]) * 35 - (i + 1) * 35 + 143, (centerPiece[1]) * 35 + 3, BLOCKLENGTH - 6,
-                    BLOCKLENGTH - 6);
-        }
-
-        // 7 slot
-        for (int i = 0; i < supportingPieces[7]; i++) {
-
-            g.setColor(Color.black);
-            g.fillRect(140 + (centerPiece[0]) * 35 - (i + 1) * 35, (centerPiece[1]) * 35 - (i + 1) * 35,
-                    BLOCKLENGTH,
-                    BLOCKLENGTH);
-            g.setColor(COLOURS[type]);
-            g.fillRect((centerPiece[0]) * 35 - (i + 1) * 35 + 143, (centerPiece[1]) * 35 - (i + 1) * 35 + 3,
-                    BLOCKLENGTH - 6,
-                    BLOCKLENGTH - 6);
-        }
-
     }
 
     // draws the next location of the block on the screen

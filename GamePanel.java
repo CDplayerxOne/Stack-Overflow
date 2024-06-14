@@ -27,8 +27,6 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
   public GameManager manager;
   private boolean infoScreen = true;
   private boolean menuScreen = false;
-
-  // gameRunning and finished game states not implemented yet
   private static boolean gameRunning = false;
   private static boolean end = false;
 
@@ -71,11 +69,21 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
     draw(graphics);
     g.drawImage(image, 0, 0, this);
 
-    if (GamePanel.gameRunning) {
+    if (menuScreen) {
       Font scoreFont = new Font("Arial", Font.BOLD, 45);
       g.setFont(scoreFont);
       g.setColor(Color.white);
+      g.drawString("1. " + Files.findScore(1), 380, 370);
+      g.drawString("2. " + Files.findScore(2), 380, 430);
+      g.drawString("3. " + Files.findScore(3), 380, 490);
+    }
+
+    if (gameRunning) {
+      Font scoreFont = new Font("Arial", Font.BOLD, 38);
+      g.setFont(scoreFont);
+      g.setColor(Color.white);
       g.drawString("" + GameManager.score, 700, 448);
+      g.drawString("" + Files.findScore(1), 700, 520);
     }
   }
 
@@ -89,7 +97,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
       g.drawImage(menuScreenBackground.getScaledInstance(1025, 770, Image.SCALE_DEFAULT), 0, 0, null);
     }
 
-    if (gameRunning) {
+    if (gameRunning || end) {
       g.drawImage(background, 0, 0, null);
 
       // grid lines
@@ -108,7 +116,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 
     if (end) {
       g.setColor(Color.BLACK);
-      g.drawRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
+      g.fillRect(300, 150, 300, 300);
       g.setColor(Color.RED);
       g.setFont(new Font("timesRoman", Font.PLAIN, 20));
       g.drawString("GAME OVER", 400, 300);
@@ -140,12 +148,15 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
           }
         }
         if (GameManager.next) {
+          GameManager.rowCollapse();
           GameManager.activateBlock(GameManager.nextblock);
           GameManager.generateBlock();
           GameManager.next = false;
+          if (GameManager.checkEnd()) {
+            setEnd();
+          }
         }
         move();
-        GameManager.rowCollapse();
         repaint();
         delta--;
       }
@@ -177,7 +188,10 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
   public static void setEnd() {
     gameRunning = false;
     end = true;
-
+    Files.writeFile(GameManager.score);
+    GameManager.score = 0;
+    PlayMusic.stopGameMusic();
+    PlayMusic.playEndMusic();
   }
 
   // method to change the state of the game
@@ -191,13 +205,25 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
       }
     }
 
-    // transition from memnu to start game
+    // transition from menu to start game
     if (menuScreen) {
       if (e.getKeyCode() == KeyEvent.VK_ENTER) {
         PlayMusic.stopMenuMusic();
         menuScreen = false;
         gameRunning = true;
         PlayMusic.playGameMusic();
+      }
+    }
+
+    if (end) {
+      if (e.getKeyCode() == KeyEvent.VK_SPACE) {
+        end = false;
+        menuScreen = true;
+        GameManager.reset();
+        PlayMusic.stopEndMusic();
+        PlayMusic.playMenuMusic();
+        GameManager.activateBlock(GameManager.nextblock);
+        GameManager.generateBlock();
       }
     }
 

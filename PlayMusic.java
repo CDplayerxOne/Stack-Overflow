@@ -107,4 +107,14 @@ public class PlayMusic {
             e.printStackTrace();
         }
     }
+
+    // stops the end music
+    static void stopEndMusic() {
+        if (endMusic != null && endMusic.isOpen()) {
+            // Stop the game music and reset its position to the beginning
+            endMusic.stop();
+            endMusic.setMicrosecondPosition(0);
+            endMusic.close();
+        }
+    }
 }

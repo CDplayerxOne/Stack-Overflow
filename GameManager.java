@@ -1,3 +1,4 @@
+import java.awt.Color;
 import java.awt.Graphics;
 import java.util.*;
 
@@ -5,7 +6,7 @@ public class GameManager {
 	public static ArrayList<Block> blocks = new ArrayList<>();
 	// grid
 	// 0 = empty, 1 = occupied
-	public static char[] colours = { 'r', 'b', 'y', 'p', 'g' };
+	public static final char[] COLOURS = { 'r', 'b', 'y', 'p', 'g' };
 	public static char[][] grid = new char[11][22];
 	public static int[] currentCenterPiece = new int[2];
 	public static ArrayList<int[]> currentSupportPieces = new ArrayList<int[]>();
@@ -13,7 +14,8 @@ public class GameManager {
 	public static boolean next = false;
 	public static Block nextblock = new Block((int) (Math.random() * 5));
 	public static Block hold, tempBlock;
-	public static int score = 0;
+	public static int score = -10;
+	public static int notHeld = 2;
 
 	// GameManager constructor
 	public GameManager() {
@@ -28,26 +30,44 @@ public class GameManager {
 		}
 	}
 
+	public static void reset() {
+		for (int i = 0; i < grid.length; i++) {
+			for (int j = 0; j < grid[i].length; j++) {
+				grid[i][j] = ' ';
+			}
+		}
+		next = false;
+		score = -10;
+		notHeld = 2;
+		blocks = new ArrayList<>();
+		currentSupportPieces = new ArrayList<int[]>();
+		currentBlock = 0;
+		hold = null;
+		tempBlock = null;
+	}
+
 	// generates a block object
 	public static void generateBlock() {
 		nextblock = new Block((int) (Math.random() * 5));
 	}
 
 	public static void holdBlock() {
+		if (notHeld > 1) {
 
-		if (hold == null) {
-			hold = new Block(blocks.get(blocks.size() - 1).getType());
-			for (int[] i : blocks.get(blocks.size() - 1).getSupportingPieces()) {
-				grid[i[0]][i[1]] = ' ';
+			notHeld = 0;
+			if (hold == null) {
+				hold = new Block(blocks.get(blocks.size() - 1).getType());
+				for (int[] i : blocks.get(blocks.size() - 1).getSupportingPieces()) {
+					grid[i[0]][i[1]] = ' ';
+				}
+				grid[currentCenterPiece[0]][currentCenterPiece[1]] = ' ';
+				blocks.remove(blocks.size() - 1);
+				activateBlock(nextblock);
+				generateBlock();
+			} else {
+				switchBlock();
 			}
-			grid[currentCenterPiece[0]][currentCenterPiece[1]] = ' ';
-			blocks.remove(blocks.get(blocks.size() - 1));
-			activateBlock(nextblock);
-			generateBlock();
-		} else {
-			switchBlock();
 		}
-
 	}
 
 	public static void switchBlock() {
@@ -59,7 +79,7 @@ public class GameManager {
 		}
 		grid[currentCenterPiece[0]][currentCenterPiece[1]] = ' ';
 		hold = new Block(blocks.get(blocks.size() - 1).getType());
-		blocks.remove(blocks.get(blocks.size() - 1));
+		blocks.remove(blocks.size() - 1);
 		activateBlock(tempBlock);
 
 	}
@@ -74,14 +94,14 @@ public class GameManager {
 		currentSupportPieces = b.getSupportingPieces();
 
 		// Update the position of the center piece on the grid
-		grid[b.getCenterPiece()[0]][b.getCenterPiece()[1]] = colours[b.getType()];
+		grid[b.getCenterPiece()[0]][b.getCenterPiece()[1]] = COLOURS[b.getType()];
 		// System.out.println("Center Piece: " +
 		// Arrays.toString(newBlock.getCenterPiece()));
 
 		// Update the position of each supporting piece on the grid
 		for (int[] piece : b.getSupportingPieces()) {
 			// System.out.println("Support Piece: " + Arrays.toString(piece));
-			grid[piece[0]][piece[1]] = colours[b.getType()];
+			grid[piece[0]][piece[1]] = COLOURS[b.getType()];
 		}
 		// System.out.println("current" + Arrays.toString(currentCenterPiece));
 		// ends game
@@ -93,6 +113,12 @@ public class GameManager {
 		// }
 		for (char[] item : grid) {
 			System.out.println(Arrays.toString(item));
+		}
+
+		notHeld++;
+
+		if (notHeld > 1) {
+			score += 10;
 		}
 	}
 
@@ -134,14 +160,14 @@ public class GameManager {
 				}
 
 				// Populate the grid with new position
-				grid[current.getCenterPiece()[0]][current.getCenterPiece()[1]] = colours[current.getType()];
+				grid[current.getCenterPiece()[0]][current.getCenterPiece()[1]] = COLOURS[current.getType()];
 				// System.out.println("Center Piece: " +
 				// Arrays.toString(current.getCenterPiece()));
 
 				// Update the position of each supporting piece on the grid
 				for (int[] piece : current.getSupportingPieces()) {
 					// System.out.println("Support Piece: " + Arrays.toString(piece));
-					grid[piece[0]][piece[1]] = colours[current.getType()];
+					grid[piece[0]][piece[1]] = COLOURS[current.getType()];
 				}
 				for (char[] item : grid) {
 					// System.out.println(Arrays.toString(item));
@@ -164,6 +190,19 @@ public class GameManager {
 		return grid;
 	}
 
+	public static boolean checkEnd() {
+
+		for (int i = 0; i < 11; i++) {
+			if (getGrid()[i][5] != ' ') {
+				return true;
+			}
+
+		}
+
+		return false;
+
+	}
+
 	public static void rowCollapse() {
 		// Loop through each row
 		for (int i = 5; i < 22; i++) {
@@ -177,24 +216,42 @@ public class GameManager {
 			}
 			// check if it's a full row. If it is reposition everything
 			if (fullRow) {
+				score += 100;
 				System.out.println("full row");
 				System.out.println(i);
-				fullRow = false;
-				char[][] temp = new char[11][21 - i];
-				for (int p = i; p < 22; p++) {
-					for (int j = 0; i < 11; j++) {
-						temp[j][p - i] = getGrid()[j][p];
+				// temp array stores everything above.
+				char[][] temp = new char[11][i];
+				// Loop through the grid
+				for (int p = 0; p < i; p++) {
+					for (int j = 0; j < 11; j++) {
+						// put everything in temp
+						temp[j][p] = getGrid()[j][p];
 					}
 				}
+				for (int j = 0; j < 11; j++) {
+					// clear the top row
+					temp[j][0] = ' ';
+				}
+				for (char[] array : temp) {
+					System.out.println(Arrays.toString(array));
+				}
+				for (int j = 0; j < 11; j++) {
+					System.out.println("hello");
+					for (int k = 1; k < i + 1; k++) {
+						// put them one row lower
+						grid[j][k] = temp[j][k - 1];
+
+					}
+				}
+
+				fullRow = false;
 			}
 		}
 	}
 
 	// draws the blocks
+
 	public void draw(Graphics g) {
-		for (Block block : blocks) {
-			block.draw(g);
-		}
 
 		nextblock.drawNextPos(g);
 
@@ -202,10 +259,34 @@ public class GameManager {
 			hold.drawHoldingPos(g);
 		}
 
-		// for (int i = 0; i < 11; i++) {
-		// for (int j = 0; j < 22; j++) {
-		// g.fillRect(140 + (i+1)*35, j*35, i, i);
-		// }
-		// }
+		for (int i = 0; i < 11; i++) {
+			for (int j = 0; j < 22; j++) {
+				if (getGrid()[i][j] != ' ') {
+					g.setColor(Color.BLACK);
+					g.fillRect(140 + i * 35, j * 35, 35, 35);
+					switch (getGrid()[i][j]) {
+						case 'r':
+							g.setColor(Color.RED);
+							break;
+						case 'b':
+							g.setColor(Color.CYAN);
+							break;
+						case 'y':
+							g.setColor(Color.YELLOW);
+							break;
+						case 'p':
+							g.setColor(Color.MAGENTA);
+							break;
+						case 'g':
+							g.setColor(Color.GREEN);
+							break;
+						default:
+							g.setColor(Color.BLACK);
+							break;
+					}
+					g.fillRect(143 + i * 35, j * 35 + 3, 29, 29);
+				}
+			}
+		}
 	}
 }
