@@ -39,6 +39,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 
     manager = new GameManager();
     // block = new Block(5, 2, 4);
+    GameManager.activateBlock(GameManager.nextblock);
     GameManager.generateBlock();
     // addMouseListener(new MouseAdapter() {
     // public void mousePressed(MouseEvent e) {
@@ -87,12 +88,12 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
       // grid lines
       for (int i = 0; i < 11; i++) {
         g.setColor(Color.LIGHT_GRAY);
-        g.drawLine(120 + i * 35, GAME_HEIGHT - 560, 120 + i * 35, GAME_HEIGHT);
+        g.drawLine(140 + i * 35, GAME_HEIGHT - 560, 140 + i * 35, GAME_HEIGHT);
 
       }
       for (int i = 0; i < 21; i++) {
         g.setColor(Color.LIGHT_GRAY);
-        g.drawLine(120, GAME_HEIGHT - 560 + i * 35, 505, GAME_HEIGHT - 560 + i * 35);
+        g.drawLine(140, GAME_HEIGHT - 560 + i * 35, 525, GAME_HEIGHT - 560 + i * 35);
 
       }
       manager.draw(g);
@@ -132,10 +133,12 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
           }
         }
         if (GameManager.next) {
+          GameManager.activateBlock(GameManager.nextblock);
           GameManager.generateBlock();
           GameManager.next = false;
         }
         move();
+        GameManager.rowCollapse();
         repaint();
         delta--;
       }
@@ -191,6 +194,13 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
       }
     }
 
+  }
+
+  public static boolean gameRunning() {
+    if (gameRunning) {
+      return true;
+    }
+    return false;
   }
 
 }

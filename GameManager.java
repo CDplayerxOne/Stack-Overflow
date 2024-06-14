@@ -11,6 +11,8 @@ public class GameManager {
 	public static ArrayList<int[]> currentSupportPieces = new ArrayList<int[]>();
 	public static int currentBlock = 0;
 	public static boolean next = false;
+	public static Block nextblock = new Block((int) (Math.random() * 5));
+	public static Block hold, tempBlock;
 
 	// GameManager constructor
 	public GameManager() {
@@ -27,49 +29,60 @@ public class GameManager {
 
 	// generates a block object
 	public static void generateBlock() {
-		System.out.println("generate");
-		// for (char[] item : grid) {
-		// System.out.println(Arrays.toString(item));
-		// }
+		nextblock = new Block((int) (Math.random() * 5));
+	}
 
-		// Create a new block
-		Block newBlock = new Block((int) (Math.random() * 5));
-		// Block newBlock = new Block(2);
+	public static void holdBlock() {
 
-		blocks.add(newBlock);
+		if (hold == null) {
+			hold = new Block(blocks.get(blocks.size() - 1).getType());
+			blocks.remove(blocks.get(blocks.size() - 1));
+			activateBlock(nextblock);
+			generateBlock();
+		} else {
+			switchBlock();
+		}
+
+	}
+
+	public static void switchBlock() {
+
+		tempBlock = hold;
+		hold = new Block(blocks.get(blocks.size() - 1).getType());
+		activateBlock(tempBlock);
+
+	}
+
+	public static void activateBlock(Block b) {
+		blocks.add(b);
 
 		currentBlock += 1;
 
 		// Populate current position
-		currentCenterPiece = newBlock.getCenterPiece();
-		currentSupportPieces = newBlock.getSupportingPieces();
+		currentCenterPiece = b.getCenterPiece();
+		currentSupportPieces = b.getSupportingPieces();
 
 		// Update the position of the center piece on the grid
-		grid[newBlock.getCenterPiece()[0]][newBlock.getCenterPiece()[1]] = colours[newBlock.getType()];
+		grid[b.getCenterPiece()[0]][b.getCenterPiece()[1]] = colours[b.getType()];
 		// System.out.println("Center Piece: " +
 		// Arrays.toString(newBlock.getCenterPiece()));
 
 		// Update the position of each supporting piece on the grid
-		for (int[] piece : newBlock.getSupportingPieces()) {
+		for (int[] piece : b.getSupportingPieces()) {
 			// System.out.println("Support Piece: " + Arrays.toString(piece));
-			grid[piece[0]][piece[1]] = colours[newBlock.getType()];
+			grid[piece[0]][piece[1]] = colours[b.getType()];
 		}
 		// System.out.println("current" + Arrays.toString(currentCenterPiece));
-		for (int i = 0; i < 11; i++) {
-			if (getGrid()[i][5] == ' ') {
-				break;
-			} else {
-				if (i == 10) {
-					// System.out.println("ran");
-					GamePanel.setEnd();
-				}
-			}
-
-		}
+		// ends game
+		// for (int i = 0; i < 11; i++) {
+		// if (getGrid()[i][5] != ' ') {
+		// GamePanel.setEnd();
+		// break;
+		// }
+		// }
 		for (char[] item : grid) {
 			System.out.println(Arrays.toString(item));
 		}
-
 	}
 
 	// returns the positions of all blocks
@@ -141,9 +154,28 @@ public class GameManager {
 	}
 
 	public static void rowCollapse() {
-		int fullRow;
-		for (int i = 0; i < 11; i++) {
-			// if()
+		// Loop through each row
+		for (int i = 5; i < 22; i++) {
+			boolean fullRow = true;
+			// if at least one spot that is blank, it is not a full row
+			for (int j = 0; j < 11; j++) {
+				if (getGrid()[j][i] == ' ') {
+					fullRow = false;
+					break;
+				}
+			}
+			// check if it's a full row. If it is reposition everything
+			if (fullRow) {
+				System.out.println("full row");
+				System.out.println(i);
+				fullRow = false;
+				char[][] temp = new char[11][21 - i];
+				for (int p = i; p < 22; p++) {
+					for (int j = 0; i < 11; j++) {
+						temp[j][p - i] = getGrid()[j][p];
+					}
+				}
+			}
 		}
 	}
 
@@ -153,5 +185,10 @@ public class GameManager {
 			block.draw(g);
 		}
 
+		nextblock.drawNextPos(g);
+
+		if (hold != null) {
+			hold.drawHoldingPos(g);
+		}
 	}
 }

@@ -19,13 +19,19 @@ public class Block extends Rectangle {
     private final int[][] TYPES = { { 1, 0, 1, 0, 1, 0, 1, 0 }, { 0, 1, 1, 0, 0, 0, 1, 1 }, { 2, 0, 0, 1, 1, 0, 0, 0 },
             { 1, 0, 1, 1, 1, 0, 0, 0 }, { 2, 0, 0, 0, 2, 0, 0, 0 } };
     private final int[][] STARTING_POSITIONS = { { 5, 1 }, { 5, 1 }, { 5, 2 }, { 5, 1 }, { 5, 2 } };
+    private final int[][] NEXT_POSITIONS = { { 13, 18 }, { 12, 18 }, { 12, 19 }, { 12, 18 }, { 12, 19 } };
+    private final int[][] HOLD_POSITIONS = { { -2, 18 }, { -2, 18 }, { -2, 19 }, { -2, 18 }, { -2, 19 } };
     private final Color[] COLOURS = { Color.RED, Color.CYAN, Color.YELLOW, Color.MAGENTA, Color.GREEN };
     private boolean isActive;
     private final int type;
     private int[] centerPiece;
     private int[] supportingPieces;
+    private int[] nextCenterPos;
+    private int[] holdCenterPos;
     public static final int BLOCKLENGTH = 35; // length of block
     private int internalCount = 0;
+
+    private boolean tester = true;
 
     // constructor for Block
     public Block(int type) {
@@ -35,22 +41,32 @@ public class Block extends Rectangle {
             case 0:
                 supportingPieces = TYPES[0];
                 centerPiece = STARTING_POSITIONS[0];
+                nextCenterPos = NEXT_POSITIONS[0];
+                holdCenterPos = HOLD_POSITIONS[0];
                 break;
             case 1:
                 supportingPieces = TYPES[1];
                 centerPiece = STARTING_POSITIONS[1];
+                nextCenterPos = NEXT_POSITIONS[1];
+                holdCenterPos = HOLD_POSITIONS[1];
                 break;
             case 2:
                 supportingPieces = TYPES[2];
                 centerPiece = STARTING_POSITIONS[2];
+                nextCenterPos = NEXT_POSITIONS[2];
+                holdCenterPos = HOLD_POSITIONS[2];
                 break;
             case 3:
                 supportingPieces = TYPES[3];
                 centerPiece = STARTING_POSITIONS[3];
+                nextCenterPos = NEXT_POSITIONS[3];
+                holdCenterPos = HOLD_POSITIONS[3];
                 break;
             case 4:
                 supportingPieces = TYPES[4];
                 centerPiece = STARTING_POSITIONS[4];
+                nextCenterPos = NEXT_POSITIONS[4];
+                holdCenterPos = HOLD_POSITIONS[4];
                 break;
 
             default:
@@ -164,6 +180,12 @@ public class Block extends Rectangle {
         // hold the block and change status
         if (e.getKeyCode() == KeyEvent.VK_SPACE) {
 
+            if (GamePanel.gameRunning()) {
+                if (tester) {
+                    GameManager.holdBlock();
+                    tester = false;
+                }
+            }
         }
     }
 
@@ -183,24 +205,32 @@ public class Block extends Rectangle {
         if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
             move(0, 0);
         }
+
+        if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
+        }
     }
 
     // moves the block according to its x and y velocity
     public void move(int xVel, int yVel) {
+        boolean ran = false;
+        centerPiece[1] += yVel;
         if (xVel > 0) {
             if (!checkHorizontalCollisionRight()) {
 
                 centerPiece[0] += xVel;
-                centerPiece[1] += yVel;
                 GameManager.updatePosition(1);
+                ran = true;
                 System.out.println(Arrays.toString(centerPiece));
             }
         } else {
             if (!checkHorizontalCollisionLeft()) {
                 centerPiece[0] += xVel;
-                centerPiece[1] += yVel;
                 GameManager.updatePosition(2);
+                ran = true;
             }
+        }
+        if (!ran) {
+            GameManager.updatePosition(0);
         }
     }
 
@@ -308,16 +338,17 @@ public class Block extends Rectangle {
                     System.out.println("collision 5");
                 }
                 isActive = false;
+                break;
 
             }
 
         }
 
         for (int i = 1; i < supportingPieces[2] + 1; i++) {
+
             if ((centerPiece[1] + 1) <= 21 && supportingPieces[2] != 0
                     && GameManager.getGrid()[centerPiece[0] + i][centerPiece[1] + 1] != ' ' && cont
                     && supportingPieces[3] == 0) {
-
                 collision = true;
                 cont = false;
                 if (isActive) {
@@ -328,6 +359,7 @@ public class Block extends Rectangle {
                     }
                 }
                 isActive = false;
+                break;
 
             }
         }
@@ -416,9 +448,14 @@ public class Block extends Rectangle {
             } else if (GameManager.getGrid()[getCenterPiece()[0] - supportingPieces[6]
                     - 1][getCenterPiece()[1]] != ' ') {
                 return true;
-            } else if (GameManager.getGrid()[getCenterPiece()[0] - supportingPieces[5] - 1][getCenterPiece()[1]
-                    + 1] != ' ') {
-                return true;
+
+            } else if (getCenterPiece()[1] > 22) {
+
+                if (GameManager.getGrid()[getCenterPiece()[0] - supportingPieces[5] - 1][getCenterPiece()[1]
+                        + 1] != ' ') {
+                    return true;
+                }
+
             } else if (supportingPieces[0] > supportingPieces[7]) {
 
                 for (int i = 0; i < supportingPieces[0]; i++) {
@@ -502,18 +539,18 @@ public class Block extends Rectangle {
 
         // Center Piece
         g.setColor(Color.black);
-        g.fillRect(120 + (centerPiece[0]) * 35, (centerPiece[1]) * 35, BLOCKLENGTH, BLOCKLENGTH);
+        g.fillRect(140 + (centerPiece[0]) * 35, (centerPiece[1]) * 35, BLOCKLENGTH, BLOCKLENGTH);
         g.setColor(COLOURS[type]);
-        g.fillRect((centerPiece[0]) * 35 + 123, (centerPiece[1]) * 35 + 3, BLOCKLENGTH - 6, BLOCKLENGTH - 6);
+        g.fillRect((centerPiece[0]) * 35 + 143, (centerPiece[1]) * 35 + 3, BLOCKLENGTH - 6, BLOCKLENGTH - 6);
 
         // Supporting Pieces
         // 0 slot
         for (int i = 0; i < supportingPieces[0]; i++) {
             g.setColor(Color.black);
-            g.fillRect(120 + (centerPiece[0]) * 35, (centerPiece[1]) * 35 - (i + 1) * 35, BLOCKLENGTH,
+            g.fillRect(140 + (centerPiece[0]) * 35, (centerPiece[1]) * 35 - (i + 1) * 35, BLOCKLENGTH,
                     BLOCKLENGTH);
             g.setColor(COLOURS[type]);
-            g.fillRect((centerPiece[0]) * 35 + 123, (centerPiece[1]) * 35 - (i + 1) * 35 + 3, BLOCKLENGTH - 6,
+            g.fillRect((centerPiece[0]) * 35 + 143, (centerPiece[1]) * 35 - (i + 1) * 35 + 3, BLOCKLENGTH - 6,
                     BLOCKLENGTH - 6);
         }
 
@@ -521,11 +558,11 @@ public class Block extends Rectangle {
         for (int i = 0; i < supportingPieces[1]; i++) {
 
             g.setColor(Color.black);
-            g.fillRect(120 + (centerPiece[0]) * 35 + (i + 1) * 35, (centerPiece[1]) * 35 - (i + 1) * 35,
+            g.fillRect(140 + (centerPiece[0]) * 35 + (i + 1) * 35, (centerPiece[1]) * 35 - (i + 1) * 35,
                     BLOCKLENGTH,
                     BLOCKLENGTH);
             g.setColor(COLOURS[type]);
-            g.fillRect(120 + (centerPiece[0]) * 35 + (i + 1) * 35 + 3, (centerPiece[1]) * 35 - (i + 1) * 35 + 3,
+            g.fillRect(140 + (centerPiece[0]) * 35 + (i + 1) * 35 + 3, (centerPiece[1]) * 35 - (i + 1) * 35 + 3,
                     BLOCKLENGTH - 6, BLOCKLENGTH - 6);
         }
 
@@ -533,10 +570,10 @@ public class Block extends Rectangle {
         for (int i = 0; i < supportingPieces[2]; i++) {
 
             g.setColor(Color.black);
-            g.fillRect(120 + (centerPiece[0]) * 35 + (i + 1) * 35, (centerPiece[1]) * 35, BLOCKLENGTH,
+            g.fillRect(140 + (centerPiece[0]) * 35 + (i + 1) * 35, (centerPiece[1]) * 35, BLOCKLENGTH,
                     BLOCKLENGTH);
             g.setColor(COLOURS[type]);
-            g.fillRect((centerPiece[0]) * 35 + (i + 1) * 35 + 123, (centerPiece[1]) * 35 + 3, BLOCKLENGTH - 6,
+            g.fillRect((centerPiece[0]) * 35 + (i + 1) * 35 + 143, (centerPiece[1]) * 35 + 3, BLOCKLENGTH - 6,
                     BLOCKLENGTH - 6);
         }
 
@@ -544,11 +581,11 @@ public class Block extends Rectangle {
         for (int i = 0; i < supportingPieces[3]; i++) {
 
             g.setColor(Color.black);
-            g.fillRect(120 + (centerPiece[0]) * 35 + (i + 1) * 35, (centerPiece[1]) * 35 + (i + 1) * 35,
+            g.fillRect(140 + (centerPiece[0]) * 35 + (i + 1) * 35, (centerPiece[1]) * 35 + (i + 1) * 35,
                     BLOCKLENGTH,
                     BLOCKLENGTH);
             g.setColor(COLOURS[type]);
-            g.fillRect((centerPiece[0]) * 35 + (i + 1) * 35 + 123, (centerPiece[1]) * 35 + (i + 1) * 35 + 3,
+            g.fillRect((centerPiece[0]) * 35 + (i + 1) * 35 + 143, (centerPiece[1]) * 35 + (i + 1) * 35 + 3,
                     BLOCKLENGTH - 6, BLOCKLENGTH - 6);
         }
 
@@ -556,10 +593,10 @@ public class Block extends Rectangle {
         for (int i = 0; i < supportingPieces[4]; i++) {
 
             g.setColor(Color.black);
-            g.fillRect(120 + (centerPiece[0]) * 35, (centerPiece[1]) * 35 + (i + 1) * 35, BLOCKLENGTH,
+            g.fillRect(140 + (centerPiece[0]) * 35, (centerPiece[1]) * 35 + (i + 1) * 35, BLOCKLENGTH,
                     BLOCKLENGTH);
             g.setColor(COLOURS[type]);
-            g.fillRect((centerPiece[0]) * 35 + 123, (centerPiece[1]) * 35 + (i + 1) * 35 + 3, BLOCKLENGTH - 6,
+            g.fillRect((centerPiece[0]) * 35 + 143, (centerPiece[1]) * 35 + (i + 1) * 35 + 3, BLOCKLENGTH - 6,
                     BLOCKLENGTH - 6);
         }
 
@@ -567,11 +604,11 @@ public class Block extends Rectangle {
         for (int i = 0; i < supportingPieces[5]; i++) {
 
             g.setColor(Color.black);
-            g.fillRect(120 + (centerPiece[0]) * 35 - (i + 1) * 35, (centerPiece[1]) * 35 + (i + 1) * 35,
+            g.fillRect(140 + (centerPiece[0]) * 35 - (i + 1) * 35, (centerPiece[1]) * 35 + (i + 1) * 35,
                     BLOCKLENGTH,
                     BLOCKLENGTH);
             g.setColor(COLOURS[type]);
-            g.fillRect((centerPiece[0]) * 35 - (i + 1) * 35 + 123, (centerPiece[1]) * 35 + (i + 1) * 35 + 3,
+            g.fillRect((centerPiece[0]) * 35 - (i + 1) * 35 + 143, (centerPiece[1]) * 35 + (i + 1) * 35 + 3,
                     BLOCKLENGTH - 6,
                     BLOCKLENGTH - 6);
         }
@@ -580,10 +617,10 @@ public class Block extends Rectangle {
         for (int i = 0; i < supportingPieces[6]; i++) {
 
             g.setColor(Color.black);
-            g.fillRect(120 + (centerPiece[0]) * 35 - (i + 1) * 35, (centerPiece[1]) * 35, BLOCKLENGTH,
+            g.fillRect(140 + (centerPiece[0]) * 35 - (i + 1) * 35, (centerPiece[1]) * 35, BLOCKLENGTH,
                     BLOCKLENGTH);
             g.setColor(COLOURS[type]);
-            g.fillRect((centerPiece[0]) * 35 - (i + 1) * 35 + 123, (centerPiece[1]) * 35 + 3, BLOCKLENGTH - 6,
+            g.fillRect((centerPiece[0]) * 35 - (i + 1) * 35 + 143, (centerPiece[1]) * 35 + 3, BLOCKLENGTH - 6,
                     BLOCKLENGTH - 6);
         }
 
@@ -591,15 +628,226 @@ public class Block extends Rectangle {
         for (int i = 0; i < supportingPieces[7]; i++) {
 
             g.setColor(Color.black);
-            g.fillRect(120 + (centerPiece[0]) * 35 - (i + 1) * 35, (centerPiece[1]) * 35 - (i + 1) * 35,
+            g.fillRect(140 + (centerPiece[0]) * 35 - (i + 1) * 35, (centerPiece[1]) * 35 - (i + 1) * 35,
                     BLOCKLENGTH,
                     BLOCKLENGTH);
             g.setColor(COLOURS[type]);
-            g.fillRect((centerPiece[0]) * 35 - (i + 1) * 35 + 123, (centerPiece[1]) * 35 - (i + 1) * 35 + 3,
+            g.fillRect((centerPiece[0]) * 35 - (i + 1) * 35 + 143, (centerPiece[1]) * 35 - (i + 1) * 35 + 3,
                     BLOCKLENGTH - 6,
                     BLOCKLENGTH - 6);
         }
 
     }
 
+    // draws the next location of the block on the screen
+    public void drawNextPos(Graphics g) {
+
+        // Center Piece
+        g.setColor(Color.black);
+        g.fillRect(120 + (nextCenterPos[0]) * 35, (nextCenterPos[1]) * 35, BLOCKLENGTH, BLOCKLENGTH);
+        g.setColor(COLOURS[type]);
+        g.fillRect((nextCenterPos[0]) * 35 + 123, (nextCenterPos[1]) * 35 + 3, BLOCKLENGTH - 6, BLOCKLENGTH - 6);
+
+        // Supporting Pieces
+        // 0 slot
+        for (int i = 0; i < supportingPieces[0]; i++) {
+            g.setColor(Color.black);
+            g.fillRect(120 + (nextCenterPos[0]) * 35, (nextCenterPos[1]) * 35 - (i + 1) * 35, BLOCKLENGTH,
+                    BLOCKLENGTH);
+            g.setColor(COLOURS[type]);
+            g.fillRect((nextCenterPos[0]) * 35 + 123, (nextCenterPos[1]) * 35 - (i + 1) * 35 + 3, BLOCKLENGTH - 6,
+                    BLOCKLENGTH - 6);
+        }
+
+        // 1 slot
+        for (int i = 0; i < supportingPieces[1]; i++) {
+
+            g.setColor(Color.black);
+            g.fillRect(120 + (nextCenterPos[0]) * 35 + (i + 1) * 35, (nextCenterPos[1]) * 35 - (i + 1) * 35,
+                    BLOCKLENGTH,
+                    BLOCKLENGTH);
+            g.setColor(COLOURS[type]);
+            g.fillRect(120 + (nextCenterPos[0]) * 35 + (i + 1) * 35 + 3,
+                    (nextCenterPos[1]) * 35 - (i + 1) * 35 + 3,
+                    BLOCKLENGTH - 6, BLOCKLENGTH - 6);
+        }
+
+        // 2 slot
+        for (int i = 0; i < supportingPieces[2]; i++) {
+
+            g.setColor(Color.black);
+            g.fillRect(120 + (nextCenterPos[0]) * 35 + (i + 1) * 35, (nextCenterPos[1]) * 35, BLOCKLENGTH,
+                    BLOCKLENGTH);
+            g.setColor(COLOURS[type]);
+            g.fillRect((nextCenterPos[0]) * 35 + (i + 1) * 35 + 123, (nextCenterPos[1]) * 35 + 3, BLOCKLENGTH - 6,
+                    BLOCKLENGTH - 6);
+        }
+
+        // 3 slot
+        for (int i = 0; i < supportingPieces[3]; i++) {
+
+            g.setColor(Color.black);
+            g.fillRect(120 + (nextCenterPos[0]) * 35 + (i + 1) * 35, (nextCenterPos[1]) * 35 + (i + 1) * 35,
+                    BLOCKLENGTH,
+                    BLOCKLENGTH);
+            g.setColor(COLOURS[type]);
+            g.fillRect((nextCenterPos[0]) * 35 + (i + 1) * 35 + 123, (nextCenterPos[1]) * 35 + (i + 1) * 35 + 3,
+                    BLOCKLENGTH - 6, BLOCKLENGTH - 6);
+        }
+
+        // 4 slot
+        for (int i = 0; i < supportingPieces[4]; i++) {
+
+            g.setColor(Color.black);
+            g.fillRect(120 + (nextCenterPos[0]) * 35, (nextCenterPos[1]) * 35 + (i + 1) * 35, BLOCKLENGTH,
+                    BLOCKLENGTH);
+            g.setColor(COLOURS[type]);
+            g.fillRect((nextCenterPos[0]) * 35 + 123, (nextCenterPos[1]) * 35 + (i + 1) * 35 + 3, BLOCKLENGTH - 6,
+                    BLOCKLENGTH - 6);
+        }
+
+        // 5 slot
+        for (int i = 0; i < supportingPieces[5]; i++) {
+
+            g.setColor(Color.black);
+            g.fillRect(120 + (nextCenterPos[0]) * 35 - (i + 1) * 35, (nextCenterPos[1]) * 35 + (i + 1) * 35,
+                    BLOCKLENGTH,
+                    BLOCKLENGTH);
+            g.setColor(COLOURS[type]);
+            g.fillRect((nextCenterPos[0]) * 35 - (i + 1) * 35 + 123, (nextCenterPos[1]) * 35 + (i + 1) * 35 + 3,
+                    BLOCKLENGTH - 6,
+                    BLOCKLENGTH - 6);
+        }
+
+        // 6 slot
+        for (int i = 0; i < supportingPieces[6]; i++) {
+
+            g.setColor(Color.black);
+            g.fillRect(120 + (nextCenterPos[0]) * 35 - (i + 1) * 35, (nextCenterPos[1]) * 35, BLOCKLENGTH,
+                    BLOCKLENGTH);
+            g.setColor(COLOURS[type]);
+            g.fillRect((nextCenterPos[0]) * 35 - (i + 1) * 35 + 123, (nextCenterPos[1]) * 35 + 3, BLOCKLENGTH - 6,
+                    BLOCKLENGTH - 6);
+        }
+
+        // 7 slot
+        for (int i = 0; i < supportingPieces[7]; i++) {
+
+            g.setColor(Color.black);
+            g.fillRect(120 + (nextCenterPos[0]) * 35 - (i + 1) * 35, (nextCenterPos[1]) * 35 - (i + 1) * 35,
+                    BLOCKLENGTH,
+                    BLOCKLENGTH);
+            g.setColor(COLOURS[type]);
+            g.fillRect((nextCenterPos[0]) * 35 - (i + 1) * 35 + 123, (nextCenterPos[1]) * 35 - (i + 1) * 35 + 3,
+                    BLOCKLENGTH - 6,
+                    BLOCKLENGTH - 6);
+        }
+
+    }
+
+    // draws the holding location of the block on the screen
+    public void drawHoldingPos(Graphics g) {
+
+        // Center Piece
+        g.setColor(Color.black);
+        g.fillRect(120 + (holdCenterPos[0]) * 35, (holdCenterPos[1]) * 35, BLOCKLENGTH, BLOCKLENGTH);
+        g.setColor(COLOURS[type]);
+        g.fillRect((holdCenterPos[0]) * 35 + 123, (holdCenterPos[1]) * 35 + 3, BLOCKLENGTH - 6, BLOCKLENGTH - 6);
+
+        // Supporting Pieces
+        // 0 slot
+        for (int i = 0; i < supportingPieces[0]; i++) {
+            g.setColor(Color.black);
+            g.fillRect(120 + (holdCenterPos[0]) * 35, (holdCenterPos[1]) * 35 - (i + 1) * 35, BLOCKLENGTH,
+                    BLOCKLENGTH);
+            g.setColor(COLOURS[type]);
+            g.fillRect((holdCenterPos[0]) * 35 + 123, (holdCenterPos[1]) * 35 - (i + 1) * 35 + 3, BLOCKLENGTH - 6,
+                    BLOCKLENGTH - 6);
+        }
+
+        // 1 slot
+        for (int i = 0; i < supportingPieces[1]; i++) {
+
+            g.setColor(Color.black);
+            g.fillRect(120 + (holdCenterPos[0]) * 35 + (i + 1) * 35, (holdCenterPos[1]) * 35 - (i + 1) * 35,
+                    BLOCKLENGTH,
+                    BLOCKLENGTH);
+            g.setColor(COLOURS[type]);
+            g.fillRect(120 + (holdCenterPos[0]) * 35 + (i + 1) * 35 + 3,
+                    (holdCenterPos[1]) * 35 - (i + 1) * 35 + 3,
+                    BLOCKLENGTH - 6, BLOCKLENGTH - 6);
+        }
+
+        // 2 slot
+        for (int i = 0; i < supportingPieces[2]; i++) {
+
+            g.setColor(Color.black);
+            g.fillRect(120 + (holdCenterPos[0]) * 35 + (i + 1) * 35, (holdCenterPos[1]) * 35, BLOCKLENGTH,
+                    BLOCKLENGTH);
+            g.setColor(COLOURS[type]);
+            g.fillRect((holdCenterPos[0]) * 35 + (i + 1) * 35 + 123, (holdCenterPos[1]) * 35 + 3, BLOCKLENGTH - 6,
+                    BLOCKLENGTH - 6);
+        }
+
+        // 3 slot
+        for (int i = 0; i < supportingPieces[3]; i++) {
+
+            g.setColor(Color.black);
+            g.fillRect(120 + (holdCenterPos[0]) * 35 + (i + 1) * 35, (holdCenterPos[1]) * 35 + (i + 1) * 35,
+                    BLOCKLENGTH,
+                    BLOCKLENGTH);
+            g.setColor(COLOURS[type]);
+            g.fillRect((holdCenterPos[0]) * 35 + (i + 1) * 35 + 123, (holdCenterPos[1]) * 35 + (i + 1) * 35 + 3,
+                    BLOCKLENGTH - 6, BLOCKLENGTH - 6);
+        }
+
+        // 4 slot
+        for (int i = 0; i < supportingPieces[4]; i++) {
+
+            g.setColor(Color.black);
+            g.fillRect(120 + (holdCenterPos[0]) * 35, (holdCenterPos[1]) * 35 + (i + 1) * 35, BLOCKLENGTH,
+                    BLOCKLENGTH);
+            g.setColor(COLOURS[type]);
+            g.fillRect((holdCenterPos[0]) * 35 + 123, (holdCenterPos[1]) * 35 + (i + 1) * 35 + 3, BLOCKLENGTH - 6,
+                    BLOCKLENGTH - 6);
+        }
+
+        // 5 slot
+        for (int i = 0; i < supportingPieces[5]; i++) {
+
+            g.setColor(Color.black);
+            g.fillRect(120 + (holdCenterPos[0]) * 35 - (i + 1) * 35, (holdCenterPos[1]) * 35 + (i + 1) * 35,
+                    BLOCKLENGTH,
+                    BLOCKLENGTH);
+            g.setColor(COLOURS[type]);
+            g.fillRect((holdCenterPos[0]) * 35 - (i + 1) * 35 + 123, (holdCenterPos[1]) * 35 + (i + 1) * 35 + 3,
+                    BLOCKLENGTH - 6,
+                    BLOCKLENGTH - 6);
+        }
+
+        // 6 slot
+        for (int i = 0; i < supportingPieces[6]; i++) {
+
+            g.setColor(Color.black);
+            g.fillRect(120 + (holdCenterPos[0]) * 35 - (i + 1) * 35, (holdCenterPos[1]) * 35, BLOCKLENGTH,
+                    BLOCKLENGTH);
+            g.setColor(COLOURS[type]);
+            g.fillRect((holdCenterPos[0]) * 35 - (i + 1) * 35 + 123, (holdCenterPos[1]) * 35 + 3, BLOCKLENGTH - 6,
+                    BLOCKLENGTH - 6);
+        }
+
+        // 7 slot
+        for (int i = 0; i < supportingPieces[7]; i++) {
+
+            g.setColor(Color.black);
+            g.fillRect(120 + (holdCenterPos[0]) * 35 - (i + 1) * 35, (holdCenterPos[1]) * 35 - (i + 1) * 35,
+                    BLOCKLENGTH,
+                    BLOCKLENGTH);
+            g.setColor(COLOURS[type]);
+            g.fillRect((holdCenterPos[0]) * 35 - (i + 1) * 35 + 123, (holdCenterPos[1]) * 35 - (i + 1) * 35 + 3,
+                    BLOCKLENGTH - 6,
+                    BLOCKLENGTH - 6);
+        }
+
+    }
 }
