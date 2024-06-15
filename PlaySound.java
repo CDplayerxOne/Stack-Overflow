@@ -10,11 +10,15 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import java.io.File;
 
-public class PlayMusic {
+public class PlaySound {
     // declare objects
     private static Clip menuMusic;
     private static Clip gameMusic;
     private static Clip endMusic;
+    private static Clip blockPlace;
+    private static Clip buttonClick;
+    private static Clip holdBlock;
+    private static Clip rowClear;
 
     // plays menu music
     static void playMenuMusic() {
@@ -117,4 +121,73 @@ public class PlayMusic {
             endMusic.close();
         }
     }
+
+    // plays the block place sound effect
+    static void playBlockPlace() {
+        try {
+            // open blockPlace file
+            File file = new File("SoundEffects/blockPlace.wav");
+            AudioInputStream audio = AudioSystem.getAudioInputStream(file);
+            blockPlace = AudioSystem.getClip();
+
+            // open and play block place sound effect
+            blockPlace.open(audio);
+            blockPlace.start();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    // plays the buttonClick sound effect
+    static void playButtonClick() {
+        try {
+            // open buttonClick file
+            File file = new File("SoundEffects/buttonClick.wav");
+            AudioInputStream audio = AudioSystem.getAudioInputStream(file);
+            buttonClick = AudioSystem.getClip();
+
+            // open and play buttonClick sound effect
+            buttonClick.open(audio);
+            buttonClick.start();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    // plays the holdBlock sound effect
+    static void PlayholdBlock() {
+        try {
+            // open holdBlock file
+            File file = new File("SoundEffects/buttonClick.wav");
+            AudioInputStream audio = AudioSystem.getAudioInputStream(file);
+            holdBlock = AudioSystem.getClip();
+
+            // open and play holdBlock sound effect
+            holdBlock.open(audio);
+            holdBlock.start();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    // plays the holdBlock sound effect
+    static void PlayRowClear() {
+        try {
+            // open rowClear file
+            File file = new File("SoundEffects/buttonClick.wav");
+            AudioInputStream audio = AudioSystem.getAudioInputStream(file);
+            rowClear = AudioSystem.getClip();
+
+            // open and play rowClear sound effect
+            rowClear.open(audio);
+            rowClear.start();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 }

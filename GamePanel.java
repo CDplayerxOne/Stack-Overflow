@@ -21,6 +21,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
   public Image background;
   public Image infoScreenBackground;
   public Image menuScreenBackground;
+  public Image endScreen;
   public Graphics graphics;
   public Block block;
 
@@ -29,6 +30,8 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
   private boolean menuScreen = false;
   private static boolean gameRunning = false;
   private static boolean end = false;
+  private static boolean ranEnd = false;
+  Font scoreFont;
 
   public GamePanel() {
     // ball = new PlayerBall(GAME_WIDTH / 2, GAME_HEIGHT / 2);
@@ -53,11 +56,16 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
       background = ImageIO.read(new File("Images/Background.png"));
       infoScreenBackground = ImageIO.read(new File("Images/infoScreen.png"));
       menuScreenBackground = ImageIO.read(new File("Images/menuScreen.png"));
+      endScreen = ImageIO.read(new File("Images/EndScreen.png"));
     } catch (Exception x) {
     }
 
-    PlayMusic.playMenuMusic();
+    PlaySound.playMenuMusic();
 
+  }
+
+  public static void toggleEnd() {
+    ranEnd = !ranEnd;
   }
 
   // paints aspects depending on game state
@@ -70,7 +78,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
     g.drawImage(image, 0, 0, this);
 
     if (menuScreen) {
-      Font scoreFont = new Font("Arial", Font.BOLD, 45);
+      scoreFont = new Font("Arial", Font.BOLD, 45);
       g.setFont(scoreFont);
       g.setColor(Color.white);
       g.drawString("1. " + Files.findScore(1), 380, 370);
@@ -78,12 +86,20 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
       g.drawString("3. " + Files.findScore(3), 380, 490);
     }
 
-    if (gameRunning || end) {
-      Font scoreFont = new Font("Arial", Font.BOLD, 38);
+    if (gameRunning) {
+      scoreFont = new Font("Arial", Font.BOLD, 40);
       g.setFont(scoreFont);
       g.setColor(Color.white);
       g.drawString("" + GameManager.score, 700, 448);
       g.drawString("" + Files.findScore(1), 700, 520);
+    }
+
+    if (end) {
+      scoreFont = new Font("Arial", Font.BOLD, 55);
+      g.drawImage(endScreen, 175, 175, null);
+      g.setFont(scoreFont);
+      g.setColor(Color.white);
+      g.drawString("" + GameManager.score, 490, 500);
     }
   }
 
@@ -112,15 +128,6 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 
       }
       manager.draw(g);
-    }
-
-    if (end) {
-      g.setColor(Color.BLACK);
-      g.fillRect(300, 150, 300, 300);
-      g.setColor(Color.RED);
-      g.setFont(new Font("timesRoman", Font.PLAIN, 20));
-      g.drawString("GAME OVER", 400, 300);
-
     }
   }
 
@@ -186,12 +193,16 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 
   // Ends the game
   public static void setEnd() {
-    gameRunning = false;
-    end = true;
-    Files.writeFile(GameManager.score);
-    GameManager.score = 0;
-    PlayMusic.stopGameMusic();
-    PlayMusic.playEndMusic();
+    if (!ranEnd) {
+      ranEnd = true;
+      System.out.println("set end");
+      gameRunning = false;
+      end = true;
+      Files.writeFile(GameManager.score);
+      GameManager.score = 0;
+      PlaySound.stopGameMusic();
+      PlaySound.playEndMusic();
+    }
   }
 
   // method to change the state of the game
@@ -200,6 +211,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
     // trasition from start info screen to menu screen
     if (infoScreen) {
       if (e.getKeyCode() == KeyEvent.VK_SPACE) {
+        PlaySound.playButtonClick();
         infoScreen = false;
         menuScreen = true;
       }
@@ -208,10 +220,11 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
     // transition from menu to start game
     if (menuScreen) {
       if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-        PlayMusic.stopMenuMusic();
+        PlaySound.stopMenuMusic();
+        PlaySound.playGameMusic();
+        PlaySound.playButtonClick();
         menuScreen = false;
         gameRunning = true;
-        PlayMusic.playGameMusic();
       }
     }
 
@@ -220,8 +233,9 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
         end = false;
         menuScreen = true;
         GameManager.reset();
-        PlayMusic.stopEndMusic();
-        PlayMusic.playMenuMusic();
+        PlaySound.stopEndMusic();
+        PlaySound.playMenuMusic();
+        PlaySound.playButtonClick();
         GameManager.activateBlock(GameManager.nextblock);
         GameManager.generateBlock();
       }

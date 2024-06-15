@@ -44,6 +44,7 @@ public class GameManager {
 		currentBlock = 0;
 		hold = null;
 		tempBlock = null;
+		GamePanel.toggleEnd();
 	}
 
 	// generates a block object
@@ -55,6 +56,7 @@ public class GameManager {
 		if (notHeld > 1) {
 
 			notHeld = 0;
+			PlaySound.PlayholdBlock();
 			if (hold == null) {
 				hold = new Block(blocks.get(blocks.size() - 1).getType());
 				for (int[] i : blocks.get(blocks.size() - 1).getSupportingPieces()) {
@@ -120,6 +122,7 @@ public class GameManager {
 		if (notHeld > 1) {
 			score += 10;
 		}
+
 	}
 
 	// returns the positions of all blocks
@@ -142,11 +145,13 @@ public class GameManager {
 
 				if (type == 1 && currentCenterPiece[0] - 1 >= 0 && currentCenterPiece[1] >= 0) {
 					grid[currentCenterPiece[0] - 1][currentCenterPiece[1]] = ' ';
+					System.out.println(grid[currentCenterPiece[0] - 1][currentCenterPiece[1]] + " why");
 				}
 
 				if (type == 2 && currentCenterPiece[0] + 1 < 11 && currentCenterPiece[1] < 21) {
 
 					grid[currentCenterPiece[0] + 1][currentCenterPiece[1]] = ' ';
+					System.out.println(grid[currentCenterPiece[0] + 1][currentCenterPiece[1]] + " how");
 				}
 
 				// This is the same fix as for the vertical drag above. However, it just doesn't
@@ -216,6 +221,7 @@ public class GameManager {
 			}
 			// check if it's a full row. If it is reposition everything
 			if (fullRow) {
+				PlaySound.PlayRowClear();
 				score += 100;
 				System.out.println("full row");
 				System.out.println(i);

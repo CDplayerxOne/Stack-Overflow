@@ -154,7 +154,7 @@ public class Block extends Rectangle {
         // accelerate downwards
         if (e.getKeyCode() == KeyEvent.VK_DOWN) {
             System.out.println(type + " " + isActive + "active");
-            if (isActive) {
+            if (isActive && !checkVerticalCollision()) {
                 move(0, 1);
             }
         }
@@ -262,6 +262,8 @@ public class Block extends Rectangle {
             if (isActive) {
                 GameManager.next = true;
                 System.out.println("collision 1");
+                System.out.println(
+                        GameManager.getGrid()[centerPiece[0]][centerPiece[1] + supportingPieces[4] + 1] + " wave");
                 for (char[] item : GameManager.getGrid()) {
                     System.out.println(Arrays.toString(item));
                 }
@@ -279,6 +281,7 @@ public class Block extends Rectangle {
             if (isActive) {
                 GameManager.next = true;
                 System.out.println("collision 2");
+                System.out.println(GameManager.getGrid()[centerPiece[0] + 1][centerPiece[1] + 2] + " wave");
             }
             isActive = false;
 
@@ -294,6 +297,7 @@ public class Block extends Rectangle {
             if (isActive) {
                 GameManager.next = true;
                 System.out.println("collision 3");
+                System.out.println(GameManager.getGrid()[centerPiece[0] - 1][centerPiece[1] + 2] + " wave");
             }
             isActive = false;
 
@@ -309,6 +313,7 @@ public class Block extends Rectangle {
             if (isActive) {
                 GameManager.next = true;
                 System.out.println("collision 4");
+                System.out.println(GameManager.getGrid()[centerPiece[0]][centerPiece[1] + 1] + " wave");
                 for (char[] item : GameManager.getGrid()) {
                     System.out.println(Arrays.toString(item));
                 }
@@ -329,6 +334,7 @@ public class Block extends Rectangle {
                 cont = false;
                 if (isActive) {
                     GameManager.next = true;
+                    System.out.println(GameManager.getGrid()[centerPiece[0] - i][centerPiece[1] + 1] + " wave");
                     System.out.println("collision 5");
                 }
                 isActive = false;
@@ -348,6 +354,7 @@ public class Block extends Rectangle {
                 if (isActive) {
                     GameManager.next = true;
                     System.out.println("collision 6");
+                    System.out.println(GameManager.getGrid()[centerPiece[0] + i][centerPiece[1] + 1] + " wave");
                     for (char[] item : GameManager.getGrid()) {
                         System.out.println(Arrays.toString(item));
                     }
@@ -367,6 +374,7 @@ public class Block extends Rectangle {
             if (isActive) {
                 GameManager.next = true;
                 System.out.println("collision 7");
+                System.out.println(GameManager.getGrid()[centerPiece[0] - 1][centerPiece[1]] + " wave");
             }
             isActive = false;
 
@@ -381,6 +389,7 @@ public class Block extends Rectangle {
             if (isActive) {
                 GameManager.next = true;
                 System.out.println("collision 8");
+                System.out.println(GameManager.getGrid()[centerPiece[0]][centerPiece[1]] + " wave");
             }
             isActive = false;
         }
