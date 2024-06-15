@@ -160,7 +160,7 @@ public class PlaySound {
     static void PlayholdBlock() {
         try {
             // open holdBlock file
-            File file = new File("SoundEffects/buttonClick.wav");
+            File file = new File("SoundEffects/holdBlock.wav");
             AudioInputStream audio = AudioSystem.getAudioInputStream(file);
             holdBlock = AudioSystem.getClip();
 
@@ -177,7 +177,7 @@ public class PlaySound {
     static void PlayRowClear() {
         try {
             // open rowClear file
-            File file = new File("SoundEffects/buttonClick.wav");
+            File file = new File("SoundEffects/rowClear.wav");
             AudioInputStream audio = AudioSystem.getAudioInputStream(file);
             rowClear = AudioSystem.getClip();
 
