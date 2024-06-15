@@ -1,9 +1,10 @@
 /*
  * Description: used to save the high scores
  * Author: Corey Dai and Jeffrey Zhu
- * Date: June 4th 2024
+ * Date: June 16th 2024
  */
 
+//import libraries
 import java.io.*;
 import java.util.*;
 
@@ -34,8 +35,25 @@ public class Files {
 		} catch (Exception e) {
 		}
 
+		// sorts and retuns the score corresponding to the place requested
 		Collections.sort(scores);
-
 		return scores.get(scores.size() - place);
+	}
+
+	// returns the last entry
+	public static int getLatest() {
+		ArrayList<Integer> scores = new ArrayList<>();
+		String line;
+
+		try {
+			BufferedReader reader = new BufferedReader(new FileReader("highScores.txt"));
+			while ((line = reader.readLine()) != null) {
+				scores.add(Integer.valueOf(line));
+			}
+
+		} catch (Exception e) {
+		}
+
+		return scores.get(scores.size() - 1);
 	}
 }

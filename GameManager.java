@@ -1,11 +1,17 @@
+/*
+ * Description: Controls the game
+ * Author: Corey Dai and Jeffrey Zhu
+ * Date: June 16th 2024
+ */
+
+//import libraries
 import java.awt.Color;
 import java.awt.Graphics;
 import java.util.*;
 
 public class GameManager {
+	// declare variables, constants, and objects
 	public static ArrayList<Block> blocks = new ArrayList<>();
-	// grid
-	// 0 = empty, 1 = occupied
 	public static final char[] COLOURS = { 'r', 'b', 'y', 'p', 'g' };
 	public static char[][] grid = new char[11][22];
 	public static int[] currentCenterPiece = new int[2];
@@ -30,6 +36,7 @@ public class GameManager {
 		}
 	}
 
+	// resets the game for the next round of playin
 	public static void reset() {
 		for (int i = 0; i < grid.length; i++) {
 			for (int j = 0; j < grid[i].length; j++) {
@@ -49,9 +56,12 @@ public class GameManager {
 
 	// generates a block object
 	public static void generateBlock() {
-		nextblock = new Block((int) (Math.random() * 5));
+		if (!GamePanel.end) {
+			nextblock = new Block((int) (Math.random() * 5));
+		}
 	}
 
+	// method to allow the user to hold a block
 	public static void holdBlock() {
 		if (notHeld > 1) {
 
@@ -121,6 +131,7 @@ public class GameManager {
 
 		if (notHeld > 1) {
 			score += 10;
+			PlaySound.playBlockPlace();
 		}
 
 	}
@@ -137,6 +148,7 @@ public class GameManager {
 
 		for (Block current : blocks) {
 			if (current.getActive()) {
+				System.out.println("start of updatePosition");
 				// System.out.println("past " + Arrays.toString(currentCenterPiece));
 
 				// Clear its old position
@@ -186,6 +198,7 @@ public class GameManager {
 				for (char[] item : grid) {
 					System.out.println(Arrays.toString(item));
 				}
+				System.out.println("end of updatePosition");
 			}
 		}
 	}
@@ -195,6 +208,7 @@ public class GameManager {
 		return grid;
 	}
 
+	// checks if the game should end b/c stack overflow
 	public static boolean checkEnd() {
 
 		for (int i = 0; i < 11; i++) {

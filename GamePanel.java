@@ -1,7 +1,7 @@
 /*
  * Description: child of JPanel and creates the window for displaying the game
  * Author: Corey Dai and Jeffrey Zhu
- * Date: June 4th 2024
+ * Date: June 16th 2024
  */
 
 //import libraries
@@ -18,6 +18,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
   public static final int GAME_HEIGHT = 770;
   public Thread gameThread;
   public Image image;
+  public Image helpScreenBackground;
   public Image background;
   public Image infoScreenBackground;
   public Image menuScreenBackground;
@@ -26,10 +27,11 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
   public Block block;
 
   public GameManager manager;
-  private boolean infoScreen = true;
-  private boolean menuScreen = false;
+  public static boolean infoScreen = true;
+  public static boolean menuScreen = false;
   private static boolean gameRunning = false;
-  private static boolean end = false;
+  private boolean helpScreen = false;
+  public static boolean end = false;
   private static boolean ranEnd = false;
   Font scoreFont;
 
@@ -57,6 +59,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
       infoScreenBackground = ImageIO.read(new File("Images/infoScreen.png"));
       menuScreenBackground = ImageIO.read(new File("Images/menuScreen.png"));
       endScreen = ImageIO.read(new File("Images/EndScreen.png"));
+      helpScreenBackground = ImageIO.read(new File("Images/helpScreen.png"));
     } catch (Exception x) {
     }
 
@@ -99,7 +102,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
       g.drawImage(endScreen, 175, 175, null);
       g.setFont(scoreFont);
       g.setColor(Color.white);
-      g.drawString("" + GameManager.score, 490, 500);
+      g.drawString("" + Files.getLatest(), 490, 500);
     }
   }
 
@@ -111,6 +114,10 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 
     if (menuScreen) {
       g.drawImage(menuScreenBackground.getScaledInstance(1025, 770, Image.SCALE_DEFAULT), 0, 0, null);
+    }
+
+    if (infoScreen) {
+      g.drawImage(infoScreenBackground.getScaledInstance(1025, 770, Image.SCALE_DEFAULT), 0, 0, null);
     }
 
     if (gameRunning || end) {
@@ -156,7 +163,9 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
         }
         if (GameManager.next) {
           GameManager.rowCollapse();
+          System.out.println(gameRunning + "gamerunning");
           GameManager.activateBlock(GameManager.nextblock);
+          System.out.println(GameManager.nextblock.getActive() + "is Active");
           GameManager.generateBlock();
           GameManager.next = false;
           if (GameManager.checkEnd()) {
@@ -225,6 +234,17 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
         PlaySound.playButtonClick();
         menuScreen = false;
         gameRunning = true;
+      } else if (e.getKeyChar() == 'h') {
+        menuScreen = false;
+        helpScreen = true;
+
+      }
+    }
+
+    if (helpScreen) {
+      if (e.getKeyChar() == 'h') {
+        menuScreen = true;
+        infoScreen = false;
       }
     }
 
@@ -236,6 +256,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
         PlaySound.stopEndMusic();
         PlaySound.playMenuMusic();
         PlaySound.playButtonClick();
+        GameManager.generateBlock();
         GameManager.activateBlock(GameManager.nextblock);
         GameManager.generateBlock();
       }
