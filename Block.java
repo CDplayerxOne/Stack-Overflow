@@ -277,7 +277,7 @@ public class Block extends Rectangle {
 
             // check if there is a block under postion 1
             if (supportingPieces[1] > supportingPieces[2] && supportingPieces[1] > supportingPieces[3]) {
-                if (GameManager.getGrid()[centerPiece[0] + 1][centerPiece[1]] != ' ') {
+                if (GameManager.getGrid()[centerPiece[0] + 1][centerPiece[1] + 1] != ' ') {
                     collision = true;
                 }
             }
@@ -490,86 +490,112 @@ public class Block extends Rectangle {
         scoreMultiplier = status;
     }
 
+
+    private boolean checkPixel(int discountR, int discountC) {
+        char target = GameManager.getGrid()[centerPiece[0] + discountR][centerPiece[1] + discountC];
+        if (target != ' ' && target != GameManager.COLOURS[type]) {
+            return false;
+        }
+        return true;
+    }
+
     // checks if the block is restricted by the boarder for rotating
     public boolean checkRotationVailidity() {
 
         // true means that it is ok to rotate
 
-        boolean collision = true;
+        boolean canRotate = true;
+        char[][]  theGrid = GameManager.getGrid();
 
         if ((supportingPieces[7] + getCenterPiece()[0] < 11) && (supportingPieces[0] + getCenterPiece()[0] < 11)
                 && (supportingPieces[1] + getCenterPiece()[0] < 11) && (getCenterPiece()[0] - supportingPieces[3] > -1)
                 && (getCenterPiece()[0] - supportingPieces[4] > -1)
                 && (getCenterPiece()[0] - supportingPieces[5] > -1)) {
-            return true;
-
-        } else {
 
             // check rotation for position 1
             if (supportingPieces[1] != 0) {
-                if (GameManager.getGrid()[centerPiece[0] + 1][centerPiece[1] - 1] != ' ') {
-                    collision = false;
+                if (supportingPieces[3] == 0){
+                    if (theGrid[centerPiece[0]+1][centerPiece[1] + 1] != ' '){
+                        canRotate = false;
+                    }
                 }
             }
 
             // check rotation for position 3
             if (supportingPieces[3] != 0) {
-                if (GameManager.getGrid()[centerPiece[0] - 1][centerPiece[1] - 1] != ' ') {
-                    collision = false;
+                if (supportingPieces[5] == 0){
+                    if (theGrid[centerPiece[0] - 1][centerPiece[1] + 1] != ' ') {
+                        canRotate = false;
+                    }
                 }
             }
 
             // check rotation for position 5
             if (supportingPieces[5] != 0) {
-                if (GameManager.getGrid()[centerPiece[0] - 1][centerPiece[1] + 1] != ' ') {
-                    collision = false;
+                if (supportingPieces[7] == 0){
+                    if (theGrid[centerPiece[0] - 1][centerPiece[1] - 1] != ' ') {
+                        canRotate = false;
+                    }
                 }
             }
 
             // check rotation for position 7
             if (supportingPieces[7] != 0) {
-                if (GameManager.getGrid()[centerPiece[0] + 1][centerPiece[1] + 1] != ' ') {
-                    collision = false;
+                if (supportingPieces[1] == 0){
+                    if (theGrid[centerPiece[0] + 1][centerPiece[1] - 1] != ' ') {
+                        canRotate = false;
+                    }
                 }
             }
 
             // check rotation for position 2
             if (supportingPieces[2] != 0) {
-                for (int i = 1; i <= supportingPieces[2]; i++) {
-                    if (GameManager.getGrid()[centerPiece[0]][centerPiece[1] - i] != ' ') {
-                        collision = false;
+                if (supportingPieces[4] == 0){
+                    for (int i = 1; i <= supportingPieces[2]; i++) {
+                        if (theGrid[centerPiece[0]][centerPiece[1] + i] != ' ') {
+                            canRotate = false;
+                        }
                     }
                 }
             }
 
             // check rotation for position 4
             if (supportingPieces[4] != 0) {
-                for (int i = 1; i <= supportingPieces[4]; i++) {
-                    if (GameManager.getGrid()[centerPiece[0] - i][centerPiece[1]] != ' ') {
-                        collision = false;
+                if (supportingPieces[6] == 0){
+                    for (int i = 1; i <= supportingPieces[4]; i++) {
+                        if (theGrid[centerPiece[0] + i][centerPiece[1]] != ' ') {
+                            canRotate = false;
+                        }
                     }
                 }
             }
 
             // check rotation for position 6
             if (supportingPieces[6] != 0) {
-                for (int i = 1; i <= supportingPieces[6]; i++) {
-                    if (GameManager.getGrid()[centerPiece[0]][centerPiece[1] + i] != ' ') {
-                        collision = false;
+                if (supportingPieces[0] == 0){
+                    for (int i = 1; i <= supportingPieces[6]; i++) {
+                        if (theGrid[centerPiece[0]][centerPiece[1] - i] != ' ') {
+                            canRotate = false;
+                        }
                     }
                 }
             }
 
             // check rotation for position 0
             if (supportingPieces[0] != 0) {
-                for (int i = 1; i <= supportingPieces[2]; i++) {
-                    if (GameManager.getGrid()[centerPiece[0] + i][centerPiece[1]] != ' ') {
-                        collision = false;
+                if (supportingPieces[2] == 0){
+                    for (int i = 1; i <= supportingPieces[0]; i++) {
+                        if (theGrid[centerPiece[0] - i][centerPiece[1]] != ' ') {
+                            canRotate = false;
+                        }
                     }
                 }
             }
+
+        } else {
+            return false;
         }
-        return collision;
+        return canRotate;
     }
 
     // draws the next location of the block on the screen
