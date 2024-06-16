@@ -5,10 +5,12 @@
  */
 
 //import libraries
-
+import java.awt.*;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.util.*;
+import javax.imageio.*;
+import java.io.*;
 
 public class GameManager {
     // declare variables, constants, and objects
@@ -22,9 +24,17 @@ public class GameManager {
     public static boolean generateNextBlock = false;
     public static int score = -10;
     public static int notHeld = 2;
+    private Image scoreMultiplierImage;
 
     // GameManager constructor
     public GameManager() {
+        // set up score multiplier image
+        try {
+            scoreMultiplierImage = ImageIO.read(new File("Images/ScoreMultiplier.png"));
+        } catch (IOException e) {
+            System.out.println("uh oh");
+        }
+
         // make the grid empty
         for (int i = 0; i < grid.length; i++) {
             for (int j = 0; j < grid[i].length; j++) {
@@ -66,6 +76,8 @@ public class GameManager {
             PlaySound.PlayholdBlock();
             if (hold == null) {
                 hold = new Block(blocks.get(blocks.size() - 1).getType());
+                System.out.println(blocks.get(blocks.size() - 1).hasScoreMultiplier() + "status");
+                hold.setScoreMultiplier(blocks.get(blocks.size() - 1).hasScoreMultiplier());
                 for (int[] i : blocks.get(blocks.size() - 1).getSupportingPieces()) {
                     grid[i[0]][i[1]] = ' ';
                 }
@@ -88,6 +100,7 @@ public class GameManager {
         }
         grid[currentCenterPiece[0]][currentCenterPiece[1]] = ' ';
         hold = new Block(blocks.get(blocks.size() - 1).getType());
+        hold.setScoreMultiplier(blocks.get(blocks.size() - 1).hasScoreMultiplier());
         blocks.remove(blocks.size() - 1);
         activateBlock(tempBlock);
 
@@ -158,8 +171,15 @@ public class GameManager {
         }
 
         // Populate the grid with new position
-        grid[blocks.get(blocks.size() - 1).getCenterPiece()[0]][blocks.get(blocks.size() - 1)
-                .getCenterPiece()[1]] = COLOURS[blocks.get(blocks.size() - 1).getType()];
+        if (blocks.get(blocks.size() - 1).hasScoreMultiplier()) {
+
+            grid[blocks.get(blocks.size() - 1).getCenterPiece()[0]][blocks.get(blocks.size() - 1)
+                    .getCenterPiece()[1]] = COLOURS[blocks.get(blocks.size() - 1).getType() + 5];
+        } else {
+
+            grid[blocks.get(blocks.size() - 1).getCenterPiece()[0]][blocks.get(blocks.size() - 1)
+                    .getCenterPiece()[1]] = COLOURS[blocks.get(blocks.size() - 1).getType()];
+        }
 
         // Update the position of each supporting piece on the grid
         for (int[] piece : blocks.get(blocks.size() - 1).getSupportingPieces()) {
@@ -194,8 +214,13 @@ public class GameManager {
         // Loop through each row
         for (int i = 5; i < 22; i++) {
             boolean fullRow = true;
+            int multiplier = 1;
             // if at least one spot that is blank, it is not a full row
             for (int j = 0; j < 11; j++) {
+                if (getGrid()[j][i] == 'a' || getGrid()[j][i] == 'x' || getGrid()[j][i] == 'c' || getGrid()[j][i] == 'd'
+                        || getGrid()[j][i] == 'e') {
+                    multiplier++;
+                }
                 if (getGrid()[j][i] == ' ') {
                     fullRow = false;
                     break;
@@ -204,7 +229,7 @@ public class GameManager {
             // check if it's a full row. If it is reposition everything
             if (fullRow) {
                 PlaySound.PlayRowClear();
-                score += 100;
+                score += 100 * multiplier;
                 System.out.println("full row");
                 System.out.println(i);
                 // temp array stores everything above.
@@ -261,26 +286,49 @@ public class GameManager {
                         case 'g':
                             g.setColor(Color.GREEN);
                             break;
-                        // case 'a':
-                        // g.setColor(Color.RED);
-                        // break;
-                        // case 'x':
-                        // g.setColor(Color.CYAN);
-                        // break;
-                        // case 'c':
-                        // g.setColor(Color.YELLOW);
-                        // break;
-                        // case 'd':
-                        // g.setColor(Color.MAGENTA);
-                        // break;
-                        // case 'e':
-                        // g.setColor(Color.GREEN);
-                        // break;
+                        case 'a':
+                            g.setColor(Color.RED);
+                            break;
+                        case 'x':
+                            g.setColor(Color.CYAN);
+                            break;
+                        case 'c':
+                            g.setColor(Color.YELLOW);
+                            break;
+                        case 'd':
+                            g.setColor(Color.MAGENTA);
+                            break;
+                        case 'e':
+                            g.setColor(Color.GREEN);
+                            break;
                         default:
                             g.setColor(Color.BLACK);
                             break;
                     }
                     g.fillRect(143 + i * 35, j * 35 + 3, 29, 29);
+                    switch (getGrid()[i][j]) {
+                        case 'a':
+                            g.drawImage(scoreMultiplierImage, 143 + i * 35, j * 35 + 3, null);
+                            break;
+                        case 'x':
+                            g.drawImage(scoreMultiplierImage, 143 + i * 35, j * 35 + 3, null);
+                            g.setColor(Color.CYAN);
+                            break;
+                        case 'c':
+                            g.drawImage(scoreMultiplierImage, 143 + i * 35, j * 35 + 3, null);
+                            g.setColor(Color.YELLOW);
+                            break;
+                        case 'd':
+                            g.drawImage(scoreMultiplierImage, 143 + i * 35, j * 35 + 3, null);
+                            g.setColor(Color.MAGENTA);
+                            break;
+                        case 'e':
+                            g.drawImage(scoreMultiplierImage, 143 + i * 35, j * 35 + 3, null);
+                            g.setColor(Color.GREEN);
+                            break;
+                        default:
+                            break;
+                    }
                 }
             }
         }

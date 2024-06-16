@@ -9,6 +9,8 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.Arrays;
+import javax.imageio.*;
+import java.io.*;
 
 public class Block extends Rectangle {
 
@@ -27,14 +29,20 @@ public class Block extends Rectangle {
     public static final int BLOCKLENGTH = 35; // length of block
     private int internalCount = 0;
     private boolean scoreMultiplier;
+    private Image scoreMultiplierImage;
 
     // constructor for Block
     public Block(int type) {
         this.type = type;
 
         // 25% chance the block has a score multiplier
-        if (Math.random() > 0.75) {
+        if (Math.random() < 0.15) {
             scoreMultiplier = true;
+            try {
+                scoreMultiplierImage = ImageIO.read(new File("Images/ScoreMultiplier.png"));
+            } catch (IOException e) {
+                System.out.println("uh oh");
+            }
         } else {
             scoreMultiplier = false;
         }
@@ -477,15 +485,22 @@ public class Block extends Rectangle {
 
     }
 
+    // Sets the block's score multiplier status
+    public void setScoreMultiplier(boolean status) {
+        scoreMultiplier = status;
+    }
+
     // checks if the block is restricted by the boarder for rotating
     public boolean checkRotationVailidity() {
 
-        boolean collision = false;
+        // true means that it is ok to rotate
+
+        boolean collision = true;
 
         if ((supportingPieces[7] + getCenterPiece()[0] < 11) && (supportingPieces[0] + getCenterPiece()[0] < 11)
-                && (supportingPieces[1] + getCenterPiece()[0] < 11) && (getCenterPiece()[0] - supportingPieces[3] > 0)
-                && (getCenterPiece()[0] - supportingPieces[4] > 0)
-                && (getCenterPiece()[0] - supportingPieces[5] > 0)) {
+                && (supportingPieces[1] + getCenterPiece()[0] < 11) && (getCenterPiece()[0] - supportingPieces[3] > -1)
+                && (getCenterPiece()[0] - supportingPieces[4] > -1)
+                && (getCenterPiece()[0] - supportingPieces[5] > -1)) {
             return true;
 
         } else {
@@ -493,28 +508,28 @@ public class Block extends Rectangle {
             // check rotation for position 1
             if (supportingPieces[1] != 0) {
                 if (GameManager.getGrid()[centerPiece[0] + 1][centerPiece[1] - 1] != ' ') {
-                    collision = true;
+                    collision = false;
                 }
             }
 
             // check rotation for position 3
             if (supportingPieces[3] != 0) {
                 if (GameManager.getGrid()[centerPiece[0] - 1][centerPiece[1] - 1] != ' ') {
-                    collision = true;
+                    collision = false;
                 }
             }
 
             // check rotation for position 5
             if (supportingPieces[5] != 0) {
                 if (GameManager.getGrid()[centerPiece[0] - 1][centerPiece[1] + 1] != ' ') {
-                    collision = true;
+                    collision = false;
                 }
             }
 
             // check rotation for position 7
             if (supportingPieces[7] != 0) {
                 if (GameManager.getGrid()[centerPiece[0] + 1][centerPiece[1] + 1] != ' ') {
-                    collision = true;
+                    collision = false;
                 }
             }
 
@@ -522,7 +537,7 @@ public class Block extends Rectangle {
             if (supportingPieces[2] != 0) {
                 for (int i = 1; i <= supportingPieces[2]; i++) {
                     if (GameManager.getGrid()[centerPiece[0]][centerPiece[1] - i] != ' ') {
-                        collision = true;
+                        collision = false;
                     }
                 }
             }
@@ -531,7 +546,7 @@ public class Block extends Rectangle {
             if (supportingPieces[4] != 0) {
                 for (int i = 1; i <= supportingPieces[4]; i++) {
                     if (GameManager.getGrid()[centerPiece[0] - i][centerPiece[1]] != ' ') {
-                        collision = true;
+                        collision = false;
                     }
                 }
             }
@@ -540,7 +555,7 @@ public class Block extends Rectangle {
             if (supportingPieces[6] != 0) {
                 for (int i = 1; i <= supportingPieces[6]; i++) {
                     if (GameManager.getGrid()[centerPiece[0]][centerPiece[1] + i] != ' ') {
-                        collision = true;
+                        collision = false;
                     }
                 }
             }
@@ -549,7 +564,7 @@ public class Block extends Rectangle {
             if (supportingPieces[0] != 0) {
                 for (int i = 1; i <= supportingPieces[2]; i++) {
                     if (GameManager.getGrid()[centerPiece[0] + i][centerPiece[1]] != ' ') {
-                        collision = true;
+                        collision = false;
                     }
                 }
             }
@@ -566,7 +581,7 @@ public class Block extends Rectangle {
         g.setColor(COLOURS[type]);
         g.fillRect((nextCenterPos[0]) * 35 + 123, (nextCenterPos[1]) * 35 + 3, BLOCKLENGTH - 6, BLOCKLENGTH - 6);
         if (scoreMultiplier) {
-            g.drawImage(GamePanel.scoreMultiplierImage, (nextCenterPos[0]) * 35 + 123, (nextCenterPos[1]) * 35 + 3,
+            g.drawImage(scoreMultiplierImage, (nextCenterPos[0]) * 35 + 123, (nextCenterPos[1]) * 35 + 3,
                     null);
         }
 
@@ -676,7 +691,7 @@ public class Block extends Rectangle {
         g.setColor(COLOURS[type]);
         g.fillRect((holdCenterPos[0]) * 35 + 123, (holdCenterPos[1]) * 35 + 3, BLOCKLENGTH - 6, BLOCKLENGTH - 6);
         if (scoreMultiplier) {
-            g.drawImage(GamePanel.scoreMultiplierImage, (nextCenterPos[0]) * 35 + 123, (nextCenterPos[1]) * 35 + 3,
+            g.drawImage(scoreMultiplierImage, (holdCenterPos[0]) * 35 + 123, (holdCenterPos[1]) * 35 + 3,
                     null);
         }
 
