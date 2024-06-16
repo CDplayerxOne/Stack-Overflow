@@ -6,11 +6,17 @@
 
 //import libraries
 
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.io.File;
-import javax.swing.*;
-import javax.imageio.*;
+
+import javax.imageio.ImageIO;
+import javax.swing.JPanel;
 
 public class GamePanel extends JPanel implements Runnable, KeyListener {
 
@@ -237,6 +243,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
             if (e.getKeyCode() == KeyEvent.VK_SPACE) {
                 end = false;
                 menuScreen = true;
+                ranEnd = false;
                 GameManager.reset();
                 PlaySound.stopEndMusic();
                 PlaySound.playMenuMusic();

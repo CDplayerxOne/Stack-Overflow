@@ -5,12 +5,17 @@
  */
 
 //import libraries
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.Rectangle;
+import java.awt.event.KeyEvent;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import javax.imageio.*;
-import java.io.*;
+
+import javax.imageio.ImageIO;
 
 public class Block extends Rectangle {
 

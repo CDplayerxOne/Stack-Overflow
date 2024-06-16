@@ -5,12 +5,15 @@
  */
 
 //import libraries
-import java.awt.*;
 import java.awt.Color;
 import java.awt.Graphics;
-import java.util.*;
-import javax.imageio.*;
-import java.io.*;
+import java.awt.Image;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+
+import javax.imageio.ImageIO;
 
 public class GameManager {
     // declare variables, constants, and objects
@@ -59,6 +62,7 @@ public class GameManager {
         currentSupportPieces = new ArrayList<>();
         hold = null;
         tempBlock = null;
+        generateNextBlock = false;
     }
 
     // generates a block object
@@ -208,6 +212,7 @@ public class GameManager {
     public static boolean checkEnd() {
         for (int i = 0; i < 11; i++) {
             if (getGrid()[i][5] != ' ') {
+                System.out.println("checkend");
                 return true;
             }
         }
