@@ -24,6 +24,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
     public Image infoScreenBackground;
     public Image menuScreenBackground;
     public Image endScreen;
+    public static Image scoreMultiplierImage;
     public Graphics graphics;
     public GameManager manager;
     public static boolean infoScreen = true;
@@ -39,13 +40,6 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
         this.setFocusable(true);
         this.addKeyListener(this);
 
-        manager = new GameManager();
-        // block = new Block(5, 2, 4);
-        if (!end) {
-            GameManager.activateBlock(GameManager.nextblock);
-            GameManager.generateBlock();
-        }
-
         this.setPreferredSize(new Dimension(GAME_WIDTH, GAME_HEIGHT));
 
         gameThread = new Thread(this);
@@ -57,7 +51,16 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
             menuScreenBackground = ImageIO.read(new File("Images/menuScreen.png"));
             endScreen = ImageIO.read(new File("Images/EndScreen.png"));
             helpScreenBackground = ImageIO.read(new File("Images/helpScreen.png"));
+            scoreMultiplierImage = ImageIO.read(new File("Images/ScoreMultiplier.png"));
         } catch (Exception x) {
+            System.out.println("Somethign went wrong :(");
+        }
+
+        manager = new GameManager();
+        // block = new Block(5, 2, 4);
+        if (!end) {
+            GameManager.activateBlock(GameManager.nextblock);
+            GameManager.generateBlock();
         }
 
         PlaySound.playMenuMusic();

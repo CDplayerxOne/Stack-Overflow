@@ -13,7 +13,7 @@ import java.util.*;
 public class GameManager {
     // declare variables, constants, and objects
     public static ArrayList<Block> blocks = new ArrayList<>();
-    public static final char[] COLOURS = { 'r', 'b', 'y', 'p', 'g' };
+    public static final char[] COLOURS = { 'r', 'b', 'y', 'p', 'g', 'a', 'x', 'c', 'd', 'e' };
     public static char[][] grid = new char[11][22];
     public static int[] currentCenterPiece = new int[2];
     public static ArrayList<int[]> currentSupportPieces = new ArrayList<>();
@@ -101,7 +101,13 @@ public class GameManager {
         currentSupportPieces = b.getSupportingPieces();
 
         // Update the position of the center piece on the grid
-        grid[b.getCenterPiece()[0]][b.getCenterPiece()[1]] = COLOURS[b.getType()];
+        if (b.hasScoreMultiplier()) {
+
+            grid[b.getCenterPiece()[0]][b.getCenterPiece()[1]] = COLOURS[b.getType() + 5];
+        } else {
+
+            grid[b.getCenterPiece()[0]][b.getCenterPiece()[1]] = COLOURS[b.getType()];
+        }
 
         // Update the position of each supporting piece on the grid
         for (int[] piece : b.getSupportingPieces()) {
@@ -255,6 +261,21 @@ public class GameManager {
                         case 'g':
                             g.setColor(Color.GREEN);
                             break;
+                        // case 'a':
+                        // g.setColor(Color.RED);
+                        // break;
+                        // case 'x':
+                        // g.setColor(Color.CYAN);
+                        // break;
+                        // case 'c':
+                        // g.setColor(Color.YELLOW);
+                        // break;
+                        // case 'd':
+                        // g.setColor(Color.MAGENTA);
+                        // break;
+                        // case 'e':
+                        // g.setColor(Color.GREEN);
+                        // break;
                         default:
                             g.setColor(Color.BLACK);
                             break;

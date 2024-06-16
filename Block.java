@@ -26,10 +26,19 @@ public class Block extends Rectangle {
     private int[] holdCenterPos;
     public static final int BLOCKLENGTH = 35; // length of block
     private int internalCount = 0;
+    private boolean scoreMultiplier;
 
     // constructor for Block
     public Block(int type) {
         this.type = type;
+
+        // 25% chance the block has a score multiplier
+        if (Math.random() > 0.75) {
+            scoreMultiplier = true;
+        } else {
+            scoreMultiplier = false;
+        }
+
         switch (type) {
             case 0:
                 supportingPieces = TYPES[0];
@@ -248,6 +257,7 @@ public class Block extends Rectangle {
 
             // check if the other pieces are above the bottom
         }
+
         if (((centerPiece[1] + supportingPieces[3] + 1) >= 22)
                 || ((centerPiece[1] + supportingPieces[4] + 1) >= 22)
                 || ((centerPiece[1] + supportingPieces[5] + 1) >= 22)) {
@@ -256,6 +266,13 @@ public class Block extends Rectangle {
 
             // check if there is a block below position 2
         } else {
+
+            // check if there is a block under postion 1
+            if (supportingPieces[1] > supportingPieces[2] && supportingPieces[1] > supportingPieces[3]) {
+                if (GameManager.getGrid()[centerPiece[0] + 1][centerPiece[1]] != ' ') {
+                    collision = true;
+                }
+            }
 
             if (supportingPieces[2] > supportingPieces[3]) {
                 for (int i = 1; i <= supportingPieces[2]; i++) {
@@ -331,17 +348,21 @@ public class Block extends Rectangle {
                 return true;
 
                 // checks the if there are blocks on the right of position 2
-            } else if (GameManager.getGrid()[getCenterPiece()[0] + supportingPieces[2]
+            }
+
+            if (GameManager.getGrid()[getCenterPiece()[0] + supportingPieces[2]
                     + 1][getCenterPiece()[1]] != ' ') {
                 return true;
 
                 // checks the if there are blocks on the right of position 3
-            } else if (GameManager.getGrid()[getCenterPiece()[0] + supportingPieces[3] + 1][getCenterPiece()[1]
+            }
+            if (GameManager.getGrid()[getCenterPiece()[0] + supportingPieces[3] + 1][getCenterPiece()[1]
                     + 1] != ' ') {
                 return true;
 
                 // checks the if there are blocks on the right of position 0
-            } else if (supportingPieces[0] > supportingPieces[1]) {
+            }
+            if (supportingPieces[0] > supportingPieces[1]) {
 
                 for (int i = 0; i < supportingPieces[0]; i++) {
                     if (GameManager.getGrid()[getCenterPiece()[0] + 1][getCenterPiece()[1] - 1 - i] != ' ') {
@@ -350,7 +371,8 @@ public class Block extends Rectangle {
                 }
 
                 // checks the if there are blocks on the right of position 4
-            } else if (supportingPieces[4] > supportingPieces[3]) {
+            }
+            if (supportingPieces[4] > supportingPieces[3]) {
 
                 for (int i = 0; i < supportingPieces[4]; i++) {
                     if (GameManager.getGrid()[getCenterPiece()[0] + 1][getCenterPiece()[1] + 1 + i] != ' ') {
@@ -358,6 +380,7 @@ public class Block extends Rectangle {
                     }
                 }
             }
+
             return false;
         } else {
             return true;
@@ -373,19 +396,23 @@ public class Block extends Rectangle {
                 return true;
 
                 // checks the if there are blocks on the left of position 6
-            } else if (GameManager.getGrid()[getCenterPiece()[0] - supportingPieces[6]
+            }
+
+            if (GameManager.getGrid()[getCenterPiece()[0] - supportingPieces[6]
                     - 1][getCenterPiece()[1]] != ' ') {
                 return true;
 
                 // checks the if there are blocks on the left of position 1
-            } else if (getCenterPiece()[1] > 22) {
+            }
+            if (getCenterPiece()[1] > 22) {
                 if (GameManager.getGrid()[getCenterPiece()[0] - supportingPieces[5] - 1][getCenterPiece()[1]
                         + 1] != ' ') {
                     return true;
                 }
 
                 // checks the if there are blocks on the left of position 0
-            } else if (supportingPieces[0] > supportingPieces[7]) {
+            }
+            if (supportingPieces[0] > supportingPieces[7]) {
                 for (int i = 0; i < supportingPieces[0]; i++) {
                     if (GameManager.getGrid()[getCenterPiece()[0] - 1][getCenterPiece()[1] - 1 - i] != ' ') {
                         return true;
@@ -393,7 +420,8 @@ public class Block extends Rectangle {
                 }
 
                 // checks the if there are blocks on the left of position 4
-            } else if (supportingPieces[4] > supportingPieces[5]) {
+            }
+            if (supportingPieces[4] > supportingPieces[5]) {
                 for (int i = 0; i < supportingPieces[4]; i++) {
                     if (GameManager.getGrid()[getCenterPiece()[0] - 1][getCenterPiece()[1] + 1 + i] != ' ') {
                         return true;
@@ -443,15 +471,90 @@ public class Block extends Rectangle {
         }
     }
 
+    // checks if the block has a score muliplier
+    public boolean hasScoreMultiplier() {
+        return scoreMultiplier;
+
+    }
+
     // checks if the block is restricted by the boarder for rotating
     public boolean checkRotationVailidity() {
+
+        boolean collision = false;
+
         if ((supportingPieces[7] + getCenterPiece()[0] < 11) && (supportingPieces[0] + getCenterPiece()[0] < 11)
                 && (supportingPieces[1] + getCenterPiece()[0] < 11) && (getCenterPiece()[0] - supportingPieces[3] > -1)
                 && (getCenterPiece()[0] - supportingPieces[4] > -1)
                 && (getCenterPiece()[0] - supportingPieces[5] > -1)) {
-            return true;
+            collision = true;
+
+        } else {
+
+            // check rotation for position 1
+            if (supportingPieces[1] != 0) {
+                if (GameManager.getGrid()[centerPiece[0] - 1][centerPiece[1] + 1] != ' ') {
+                    collision = true;
+                }
+            }
+
+            // check rotation for position 3
+            if (supportingPieces[3] != 0) {
+                if (GameManager.getGrid()[centerPiece[0] + 1][centerPiece[1] + 1] != ' ') {
+                    collision = true;
+                }
+            }
+
+            // check rotation for position 5
+            if (supportingPieces[5] != 0) {
+                if (GameManager.getGrid()[centerPiece[0] + 1][centerPiece[1] - 1] != ' ') {
+                    collision = true;
+                }
+            }
+
+            // check rotation for position 7
+            if (supportingPieces[7] != 0) {
+                if (GameManager.getGrid()[centerPiece[0] - 1][centerPiece[1] - 1] != ' ') {
+                    collision = true;
+                }
+            }
+
+            // check rotation for position 2
+            if (supportingPieces[2] != 0) {
+                for (int i = 1; i <= supportingPieces[2]; i++) {
+                    if (GameManager.getGrid()[centerPiece[0]][centerPiece[1] + i] != ' ') {
+                        collision = true;
+                    }
+                }
+            }
+
+            // check rotation for position 4
+            if (supportingPieces[4] != 0) {
+                for (int i = 1; i <= supportingPieces[4]; i++) {
+                    if (GameManager.getGrid()[centerPiece[0] + i][centerPiece[1]] != ' ') {
+                        collision = true;
+                    }
+                }
+            }
+
+            // check rotation for position 6
+            if (supportingPieces[6] != 0) {
+                for (int i = 1; i <= supportingPieces[6]; i++) {
+                    if (GameManager.getGrid()[centerPiece[0]][centerPiece[1] - i] != ' ') {
+                        collision = true;
+                    }
+                }
+            }
+
+            // check rotation for position 0
+            if (supportingPieces[0] != 0) {
+                for (int i = 1; i <= supportingPieces[2]; i++) {
+                    if (GameManager.getGrid()[centerPiece[0] - i][centerPiece[1]] != ' ') {
+                        collision = true;
+                    }
+                }
+            }
         }
-        return false;
+        return collision;
     }
 
     // draws the next location of the block on the screen
@@ -462,6 +565,10 @@ public class Block extends Rectangle {
         g.fillRect(120 + (nextCenterPos[0]) * 35, (nextCenterPos[1]) * 35, BLOCKLENGTH, BLOCKLENGTH);
         g.setColor(COLOURS[type]);
         g.fillRect((nextCenterPos[0]) * 35 + 123, (nextCenterPos[1]) * 35 + 3, BLOCKLENGTH - 6, BLOCKLENGTH - 6);
+        if (scoreMultiplier) {
+            g.drawImage(GamePanel.scoreMultiplierImage, (nextCenterPos[0]) * 35 + 123, (nextCenterPos[1]) * 35 + 3,
+                    null);
+        }
 
         // Supporting Pieces
         // 0 slot
@@ -568,6 +675,10 @@ public class Block extends Rectangle {
         g.fillRect(120 + (holdCenterPos[0]) * 35, (holdCenterPos[1]) * 35, BLOCKLENGTH, BLOCKLENGTH);
         g.setColor(COLOURS[type]);
         g.fillRect((holdCenterPos[0]) * 35 + 123, (holdCenterPos[1]) * 35 + 3, BLOCKLENGTH - 6, BLOCKLENGTH - 6);
+        if (scoreMultiplier) {
+            g.drawImage(GamePanel.scoreMultiplierImage, (nextCenterPos[0]) * 35 + 123, (nextCenterPos[1]) * 35 + 3,
+                    null);
+        }
 
         // Supporting Pieces
         // 0 slot
