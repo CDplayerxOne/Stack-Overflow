@@ -490,7 +490,6 @@ public class Block extends Rectangle {
         scoreMultiplier = status;
     }
 
-
     private boolean checkPixel(int discountR, int discountC) {
         char target = GameManager.getGrid()[centerPiece[0] + discountR][centerPiece[1] + discountC];
         if (target != ' ' && target != GameManager.COLOURS[type]) {
@@ -505,7 +504,7 @@ public class Block extends Rectangle {
         // true means that it is ok to rotate
 
         boolean canRotate = true;
-        char[][]  theGrid = GameManager.getGrid();
+        char[][] theGrid = GameManager.getGrid();
 
         if ((supportingPieces[7] + getCenterPiece()[0] < 11) && (supportingPieces[0] + getCenterPiece()[0] < 11)
                 && (supportingPieces[1] + getCenterPiece()[0] < 11) && (getCenterPiece()[0] - supportingPieces[3] > -1)
@@ -514,8 +513,8 @@ public class Block extends Rectangle {
 
             // check rotation for position 1
             if (supportingPieces[1] != 0) {
-                if (supportingPieces[3] == 0){
-                    if (theGrid[centerPiece[0]+1][centerPiece[1] + 1] != ' '){
+                if (supportingPieces[3] == 0) {
+                    if (theGrid[centerPiece[0] + 1][centerPiece[1] + 1] != ' ') {
                         canRotate = false;
                     }
                 }
@@ -523,7 +522,7 @@ public class Block extends Rectangle {
 
             // check rotation for position 3
             if (supportingPieces[3] != 0) {
-                if (supportingPieces[5] == 0){
+                if (supportingPieces[5] == 0) {
                     if (theGrid[centerPiece[0] - 1][centerPiece[1] + 1] != ' ') {
                         canRotate = false;
                     }
@@ -532,7 +531,7 @@ public class Block extends Rectangle {
 
             // check rotation for position 5
             if (supportingPieces[5] != 0) {
-                if (supportingPieces[7] == 0){
+                if (supportingPieces[7] == 0) {
                     if (theGrid[centerPiece[0] - 1][centerPiece[1] - 1] != ' ') {
                         canRotate = false;
                     }
@@ -541,7 +540,7 @@ public class Block extends Rectangle {
 
             // check rotation for position 7
             if (supportingPieces[7] != 0) {
-                if (supportingPieces[1] == 0){
+                if (supportingPieces[1] == 0) {
                     if (theGrid[centerPiece[0] + 1][centerPiece[1] - 1] != ' ') {
                         canRotate = false;
                     }
@@ -550,7 +549,7 @@ public class Block extends Rectangle {
 
             // check rotation for position 2
             if (supportingPieces[2] != 0) {
-                if (supportingPieces[4] == 0){
+                if (supportingPieces[4] == 0) {
                     for (int i = 1; i <= supportingPieces[2]; i++) {
                         if (theGrid[centerPiece[0]][centerPiece[1] + i] != ' ') {
                             canRotate = false;
@@ -561,9 +560,9 @@ public class Block extends Rectangle {
 
             // check rotation for position 4
             if (supportingPieces[4] != 0) {
-                if (supportingPieces[6] == 0){
+                if (supportingPieces[6] == 0) {
                     for (int i = 1; i <= supportingPieces[4]; i++) {
-                        if (theGrid[centerPiece[0] + i][centerPiece[1]] != ' ') {
+                        if (theGrid[centerPiece[0] - i][centerPiece[1]] != ' ') {
                             canRotate = false;
                         }
                     }
@@ -572,7 +571,7 @@ public class Block extends Rectangle {
 
             // check rotation for position 6
             if (supportingPieces[6] != 0) {
-                if (supportingPieces[0] == 0){
+                if (supportingPieces[0] == 0) {
                     for (int i = 1; i <= supportingPieces[6]; i++) {
                         if (theGrid[centerPiece[0]][centerPiece[1] - i] != ' ') {
                             canRotate = false;
@@ -583,9 +582,9 @@ public class Block extends Rectangle {
 
             // check rotation for position 0
             if (supportingPieces[0] != 0) {
-                if (supportingPieces[2] == 0){
+                if (supportingPieces[2] == 0) {
                     for (int i = 1; i <= supportingPieces[0]; i++) {
-                        if (theGrid[centerPiece[0] - i][centerPiece[1]] != ' ') {
+                        if (theGrid[centerPiece[0] + i][centerPiece[1]] != ' ') {
                             canRotate = false;
                         }
                     }

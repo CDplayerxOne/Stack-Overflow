@@ -189,8 +189,12 @@ public class GameManager {
         // Keep track of the current position
         currentCenterPiece = blocks.get(blocks.size() - 1).getCenterPiece();
         currentSupportPieces = blocks.get(blocks.size() - 1).getSupportingPieces();
-        for (char[] item : grid) {
-            System.out.println(Arrays.toString(item));
+        // for (char[] item : grid) {
+        // System.out.println(Arrays.toString(item));
+        // }
+
+        for (int i = 10; i >= 0; i--) {
+            System.out.println(Arrays.toString(getGrid()[i]));
         }
         System.out.println("end of updatePosition");
     }
