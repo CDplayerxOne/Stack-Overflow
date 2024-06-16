@@ -483,37 +483,37 @@ public class Block extends Rectangle {
         boolean collision = false;
 
         if ((supportingPieces[7] + getCenterPiece()[0] < 11) && (supportingPieces[0] + getCenterPiece()[0] < 11)
-                && (supportingPieces[1] + getCenterPiece()[0] < 11) && (getCenterPiece()[0] - supportingPieces[3] > -1)
-                && (getCenterPiece()[0] - supportingPieces[4] > -1)
-                && (getCenterPiece()[0] - supportingPieces[5] > -1)) {
-            collision = true;
+                && (supportingPieces[1] + getCenterPiece()[0] < 11) && (getCenterPiece()[0] - supportingPieces[3] > 0)
+                && (getCenterPiece()[0] - supportingPieces[4] > 0)
+                && (getCenterPiece()[0] - supportingPieces[5] > 0)) {
+            return true;
 
         } else {
 
             // check rotation for position 1
             if (supportingPieces[1] != 0) {
-                if (GameManager.getGrid()[centerPiece[0] - 1][centerPiece[1] + 1] != ' ') {
+                if (GameManager.getGrid()[centerPiece[0] + 1][centerPiece[1] - 1] != ' ') {
                     collision = true;
                 }
             }
 
             // check rotation for position 3
             if (supportingPieces[3] != 0) {
-                if (GameManager.getGrid()[centerPiece[0] + 1][centerPiece[1] + 1] != ' ') {
+                if (GameManager.getGrid()[centerPiece[0] - 1][centerPiece[1] - 1] != ' ') {
                     collision = true;
                 }
             }
 
             // check rotation for position 5
             if (supportingPieces[5] != 0) {
-                if (GameManager.getGrid()[centerPiece[0] + 1][centerPiece[1] - 1] != ' ') {
+                if (GameManager.getGrid()[centerPiece[0] - 1][centerPiece[1] + 1] != ' ') {
                     collision = true;
                 }
             }
 
             // check rotation for position 7
             if (supportingPieces[7] != 0) {
-                if (GameManager.getGrid()[centerPiece[0] - 1][centerPiece[1] - 1] != ' ') {
+                if (GameManager.getGrid()[centerPiece[0] + 1][centerPiece[1] + 1] != ' ') {
                     collision = true;
                 }
             }
@@ -521,7 +521,7 @@ public class Block extends Rectangle {
             // check rotation for position 2
             if (supportingPieces[2] != 0) {
                 for (int i = 1; i <= supportingPieces[2]; i++) {
-                    if (GameManager.getGrid()[centerPiece[0]][centerPiece[1] + i] != ' ') {
+                    if (GameManager.getGrid()[centerPiece[0]][centerPiece[1] - i] != ' ') {
                         collision = true;
                     }
                 }
@@ -530,7 +530,7 @@ public class Block extends Rectangle {
             // check rotation for position 4
             if (supportingPieces[4] != 0) {
                 for (int i = 1; i <= supportingPieces[4]; i++) {
-                    if (GameManager.getGrid()[centerPiece[0] + i][centerPiece[1]] != ' ') {
+                    if (GameManager.getGrid()[centerPiece[0] - i][centerPiece[1]] != ' ') {
                         collision = true;
                     }
                 }
@@ -539,7 +539,7 @@ public class Block extends Rectangle {
             // check rotation for position 6
             if (supportingPieces[6] != 0) {
                 for (int i = 1; i <= supportingPieces[6]; i++) {
-                    if (GameManager.getGrid()[centerPiece[0]][centerPiece[1] - i] != ' ') {
+                    if (GameManager.getGrid()[centerPiece[0]][centerPiece[1] + i] != ' ') {
                         collision = true;
                     }
                 }
@@ -548,7 +548,7 @@ public class Block extends Rectangle {
             // check rotation for position 0
             if (supportingPieces[0] != 0) {
                 for (int i = 1; i <= supportingPieces[2]; i++) {
-                    if (GameManager.getGrid()[centerPiece[0] - i][centerPiece[1]] != ' ') {
+                    if (GameManager.getGrid()[centerPiece[0] + i][centerPiece[1]] != ' ') {
                         collision = true;
                     }
                 }
