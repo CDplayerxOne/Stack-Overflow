@@ -36,7 +36,7 @@ public class Block extends Rectangle {
         this.type = type;
 
         // 25% chance the block has a score multiplier
-        if (Math.random() < 0.15) {
+        if (Math.random() < 1) {
             scoreMultiplier = true;
             try {
                 scoreMultiplierImage = ImageIO.read(new File("Images/ScoreMultiplier.png"));
