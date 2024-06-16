@@ -42,8 +42,10 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 
     manager = new GameManager();
     // block = new Block(5, 2, 4);
-    GameManager.activateBlock(GameManager.nextblock);
-    GameManager.generateBlock();
+    if (!end){
+      GameManager.activateBlock(GameManager.nextblock);
+      GameManager.generateBlock();
+    }
     // addMouseListener(new MouseAdapter() {
     // public void mousePressed(MouseEvent e) {
     // ball.mousePressed(e);
@@ -164,9 +166,9 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
         if (GameManager.next) {
           GameManager.rowCollapse();
           System.out.println(gameRunning + "gamerunning");
-          GameManager.activateBlock(GameManager.nextblock);
-          System.out.println(GameManager.nextblock.getActive() + "is Active");
-          GameManager.generateBlock();
+            GameManager.activateBlock(GameManager.nextblock);
+            System.out.println(GameManager.nextblock.getActive() + "is Active");
+            GameManager.generateBlock();
           GameManager.next = false;
           if (GameManager.checkEnd()) {
             setEnd();
@@ -182,18 +184,16 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
   // calls other methods and objects for when the user presses their keyboard key
   public void keyPressed(KeyEvent e) {
     changeGameState(e);
-    for (Block b : GameManager.getBlocks()) {
-      b.keyPressed(e);
-
+    if (gameRunning()){
+      GameManager.blocks.get(GameManager.blocks.size()-1).keyPressed(e);
     }
   }
 
   // calls other methods for when the user releases their keyboard key
   public void keyReleased(KeyEvent e) {
-    for (Block b : GameManager.getBlocks()) {
-      b.keyReleased(e);
+    if (gameRunning()){
+      GameManager.blocks.get(GameManager.blocks.size()-1).keyReleased(e);
     }
-
   }
 
   // override method for keyTyped

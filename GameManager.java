@@ -15,7 +15,7 @@ public class GameManager {
 	public static final char[] COLOURS = { 'r', 'b', 'y', 'p', 'g' };
 	public static char[][] grid = new char[11][22];
 	public static int[] currentCenterPiece = new int[2];
-	public static ArrayList<int[]> currentSupportPieces = new ArrayList<int[]>();
+	public static ArrayList<int[]> currentSupportPieces = new ArrayList<>();
 	public static int currentBlock = 0;
 	public static boolean next = false;
 	public static Block nextblock = new Block((int) (Math.random() * 5));
@@ -47,7 +47,7 @@ public class GameManager {
 		score = -10;
 		notHeld = 2;
 		blocks = new ArrayList<>();
-		currentSupportPieces = new ArrayList<int[]>();
+		currentSupportPieces = new ArrayList<>();
 		currentBlock = 0;
 		hold = null;
 		tempBlock = null;
@@ -56,7 +56,7 @@ public class GameManager {
 
 	// generates a block object
 	public static void generateBlock() {
-		if (!GamePanel.end) {
+		if (!checkEnd()) {
 			nextblock = new Block((int) (Math.random() * 5));
 		}
 	}
@@ -131,7 +131,9 @@ public class GameManager {
 
 		if (notHeld > 1) {
 			score += 10;
-			PlaySound.playBlockPlace();
+			if (GamePanel.gameRunning()){
+				PlaySound.PlayholdBlock();
+			}
 		}
 
 	}
@@ -212,7 +214,7 @@ public class GameManager {
 	public static boolean checkEnd() {
 
 		for (int i = 0; i < 11; i++) {
-			if (getGrid()[i][5] != ' ') {
+			if (getGrid()[i][6] != ' ') {
 				return true;
 			}
 
@@ -272,6 +274,7 @@ public class GameManager {
 	// draws the blocks
 
 	public void draw(Graphics g) {
+		int z;
 
 		nextblock.drawNextPos(g);
 
@@ -279,8 +282,13 @@ public class GameManager {
 			hold.drawHoldingPos(g);
 		}
 
+		if (!GamePanel.end){
+			z = 0;
+		} else {
+			z = 5;
+		}
 		for (int i = 0; i < 11; i++) {
-			for (int j = 0; j < 22; j++) {
+			for (int j = z; j < 22; j++) {
 				if (getGrid()[i][j] != ' ') {
 					g.setColor(Color.BLACK);
 					g.fillRect(140 + i * 35, j * 35, 35, 35);

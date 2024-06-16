@@ -17,7 +17,7 @@ public class Block extends Rectangle {
             { 1, 0, 1, 1, 1, 0, 0, 0 }, { 2, 0, 0, 0, 2, 0, 0, 0 } };
     private final int[][] STARTING_POSITIONS = { { 5, 1 }, { 5, 1 }, { 5, 2 }, { 5, 1 }, { 5, 2 } };
     private final int[][] NEXT_POSITIONS = { { 13, 18 }, { 13, 19 }, { 13, 19 }, { 13, 18 }, { 13, 18 } };
-    private final int[][] HOLD_POSITIONS = { { -2, 18 }, { -2, 18 }, { -2, 19 }, { -2, 18 }, { -2, 19 } };
+    private final int[][] HOLD_POSITIONS = { { -2, 18 }, { -2, 19 }, { -2, 19 }, { -2, 18 }, { -2, 18 } };
     private final Color[] COLOURS = { Color.RED, Color.CYAN, Color.YELLOW, Color.MAGENTA, Color.GREEN };
     private boolean isActive;
     private final int type;
