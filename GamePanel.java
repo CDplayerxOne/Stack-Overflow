@@ -102,7 +102,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
             g.drawImage(endScreen, 175, 175, null);
             g.setFont(scoreFont);
             g.setColor(Color.white);
-            g.drawString("" + Files.getLatest(), 490, 500);
+            g.drawString("" + Files.getLatest(), 460, 485);
         }
     }
 
