@@ -146,11 +146,10 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 
             if (delta >= 1) {
                 if (gameRunning) {
-                    GameManager.blocks.get(GameManager.blocks.size()-1).autoFall();
+                    GameManager.blocks.get(GameManager.blocks.size() - 1).autoFall();
                 }
                 if (GameManager.generateNextBlock) {
                     GameManager.rowCollapse();
-                    System.out.println(gameRunning + "gamerunning");
 
                     if (GameManager.checkEnd()) {
                         setEnd();

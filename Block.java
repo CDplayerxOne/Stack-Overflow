@@ -190,29 +190,26 @@ public class Block extends Rectangle {
     // moves the block according to its x and y velocity
     public void move(int xVel, int yVel) {
 
-        boolean ran = false;
         if (xVel > 0) {
             if (!checkHorizontalCollisionRight()) {
 
                 centerPiece[0] += xVel;
                 GameManager.updatePosition(1);
-                ran = true;
                 System.out.println(Arrays.toString(centerPiece));
             }
-        } else if (xVel < 0){
+        }
+        if (xVel < 0) {
             if (!checkHorizontalCollisionLeft()) {
                 centerPiece[0] += xVel;
                 GameManager.updatePosition(2);
-                ran = true;
-            }
-        } else {
-            if (!checkVerticalCollision()){
-                centerPiece[1] += yVel;
-                System.out.println("moved");
             }
         }
-        if (!ran) {
+        if (!checkVerticalCollision()) {
+            System.out.println("no coollision");
+            centerPiece[1] += yVel;
             GameManager.updatePosition(0);
+        } else {
+            GameManager.generateNextBlock = true;
         }
     }
 
@@ -236,143 +233,77 @@ public class Block extends Rectangle {
 
     // checks if the block collides with another block
     public boolean checkVerticalCollision() {
-//        boolean collision = false;
-//        boolean cont = true;
-//
-//        // if the row under it is above the bottom, if itself is not 0 and if the square
-//        // under it is taken
-//        if ((centerPiece[1] + supportingPieces[4] + 1) <= 21 && GameManager.getGrid()[centerPiece[0]][centerPiece[1] + supportingPieces[4] + 1] != ' ') {
-//            collision = true;
-//            cont = false;
-//            System.out.println("collision 1");
-//            for (char[] item : GameManager.getGrid()) {
-//                System.out.println(Arrays.toString(item));
-//            }
-//        }
-//
-//        // if the square under it can exist. If the it itself is not 0 and if the square
-//        // under it is taken
-//        if ((centerPiece[1] + 2) <= 21 && supportingPieces[3] != 0
-//                && GameManager.getGrid()[centerPiece[0] + 1][centerPiece[1] + 2] != ' ' && cont) {
-//            collision = true;
-//            cont = false;
-//            System.out.println("collision 2");
-//
-//        }
-//
-//        // if the square under it can exist. If the it itself is not 0 and if the square
-//        // under it is taken
-//        if ((centerPiece[1] + 2) <= 21 && supportingPieces[5] != 0
-//                && GameManager.getGrid()[centerPiece[0] - 1][centerPiece[1] + 2] != ' ' && cont) {
-//            collision = true;
-//            cont = false;
-//            System.out.println("collision 3");
-//        }
-//
-//        // if it is not the bottom row and the block below is occupied
-//        if ((centerPiece[1] + 1) <= 21
-//                && GameManager.getGrid()[centerPiece[0]][centerPiece[1] + 1] != ' '
-//                && supportingPieces[4] == 0) {
-//            collision = true;
-//            cont = false;
-//            System.out.println("collision 4");
-//            for (char[] item : GameManager.getGrid()) {
-//                System.out.println(Arrays.toString(item));
-//            }
-//        }
-//
-//        // the 6 spot
-//        // if itself is not 0. If it does not go beyond 21 and if the spot under it is
-//        // occupied
-//        for (int i = 1; i < supportingPieces[6] + 1; i++) {
-//            if ((centerPiece[1] + 1) <= 21 && supportingPieces[6] != 0
-//                    && GameManager.getGrid()[centerPiece[0] - i][centerPiece[1] + 1] != ' ' && cont
-//                    && supportingPieces[5] == 0) {
-//                collision = true;
-//                cont = false;
-//                System.out.println("collision 5");
-//                System.out.println(i);
-//                break;
-//            }
-//        }
-//
-//        // the 2 spot
-//        // if itself is not 0. If it does not go beyond 21 and if the spot under it is
-//        // occupied
-//        for (int i = 1; i < supportingPieces[2] + 1; i++) {
-//            if ((centerPiece[1] + 1) <= 21 && supportingPieces[2] != 0
-//                    && GameManager.getGrid()[centerPiece[0] + i][centerPiece[1] + 1] != ' ' && cont
-//                    && supportingPieces[3] == 0) {
-//                collision = true;
-//                cont = false;
-//                System.out.println("collision 6");
-//                System.out.println(i);
-//                for (char[] item : GameManager.getGrid()) {
-//                    System.out.println(Arrays.toString(item));
-//                }
-//                break;
-//            }
-//        }
-//
-//        // the 7 spot
-//        // if itself is not 0. If it does not go beyond 21 and if the spot under it is
-//        // occupied
-//        if ((centerPiece[1]) <= 21 && supportingPieces[7] != 0
-//                && GameManager.getGrid()[centerPiece[0] - 1][centerPiece[1]] != ' ' && cont
-//                && supportingPieces[5] == 0 && supportingPieces[6] == 0) {
-//            collision = true;
-//            cont = false;
-//            System.out.println("collision 7");
-//        }
-//
-//        if ((centerPiece[1]) <= 21 && supportingPieces[1] != 0
-//                && GameManager.getGrid()[centerPiece[0]][centerPiece[1]] != ' ' && cont
-//                && supportingPieces[3] == 0 && supportingPieces[2] == 0) {
-//            collision = true;
-//            System.out.println("collision 8");
-//        }
+        System.out.println(type);
+        System.out.println(supportingPieces[2]);
+        System.out.println(supportingPieces[3]);
+
+        // System.out.println("what is supporting pieces 4 " + supportingPieces[4]);
 
         boolean collision = false;
 
-        //check if the center piece is above the bottom
-        if ((centerPiece[1] + 1) >= 22){
+        // check if the center piece is above the bottom
+        if ((centerPiece[1] + 1) >= 22) {
             collision = true;
+            System.out.println("collision 1");
 
-            //check if the other pieces are above the bottom
-        } else if (((centerPiece[1] + supportingPieces[3] + 1) >= 22) || ((centerPiece[1] + supportingPieces[4] + 1) >= 22) || ((centerPiece[1] + supportingPieces[5] + 1) >= 22)){
+            // check if the other pieces are above the bottom
+        }
+        if (((centerPiece[1] + supportingPieces[3] + 1) >= 22)
+                || ((centerPiece[1] + supportingPieces[4] + 1) >= 22)
+                || ((centerPiece[1] + supportingPieces[5] + 1) >= 22)) {
             collision = true;
+            System.out.println("collision 2");
 
-            //check if there is a block below position 2
-        } else if (supportingPieces[2] > supportingPieces[3]) {
-            for (int i = 1; i <= supportingPieces[2]; i++) {
-                if (GameManager.getGrid()[centerPiece[0] + i][centerPiece[1] + 1] != ' ') {
+            // check if there is a block below position 2
+        } else {
+
+            if (supportingPieces[2] > supportingPieces[3]) {
+                for (int i = 1; i <= supportingPieces[2]; i++) {
+                    if (GameManager.getGrid()[centerPiece[0] + i][centerPiece[1] + 1] != ' ') {
+                        collision = true;
+                        System.out.println("collision 3");
+                    }
+                }
+
+                // check if there is a block below position 3
+            }
+            if (supportingPieces[3] != 0) {
+                if (GameManager.getGrid()[centerPiece[0] + 1][centerPiece[1] + 2] != ' ') {
                     collision = true;
+                    System.out.println("collision 4");
+
+                }
+
+                // check if there is a block below position 4
+            }
+            if (supportingPieces[4] != 0) {
+                if (GameManager.getGrid()[centerPiece[0]][centerPiece[1] + 1 + supportingPieces[4]] != ' ') {
+                    collision = true;
+                    System.out.println("collision 5");
+                }
+
+                // check if there is a block below position 5
+            }
+            if (supportingPieces[5] != 0) {
+                if (GameManager.getGrid()[centerPiece[0] - 1][centerPiece[1] + 2] != ' ') {
+                    collision = true;
+                    System.out.println("collision 6");
+                }
+
+                // check if there is a block below position 6
+            }
+            if (supportingPieces[6] > supportingPieces[5]) {
+                for (int i = 1; i <= supportingPieces[6]; i++) {
+                    if (GameManager.getGrid()[centerPiece[0] - i][centerPiece[1] + 1] != ' ') {
+                        collision = true;
+                        System.out.println("collision 7");
+                    }
                 }
             }
-
-            //check if there is a block below position 3
-        } else if (supportingPieces[3] != 0) {
-            if (GameManager.getGrid()[centerPiece[0] + 1][centerPiece[1] + 2] != ' ') {
-                collision = true;
-            }
-
-            //check if there is a block below position 4
-        } else if (supportingPieces[4] != 0) {
-            if (GameManager.getGrid()[centerPiece[0]][centerPiece[1] + 1 + supportingPieces[4]] != ' ') {
-                collision = true;
-            }
-
-            //check if there is a block below position 5
-        } else if (supportingPieces[5] != 0) {
-            if (GameManager.getGrid()[centerPiece[0] - 1][centerPiece[1] + 2] != ' ') {
-                collision = true;
-            }
-
-            //check if there is a block below position 6
-        } else if (supportingPieces[6] > supportingPieces[5]) {
-            for (int i = 1; i <= supportingPieces[6]; i++){
-                if (GameManager.getGrid()[centerPiece[0] - i][centerPiece[1] + 1] != ' ') {
+            if (supportingPieces[4] == 0) {
+                if (GameManager.getGrid()[centerPiece[0]][centerPiece[1] + 1] != ' ') {
                     collision = true;
+                    System.out.println("collsiion 8");
                 }
             }
         }
@@ -381,6 +312,9 @@ public class Block extends Rectangle {
             GameManager.generateNextBlock = true;
             return true;
         } else {
+            System.out.println("Validation for collision 5: "
+                    + GameManager.getGrid()[centerPiece[0]][centerPiece[1] + 1 + supportingPieces[4]]);
+            System.out.println(supportingPieces[4]);
             return false;
         }
     }
@@ -474,20 +408,20 @@ public class Block extends Rectangle {
 
     // moves the block while auto falling down
     public void autoFall() {
-        if ((getCenterPiece()[1] + supportingPieces[3] < 21) && (getCenterPiece()[1] + supportingPieces[4] < 21)
-                && (getCenterPiece()[1] + supportingPieces[5] < 21)) {
+        internalCount++;
+        if (internalCount == 33) {
             if (!checkVerticalCollision()) {
                 // Every 33 frames
-                internalCount++;
-                if (internalCount == 33) {
-                    // move down
-                    move(0, 1);
-                    internalCount = 0;
+                // move down
+                move(0, 1);
 
-                    GameManager.updatePosition(0);
-                    // System.out.println(checkVerticalCollision() + " collision");
-                }
+                // GameManager.updatePosition(0);
+                // System.out.println(checkVerticalCollision() + " collision");
+
+            } else {
+                GameManager.generateNextBlock = true;
             }
+            internalCount = 0;
         }
     }
 

@@ -13,7 +13,7 @@ import java.util.*;
 public class GameManager {
     // declare variables, constants, and objects
     public static ArrayList<Block> blocks = new ArrayList<>();
-    public static final char[] COLOURS = {'r', 'b', 'y', 'p', 'g'};
+    public static final char[] COLOURS = { 'r', 'b', 'y', 'p', 'g' };
     public static char[][] grid = new char[11][22];
     public static int[] currentCenterPiece = new int[2];
     public static ArrayList<int[]> currentSupportPieces = new ArrayList<>();
@@ -133,17 +133,17 @@ public class GameManager {
 
         // Clear its old position
         grid[currentCenterPiece[0]][currentCenterPiece[1] - 1] = ' ';
-        System.out.println(grid[currentCenterPiece[0]][currentCenterPiece[1]]);
+        System.out.println(grid[currentCenterPiece[0]][currentCenterPiece[1] - 1]);
 
         if (type == 1 && currentCenterPiece[0] - 1 >= 0 && currentCenterPiece[1] >= 0) {
             grid[currentCenterPiece[0] - 1][currentCenterPiece[1]] = ' ';
-            System.out.println(grid[currentCenterPiece[0] - 1][currentCenterPiece[1]] + " why");
+            System.out.println(grid[currentCenterPiece[0] - 1][currentCenterPiece[1]] + " right");
         }
 
         if (type == 2 && currentCenterPiece[0] + 1 < 11 && currentCenterPiece[1] < 21) {
 
             grid[currentCenterPiece[0] + 1][currentCenterPiece[1]] = ' ';
-            System.out.println(grid[currentCenterPiece[0] + 1][currentCenterPiece[1]] + " how");
+            System.out.println(grid[currentCenterPiece[0] + 1][currentCenterPiece[1]] + " left");
         }
 
         // Clear the position of each supporting piece on the grid
@@ -152,7 +152,8 @@ public class GameManager {
         }
 
         // Populate the grid with new position
-        grid[blocks.get(blocks.size() - 1).getCenterPiece()[0]][blocks.get(blocks.size() - 1).getCenterPiece()[1]] = COLOURS[blocks.get(blocks.size() - 1).getType()];
+        grid[blocks.get(blocks.size() - 1).getCenterPiece()[0]][blocks.get(blocks.size() - 1)
+                .getCenterPiece()[1]] = COLOURS[blocks.get(blocks.size() - 1).getType()];
 
         // Update the position of each supporting piece on the grid
         for (int[] piece : blocks.get(blocks.size() - 1).getSupportingPieces()) {
@@ -165,6 +166,7 @@ public class GameManager {
         for (char[] item : grid) {
             System.out.println(Arrays.toString(item));
         }
+        System.out.println("end of updatePosition");
     }
 
     // returns the grid of all occupied squares
@@ -216,9 +218,8 @@ public class GameManager {
                     System.out.println(Arrays.toString(array));
                 }
                 for (int j = 0; j < 11; j++) {
-                    System.out.println("hello");
-					// put them one row lower
-					System.arraycopy(temp[j], 0, grid[j], 1, i + 1 - 1);
+                    // put them one row lower
+                    System.arraycopy(temp[j], 0, grid[j], 1, i + 1 - 1);
                 }
             }
         }
