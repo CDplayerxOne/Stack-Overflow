@@ -19,7 +19,6 @@ public class Block extends Rectangle {
     private final int[][] NEXT_POSITIONS = { { 13, 18 }, { 13, 19 }, { 13, 19 }, { 13, 18 }, { 13, 18 } };
     private final int[][] HOLD_POSITIONS = { { -2, 18 }, { -2, 19 }, { -2, 19 }, { -2, 18 }, { -2, 18 } };
     private final Color[] COLOURS = { Color.RED, Color.CYAN, Color.YELLOW, Color.MAGENTA, Color.GREEN };
-    private boolean isActive;
     private final int type;
     private int[] centerPiece;
     private int[] supportingPieces;
@@ -31,7 +30,6 @@ public class Block extends Rectangle {
     // constructor for Block
     public Block(int type) {
         this.type = type;
-        isActive = true;
         switch (type) {
             case 0:
                 supportingPieces = TYPES[0];
@@ -133,48 +131,32 @@ public class Block extends Rectangle {
         return pieces;
     }
 
-    // returns if the block is active or not
-    public boolean getActive() {
-        return isActive;
-    }
-
     // method to respond to a key press
     public void keyPressed(KeyEvent e) {
         // CW block roatation
         if (e.getKeyCode() == KeyEvent.VK_UP) {
             // implement in rotate
-            if (isActive) {
-                rotate();
-            }
+            rotate();
         }
 
         // accelerate downwards
         if (e.getKeyCode() == KeyEvent.VK_DOWN) {
-            // System.out.println(type + " " + isActive + "active");
-            if (isActive) {
-                move(0, 1);
-            }
+            move(0, 1);
         }
 
         // move the block the left
         if (e.getKeyCode() == KeyEvent.VK_LEFT) {
-            if (isActive) {
-                move(-1, 0);
-            }
+            move(-1, 0);
         }
 
         // move the block to the right
         if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
-
-            // System.out.println(type + " " + isActive + "active");
-            if (isActive) {
-                move(1, 0);
-            }
+            move(1, 0);
         }
 
         // hold the block and change status
         if (e.getKeyCode() == KeyEvent.VK_SPACE) {
-            if (GamePanel.gameRunning()) {
+            if (GamePanel.gameRunning) {
                 GameManager.holdBlock();
             }
         }
@@ -182,8 +164,6 @@ public class Block extends Rectangle {
 
     // method to respond to a key being released
     public void keyReleased(KeyEvent e) {
-        if (e.getKeyCode() == KeyEvent.VK_UP) {
-        }
 
         if (e.getKeyCode() == KeyEvent.VK_DOWN) {
             move(0, 0);
@@ -198,6 +178,7 @@ public class Block extends Rectangle {
         }
 
         if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
+            move(0, 0);
         }
     }
 
@@ -206,17 +187,10 @@ public class Block extends Rectangle {
         centerPiece[0] += xVel;
     }
 
-    // sets the y-velocity of the center piece
-    public void setCenterPieceY(int yVel) {
-        centerPiece[1] += yVel;
-    }
-
     // moves the block according to its x and y velocity
     public void move(int xVel, int yVel) {
 
         boolean ran = false;
-        centerPiece[1] += yVel;
-        System.out.println("moved");
         if (xVel > 0) {
             if (!checkHorizontalCollisionRight()) {
 
@@ -225,11 +199,16 @@ public class Block extends Rectangle {
                 ran = true;
                 System.out.println(Arrays.toString(centerPiece));
             }
-        } else {
+        } else if (xVel < 0){
             if (!checkHorizontalCollisionLeft()) {
                 centerPiece[0] += xVel;
                 GameManager.updatePosition(2);
                 ran = true;
+            }
+        } else {
+            if (!checkVerticalCollision()){
+                centerPiece[1] += yVel;
+                System.out.println("moved");
             }
         }
         if (!ran) {
@@ -255,157 +234,155 @@ public class Block extends Rectangle {
         return false;
     }
 
-    public int[] getCurrentSupportingPieces() {
-        return supportingPieces;
-    }
-
     // checks if the block collides with another block
     public boolean checkVerticalCollision() {
+//        boolean collision = false;
+//        boolean cont = true;
+//
+//        // if the row under it is above the bottom, if itself is not 0 and if the square
+//        // under it is taken
+//        if ((centerPiece[1] + supportingPieces[4] + 1) <= 21 && GameManager.getGrid()[centerPiece[0]][centerPiece[1] + supportingPieces[4] + 1] != ' ') {
+//            collision = true;
+//            cont = false;
+//            System.out.println("collision 1");
+//            for (char[] item : GameManager.getGrid()) {
+//                System.out.println(Arrays.toString(item));
+//            }
+//        }
+//
+//        // if the square under it can exist. If the it itself is not 0 and if the square
+//        // under it is taken
+//        if ((centerPiece[1] + 2) <= 21 && supportingPieces[3] != 0
+//                && GameManager.getGrid()[centerPiece[0] + 1][centerPiece[1] + 2] != ' ' && cont) {
+//            collision = true;
+//            cont = false;
+//            System.out.println("collision 2");
+//
+//        }
+//
+//        // if the square under it can exist. If the it itself is not 0 and if the square
+//        // under it is taken
+//        if ((centerPiece[1] + 2) <= 21 && supportingPieces[5] != 0
+//                && GameManager.getGrid()[centerPiece[0] - 1][centerPiece[1] + 2] != ' ' && cont) {
+//            collision = true;
+//            cont = false;
+//            System.out.println("collision 3");
+//        }
+//
+//        // if it is not the bottom row and the block below is occupied
+//        if ((centerPiece[1] + 1) <= 21
+//                && GameManager.getGrid()[centerPiece[0]][centerPiece[1] + 1] != ' '
+//                && supportingPieces[4] == 0) {
+//            collision = true;
+//            cont = false;
+//            System.out.println("collision 4");
+//            for (char[] item : GameManager.getGrid()) {
+//                System.out.println(Arrays.toString(item));
+//            }
+//        }
+//
+//        // the 6 spot
+//        // if itself is not 0. If it does not go beyond 21 and if the spot under it is
+//        // occupied
+//        for (int i = 1; i < supportingPieces[6] + 1; i++) {
+//            if ((centerPiece[1] + 1) <= 21 && supportingPieces[6] != 0
+//                    && GameManager.getGrid()[centerPiece[0] - i][centerPiece[1] + 1] != ' ' && cont
+//                    && supportingPieces[5] == 0) {
+//                collision = true;
+//                cont = false;
+//                System.out.println("collision 5");
+//                System.out.println(i);
+//                break;
+//            }
+//        }
+//
+//        // the 2 spot
+//        // if itself is not 0. If it does not go beyond 21 and if the spot under it is
+//        // occupied
+//        for (int i = 1; i < supportingPieces[2] + 1; i++) {
+//            if ((centerPiece[1] + 1) <= 21 && supportingPieces[2] != 0
+//                    && GameManager.getGrid()[centerPiece[0] + i][centerPiece[1] + 1] != ' ' && cont
+//                    && supportingPieces[3] == 0) {
+//                collision = true;
+//                cont = false;
+//                System.out.println("collision 6");
+//                System.out.println(i);
+//                for (char[] item : GameManager.getGrid()) {
+//                    System.out.println(Arrays.toString(item));
+//                }
+//                break;
+//            }
+//        }
+//
+//        // the 7 spot
+//        // if itself is not 0. If it does not go beyond 21 and if the spot under it is
+//        // occupied
+//        if ((centerPiece[1]) <= 21 && supportingPieces[7] != 0
+//                && GameManager.getGrid()[centerPiece[0] - 1][centerPiece[1]] != ' ' && cont
+//                && supportingPieces[5] == 0 && supportingPieces[6] == 0) {
+//            collision = true;
+//            cont = false;
+//            System.out.println("collision 7");
+//        }
+//
+//        if ((centerPiece[1]) <= 21 && supportingPieces[1] != 0
+//                && GameManager.getGrid()[centerPiece[0]][centerPiece[1]] != ' ' && cont
+//                && supportingPieces[3] == 0 && supportingPieces[2] == 0) {
+//            collision = true;
+//            System.out.println("collision 8");
+//        }
+
         boolean collision = false;
-        boolean cont = true;
 
-        // if the row under it is above the bottom, if itself is not 0 and if the square
-        // under it is taken
-        if ((centerPiece[1] + supportingPieces[4] + 1) <= 21 && supportingPieces[4] != 0
-                && GameManager.getGrid()[centerPiece[0]][centerPiece[1] + supportingPieces[4]
-                        + 1] != ' ') {
-
+        //check if the center piece is above the bottom
+        if ((centerPiece[1] + 1) >= 22){
             collision = true;
-            cont = false;
-            if (isActive) {
-                GameManager.next = true;
-                System.out.println("collision 1");
-                for (char[] item : GameManager.getGrid()) {
-                    System.out.println(Arrays.toString(item));
+
+            //check if the other pieces are above the bottom
+        } else if (((centerPiece[1] + supportingPieces[3] + 1) >= 22) || ((centerPiece[1] + supportingPieces[4] + 1) >= 22) || ((centerPiece[1] + supportingPieces[5] + 1) >= 22)){
+            collision = true;
+
+            //check if there is a block below position 2
+        } else if (supportingPieces[2] > supportingPieces[3]) {
+            for (int i = 1; i <= supportingPieces[2]; i++) {
+                if (GameManager.getGrid()[centerPiece[0] + i][centerPiece[1] + 1] != ' ') {
+                    collision = true;
                 }
             }
-            isActive = false;
-        }
 
-        // if the square under it can exist. If the it itself is not 0 and if the square
-        // under it is taken
-        if ((centerPiece[1] + 2) <= 21 && supportingPieces[3] != 0
-                && GameManager.getGrid()[centerPiece[0] + 1][centerPiece[1] + 2] != ' ' && cont) {
-
-            collision = true;
-            cont = false;
-            if (isActive) {
-                GameManager.next = true;
-                System.out.println("collision 2");
-            }
-            isActive = false;
-
-        }
-
-        // if the square under it can exist. If the it itself is not 0 and if the square
-        // under it is taken
-        if ((centerPiece[1] + 2) <= 21 && supportingPieces[5] != 0
-                && GameManager.getGrid()[centerPiece[0] - 1][centerPiece[1] + 2] != ' ' && cont) {
-
-            collision = true;
-            cont = false;
-            if (isActive) {
-                GameManager.next = true;
-                System.out.println("collision 3");
-            }
-            isActive = false;
-
-        }
-
-        // if it is not the bottom row and the block below is occupied
-        if ((centerPiece[1] + 1) <= 21
-                && GameManager.getGrid()[centerPiece[0]][centerPiece[1] + 1] != ' '
-                && supportingPieces[4] == 0) {
-            collision = true;
-            cont = false;
-            if (isActive) {
-                GameManager.next = true;
-                System.out.println("collision 4");
-                for (char[] item : GameManager.getGrid()) {
-                    System.out.println(Arrays.toString(item));
-                }
-            }
-            isActive = false;
-
-        }
-
-        // the 6 spot
-        // if itself is not 0. If it does not go beyond 21 and if the spot under it is
-        // occupied
-        for (int i = 1; i < supportingPieces[6] + 1; i++) {
-            if ((centerPiece[1] + 1) <= 21 && supportingPieces[6] != 0
-                    && GameManager.getGrid()[centerPiece[0] - i][centerPiece[1] + 1] != ' ' && cont
-                    && supportingPieces[5] == 0) {
-
+            //check if there is a block below position 3
+        } else if (supportingPieces[3] != 0) {
+            if (GameManager.getGrid()[centerPiece[0] + 1][centerPiece[1] + 2] != ' ') {
                 collision = true;
-                cont = false;
-                if (isActive) {
-                    GameManager.next = true;
-                    System.out.println("collision 5");
-                    System.out.println(i);
-                }
-                isActive = false;
-                break;
-
             }
 
-        }
-
-        // the 2 spot
-        // if itself is not 0. If it does not go beyond 21 and if the spot under it is
-        // occupied
-        for (int i = 1; i < supportingPieces[2] + 1; i++) {
-
-            if ((centerPiece[1] + 1) <= 21 && supportingPieces[2] != 0
-                    && GameManager.getGrid()[centerPiece[0] + i][centerPiece[1] + 1] != ' ' && cont
-                    && supportingPieces[3] == 0) {
+            //check if there is a block below position 4
+        } else if (supportingPieces[4] != 0) {
+            if (GameManager.getGrid()[centerPiece[0]][centerPiece[1] + 1 + supportingPieces[4]] != ' ') {
                 collision = true;
-                cont = false;
-                if (isActive) {
-                    GameManager.next = true;
-                    System.out.println("collision 6");
-                    System.out.println(i);
-                    for (char[] item : GameManager.getGrid()) {
-                        System.out.println(Arrays.toString(item));
-                    }
+            }
+
+            //check if there is a block below position 5
+        } else if (supportingPieces[5] != 0) {
+            if (GameManager.getGrid()[centerPiece[0] - 1][centerPiece[1] + 2] != ' ') {
+                collision = true;
+            }
+
+            //check if there is a block below position 6
+        } else if (supportingPieces[6] > supportingPieces[5]) {
+            for (int i = 1; i <= supportingPieces[6]; i++){
+                if (GameManager.getGrid()[centerPiece[0] - i][centerPiece[1] + 1] != ' ') {
+                    collision = true;
                 }
-                isActive = false;
-                break;
-
             }
         }
 
-        // the 7 spot
-        // if itself is not 0. If it does not go beyond 21 and if the spot under it is
-        // occupied
-        if ((centerPiece[1]) <= 21 && supportingPieces[7] != 0
-                && GameManager.getGrid()[centerPiece[0] - 1][centerPiece[1]] != ' ' && cont
-                && supportingPieces[5] == 0 && supportingPieces[6] == 0) {
-
-            collision = true;
-            cont = false;
-            if (isActive) {
-                GameManager.next = true;
-                System.out.println("collision 7");
-            }
-            isActive = false;
-
+        if (collision) {
+            GameManager.generateNextBlock = true;
+            return true;
+        } else {
+            return false;
         }
-
-        if ((centerPiece[1]) <= 21 && supportingPieces[1] != 0
-                && GameManager.getGrid()[centerPiece[0]][centerPiece[1]] != ' ' && cont
-                && supportingPieces[3] == 0 && supportingPieces[2] == 0) {
-
-            collision = true;
-            cont = false;
-            if (isActive) {
-                GameManager.next = true;
-                System.out.println("collision 8");
-            }
-            isActive = false;
-        }
-
-        return collision;
     }
 
     // checks if there is a right horizontal collision between blocks
@@ -504,21 +481,13 @@ public class Block extends Rectangle {
                 internalCount++;
                 if (internalCount == 33) {
                     // move down
-                    centerPiece[1] += 1;
+                    move(0, 1);
                     internalCount = 0;
 
                     GameManager.updatePosition(0);
                     // System.out.println(checkVerticalCollision() + " collision");
                 }
             }
-        } else {
-            // change status here
-            if (isActive) {
-                GameManager.next = true;
-            }
-            isActive = false;
-
-            // GameManager.generateBlock();
         }
     }
 
