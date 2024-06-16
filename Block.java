@@ -394,6 +394,18 @@ public class Block extends Rectangle {
                 }
             }
 
+            if (supportingPieces[1] != 0) {
+                if (GameManager.getGrid()[getCenterPiece()[0] - 1][getCenterPiece()[1] - 1] != ' ') {
+                    return true;
+                }
+            }
+
+            if (supportingPieces[3] != 0) {
+                if (GameManager.getGrid()[getCenterPiece()[0] - 1][getCenterPiece()[1] - 1] != ' ') {
+                    return true;
+                }
+            }
+
             return false;
         } else {
             return true;
@@ -441,6 +453,19 @@ public class Block extends Rectangle {
                     }
                 }
             }
+
+            if (supportingPieces[5] != 0) {
+                if (GameManager.getGrid()[getCenterPiece()[0] + 1][getCenterPiece()[1] + 1] != ' ') {
+                    return true;
+                }
+            }
+
+            if (supportingPieces[7] != 0) {
+                if (GameManager.getGrid()[getCenterPiece()[0] + 1][getCenterPiece()[1] - 1] != ' ') {
+                    return true;
+                }
+            }
+
             return false;
         } else {
             return true;
