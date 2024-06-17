@@ -245,6 +245,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
         // transition from the help screen to the menu screen
         if (helpScreen) {
             if (e.getKeyChar() == 'h') {
+                PlaySound.playButtonClick();
                 menuScreen = true;
                 helpScreen = false;
                 checkedHelp = true;
@@ -264,7 +265,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
             if (e.getKeyChar() == 'h') {
                 menuScreen = false;
                 helpScreen = true;
-
+                PlaySound.playButtonClick();
             }
         }
 

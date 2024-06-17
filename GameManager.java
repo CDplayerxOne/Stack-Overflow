@@ -35,7 +35,6 @@ public class GameManager {
         try {
             scoreMultiplierImage = ImageIO.read(new File("Images/ScoreMultiplier.png"));
         } catch (IOException e) {
-            System.out.println("uh oh");
         }
 
         // make the grid empty
@@ -277,7 +276,7 @@ public class GameManager {
         // Held blocks
         if (hold != null) {
             hold.drawHoldPosition(g);
-//            Draws the star
+            //Draws the star
             if(hold.hasScoreMultiplier()){
                 g.drawImage(scoreMultiplierImage, (hold.getHoldCenterPos()[0]) * 35 + 123, (hold.getHoldCenterPos()[1]) * 35 + 3,
                         null);
