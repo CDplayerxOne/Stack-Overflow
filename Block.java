@@ -755,8 +755,8 @@ public class Block extends Rectangle {
 
     }
 
-//    Returns the hold center position
-    public int[] getHoldCenterPos(){
+    // Returns the hold center position
+    public int[] getHoldCenterPos() {
         return holdCenterPos;
     }
 
@@ -768,10 +768,6 @@ public class Block extends Rectangle {
         g.fillRect(120 + (holdCenterPos[0]) * 35, (holdCenterPos[1]) * 35, BLOCKLENGTH, BLOCKLENGTH);
         g.setColor(COLOURS[type]);
         g.fillRect((holdCenterPos[0]) * 35 + 123, (holdCenterPos[1]) * 35 + 3, BLOCKLENGTH - 6, BLOCKLENGTH - 6);
-//        if (scoreMultiplier) {
-//            g.drawImage(scoreMultiplierImage, (holdCenterPos[0]) * 35 + 123, (holdCenterPos[1]) * 35 + 3,
-//                    null);
-//        }
 
         // Supporting Pieces
         // 0 slot
