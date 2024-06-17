@@ -93,4 +93,19 @@
 200
 570
 120
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
 2210
+=======
+=======
+>>>>>>> Stashed changes
+100
+1360
+1920
+2990
+150
+2550
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
