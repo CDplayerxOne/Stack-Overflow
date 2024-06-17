@@ -1,14 +1,15 @@
 /*
  * Description: used to play music
  * Author: Corey Dai and Jeffrey Zhu
- * Date: June 4th 2024
+ * Date: June 17th 2024
  */
 
 //import libraries
+import java.io.File;
+
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
-import java.io.File;
 
 public class PlaySound {
     // declare objects
@@ -173,7 +174,7 @@ public class PlaySound {
         }
     }
 
-    // plays the holdBlock sound effect
+    // plays the row clear sound effect
     static void PlayRowClear() {
         try {
             // open rowClear file

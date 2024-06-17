@@ -1,11 +1,10 @@
 /*
  * Description: child of JPanel and creates the window for displaying the game
  * Author: Corey Dai and Jeffrey Zhu
- * Date: June 16th 2024
+ * Date: June 17th 2024
  */
 
 //import libraries
-
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -40,16 +39,17 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
     private static boolean ranEnd = false;
     Font scoreFont;
 
+    // Game Panel constructor
     public GamePanel() {
-        // ball = new PlayerBall(GAME_WIDTH / 2, GAME_HEIGHT / 2);
-        this.setFocusable(true);
-        this.addKeyListener(this);
 
-        this.setPreferredSize(new Dimension(GAME_WIDTH, GAME_HEIGHT));
+        // declare objects and variables
 
+        // creates a thread for GamePanel
         gameThread = new Thread(this);
-        gameThread.start();
 
+        manager = new GameManager();
+
+        // image declarations
         try {
             background = ImageIO.read(new File("Images/Background.png"));
             infoScreenBackground = ImageIO.read(new File("Images/infoScreen.png"));
@@ -60,15 +60,24 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
             x.printStackTrace();
         }
 
-        manager = new GameManager();
-        // block = new Block(5, 2, 4);
+        // starts GamePanel thread
+        gameThread.start();
+
+        // listens for key input
+        this.setFocusable(true);
+        this.addKeyListener(this);
+
+        // sets game window dimentions
+        this.setPreferredSize(new Dimension(GAME_WIDTH, GAME_HEIGHT));
+
+        // activates the starting blocks
         if (!end) {
             GameManager.activateBlock(GameManager.nextblock);
             GameManager.generateBlock();
         }
 
+        // plays menu music
         PlaySound.playMenuMusic();
-
     }
 
     // paints aspects depending on game state
@@ -80,6 +89,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
         draw(graphics);
         g.drawImage(image, 0, 0, this);
 
+        // prints the three highest scores
         if (menuScreen) {
             scoreFont = new Font("Arial", Font.BOLD, 45);
             g.setFont(scoreFont);
@@ -89,6 +99,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
             g.drawString("3. " + Files.findScore(3), 390, 490);
         }
 
+        // prints the current and all time high score
         if (gameRunning) {
             scoreFont = new Font("Arial", Font.BOLD, 40);
             g.setFont(scoreFont);
@@ -97,6 +108,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
             g.drawString("" + Files.findScore(1), 700, 520);
         }
 
+        // prints the final score
         if (end) {
             scoreFont = new Font("Arial", Font.BOLD, 55);
             g.drawImage(endScreen, 175, 175, null);
@@ -108,19 +120,23 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 
     // draws elements depending on game state
     public void draw(Graphics g) {
+
+        // draws the info screen
         if (infoScreen) {
             g.drawImage(infoScreenBackground.getScaledInstance(1025, 770, Image.SCALE_DEFAULT), 0, 0, null);
         }
 
+        // draws the menu screen
         if (menuScreen) {
             g.drawImage(menuScreenBackground.getScaledInstance(1025, 770, Image.SCALE_DEFAULT), 0, 0, null);
         }
 
+        // draws the help screen
         if (helpScreen) {
-            // System.out.println("hello");
             g.drawImage(helpScreenBackground.getScaledInstance(1025, 770, Image.SCALE_DEFAULT), 0, 0, null);
         }
 
+        // draws the game screen if the game is running or if the game is ended
         if (gameRunning || end) {
             g.drawImage(background, 0, 0, null);
 
@@ -153,14 +169,20 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
             lastTime = now;
 
             if (delta >= 1) {
+                // runs the autofall method for the cureently active block
                 if (gameRunning) {
                     GameManager.blocks.get(GameManager.blocks.size() - 1).autoFall();
                 }
+
+                // checks when a new block is generated
                 if (GameManager.generateNextBlock) {
                     GameManager.rowCollapse();
 
+                    // checks if the game should end
                     if (GameManager.checkEnd()) {
                         setEnd();
+
+                        // activates and generates the next blocks
                     } else {
                         GameManager.activateBlock(GameManager.nextblock);
                         GameManager.generateBlock();
@@ -196,7 +218,6 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
     public static void setEnd() {
         if (!ranEnd) {
             ranEnd = true;
-            System.out.println("set end");
             gameRunning = false;
             end = true;
             Files.writeFile(GameManager.score);
@@ -219,6 +240,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
             }
         }
 
+        // transition from the help screen to the menu screen
         if (helpScreen) {
             if (e.getKeyChar() == 'h') {
                 menuScreen = true;
@@ -244,6 +266,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
             }
         }
 
+        // transition from the end screen to the menu screen
         if (end) {
             if (e.getKeyCode() == KeyEvent.VK_SPACE) {
                 end = false;

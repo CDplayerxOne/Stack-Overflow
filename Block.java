@@ -1,7 +1,7 @@
 /*
- * Description: deals with the drawing and manipulation of the block object
+ * Description: deals with the drawing(certain states) and manipulation of the block object
  * Author: Corey Dai and Jeffrey Zhu
- * Date: June 16th 2024
+ * Date: June 17th 2024
  */
 
 //import libraries
@@ -40,18 +40,19 @@ public class Block extends Rectangle {
     public Block(int type) {
         this.type = type;
 
-        // 25% chance the block has a score multiplier
+        // % chance the block has a score multiplier
         if (Math.random() < 0.2) {
             scoreMultiplier = true;
             try {
                 scoreMultiplierImage = ImageIO.read(new File("Images/ScoreMultiplier.png"));
             } catch (IOException e) {
-                System.out.println("uh oh");
             }
         } else {
             scoreMultiplier = false;
         }
 
+        // assign the correct supporting pecies, center position, next center position,
+        // and hold center position for a block type
         switch (type) {
             case 0:
                 supportingPieces = TYPES[0];
@@ -83,7 +84,6 @@ public class Block extends Rectangle {
                 nextCenterPos = NEXT_POSITIONS[4];
                 holdCenterPos = HOLD_POSITIONS[4];
                 break;
-
             default:
                 break;
         }
@@ -102,62 +102,79 @@ public class Block extends Rectangle {
     // returns location of supporting pieces
     public ArrayList<int[]> getSupportingPieces() {
         ArrayList<int[]> pieces = new ArrayList<>();
+
+        // coords for supporting piece 0
         for (int i = 0; i < supportingPieces[0]; i++) {
             int[] coordinate = new int[2];
             coordinate[0] = centerPiece[0];
             coordinate[1] = centerPiece[1] - (i + 1);
             pieces.add(coordinate);
         }
+
+        // coords for supporting piece 1
         for (int i = 0; i < supportingPieces[1]; i++) {
             int[] coordinate = new int[2];
             coordinate[0] = centerPiece[0] + (i + 1);
             coordinate[1] = centerPiece[1] - (i + 1);
             pieces.add(coordinate);
         }
+
+        // coords for supporting piece 2
         for (int i = 0; i < supportingPieces[2]; i++) {
             int[] coordinate = new int[2];
             coordinate[0] = centerPiece[0] + (i + 1);
             coordinate[1] = centerPiece[1];
             pieces.add(coordinate);
         }
+
+        // coords for supporting piece 3
         for (int i = 0; i < supportingPieces[3]; i++) {
             int[] coordinate = new int[2];
             coordinate[0] = centerPiece[0] + (i + 1);
             coordinate[1] = centerPiece[1] + (i + 1);
             pieces.add(coordinate);
         }
+
+        // coords for supporting piece 4
         for (int i = 0; i < supportingPieces[4]; i++) {
             int[] coordinate = new int[2];
             coordinate[0] = centerPiece[0];
             coordinate[1] = centerPiece[1] + (i + 1);
             pieces.add(coordinate);
         }
+
+        // coords for supporting piece 5
         for (int i = 0; i < supportingPieces[5]; i++) {
             int[] coordinate = new int[2];
             coordinate[0] = centerPiece[0] - (i + 1);
             coordinate[1] = centerPiece[1] + (i + 1);
             pieces.add(coordinate);
         }
+
+        // coords for supporting piece 6
         for (int i = 0; i < supportingPieces[6]; i++) {
             int[] coordinate = new int[2];
             coordinate[0] = centerPiece[0] - (i + 1);
             coordinate[1] = centerPiece[1];
             pieces.add(coordinate);
         }
+
+        // coords for supporting piece 7
         for (int i = 0; i < supportingPieces[7]; i++) {
             int[] coordinate = new int[2];
             coordinate[0] = centerPiece[0] - (i + 1);
             coordinate[1] = centerPiece[1] - (i + 1);
             pieces.add(coordinate);
         }
+
         return pieces;
     }
 
     // method to respond to a key press
     public void keyPressed(KeyEvent e) {
+
         // CW block roatation
         if (e.getKeyCode() == KeyEvent.VK_UP) {
-            // implement in rotate
             rotate();
         }
 
@@ -214,22 +231,26 @@ public class Block extends Rectangle {
     // moves the block according to its x and y velocity
     public void move(int xVel, int yVel) {
 
+        // updates position if block is moving to the right
         if (xVel > 0) {
             if (!checkHorizontalCollisionRight()) {
 
                 centerPiece[0] += xVel;
                 GameManager.updatePosition(1);
-                // System.out.println(Arrays.toString(centerPiece));
             }
         }
+
+        // updates position if block is moving to the left
         if (xVel < 0) {
             if (!checkHorizontalCollisionLeft()) {
                 centerPiece[0] += xVel;
                 GameManager.updatePosition(2);
             }
         }
+
+        // updates position and checks for a vertical collision if the block is moving
+        // down
         if (!checkVerticalCollision()) {
-            // System.out.println("no coollision");
             centerPiece[1] += yVel;
             GameManager.updatePosition(0);
         } else {
@@ -257,30 +278,19 @@ public class Block extends Rectangle {
 
     // checks if the block collides with another block
     public boolean checkVerticalCollision() {
-        // System.out.println("collision");
-        // System.out.println(type);
-        // System.out.println(supportingPieces[2]);
-        // System.out.println(supportingPieces[3]);
-
-        // System.out.println("what is supporting pieces 4 " + supportingPieces[4]);
-
         boolean collision = false;
 
         // check if the center piece is above the bottom
         if ((centerPiece[1] + 1) >= 22) {
             collision = true;
-            // System.out.println("collision 1");
-
-            // check if the other pieces are above the bottom
         }
 
+        // check if the bottom pieces are touching the bottom
         if (((centerPiece[1] + supportingPieces[3] + 1) >= 22)
                 || ((centerPiece[1] + supportingPieces[4] + 1) >= 22)
                 || ((centerPiece[1] + supportingPieces[5] + 1) >= 22)) {
             collision = true;
-            // System.out.println("collision 2");
 
-            // check if there is a block below position 2
         } else {
 
             // check if there is a block under postion 1
@@ -302,38 +312,29 @@ public class Block extends Rectangle {
                 for (int i = 1; i <= supportingPieces[2]; i++) {
                     if (GameManager.getGrid()[centerPiece[0] + i][centerPiece[1] + 1] != ' ') {
                         collision = true;
-                        // System.out.println("collision 3");
                     }
                 }
-
             }
 
             // check if there is a block below position 3
             if (supportingPieces[3] != 0) {
                 if (GameManager.getGrid()[centerPiece[0] + 1][centerPiece[1] + 2] != ' ') {
                     collision = true;
-                    // System.out.println("collision 4");
-
                 }
-
             }
 
             // check if there is a block below position 4
             if (supportingPieces[4] != 0) {
                 if (GameManager.getGrid()[centerPiece[0]][centerPiece[1] + 1 + supportingPieces[4]] != ' ') {
                     collision = true;
-                    // System.out.println("collision 5");
                 }
-
             }
 
             // check if there is a block below position 5
             if (supportingPieces[5] != 0) {
                 if (GameManager.getGrid()[centerPiece[0] - 1][centerPiece[1] + 2] != ' ') {
                     collision = true;
-                    // System.out.println("collision 6");
                 }
-
             }
 
             // check if there is a position below position 6
@@ -341,7 +342,6 @@ public class Block extends Rectangle {
                 for (int i = 1; i <= supportingPieces[6]; i++) {
                     if (GameManager.getGrid()[centerPiece[0] - i][centerPiece[1] + 1] != ' ') {
                         collision = true;
-                        // System.out.println("collision 7");
                     }
                 }
             }
@@ -365,20 +365,15 @@ public class Block extends Rectangle {
             if (supportingPieces[4] == 0) {
                 if (GameManager.getGrid()[centerPiece[0]][centerPiece[1] + 1] != ' ') {
                     collision = true;
-                    // System.out.println("collsiion 8");
                 }
             }
         }
 
+        // return if there is a collsion or not
         if (collision) {
-            System.out.println("collision");
             GameManager.generateNextBlock = true;
             return true;
         } else {
-            // System.out.println("Validation for collision 5: "
-            // + GameManager.getGrid()[centerPiece[0]][centerPiece[1] + 1 +
-            // supportingPieces[4]]);
-            // System.out.println(supportingPieces[4]);
             return false;
         }
     }
@@ -389,26 +384,22 @@ public class Block extends Rectangle {
 
             // checks the if there are blocks on the right of position 1
             if (GameManager.getGrid()[getCenterPiece()[0] + supportingPieces[1] + 1][getCenterPiece()[1] - 1] != ' ') {
-                for (char[] item : GameManager.getGrid()) {
-                    // System.out.println(Arrays.toString(item));
-                }
                 return true;
-
-                // checks the if there are blocks on the right of position 2
             }
 
+            // checks the if there are blocks on the right of position 2
             if (GameManager.getGrid()[getCenterPiece()[0] + supportingPieces[2]
                     + 1][getCenterPiece()[1]] != ' ') {
                 return true;
-
-                // checks the if there are blocks on the right of position 3
             }
+
+            // checks the if there are blocks on the right of position 3
             if (GameManager.getGrid()[getCenterPiece()[0] + supportingPieces[3] + 1][getCenterPiece()[1]
                     + 1] != ' ') {
                 return true;
-
-                // checks the if there are blocks on the right of position 0
             }
+
+            // checks the if there are blocks on the right of position 0
             if (supportingPieces[0] > supportingPieces[1]) {
 
                 for (int i = 0; i < supportingPieces[0]; i++) {
@@ -416,9 +407,9 @@ public class Block extends Rectangle {
                         return true;
                     }
                 }
-
-                // checks the if there are blocks on the right of position 4
             }
+
+            // checks the if there are blocks on the right of position 4
             if (supportingPieces[4] > supportingPieces[3]) {
 
                 for (int i = 0; i < supportingPieces[4]; i++) {
@@ -428,18 +419,21 @@ public class Block extends Rectangle {
                 }
             }
 
+            // checks the right postiion to supporting peice 1
             if (supportingPieces[1] != 0) {
                 if (GameManager.getGrid()[getCenterPiece()[0] + 2][getCenterPiece()[1] - 1] != ' ') {
                     return true;
                 }
             }
 
+            // checks the right postiion to supporting peice 3
             if (supportingPieces[3] != 0) {
                 if (GameManager.getGrid()[getCenterPiece()[0] + 2][getCenterPiece()[1] + 1] != ' ') {
                     return true;
                 }
             }
 
+            // return result of the checks
             return false;
         } else {
             return true;
@@ -453,33 +447,32 @@ public class Block extends Rectangle {
             // checks the if there are blocks on the left of position 7
             if (GameManager.getGrid()[getCenterPiece()[0] - supportingPieces[7] - 1][getCenterPiece()[1] - 1] != ' ') {
                 return true;
-
-                // checks the if there are blocks on the left of position 6
             }
 
+            // checks the if there are blocks on the left of position 6
             if (GameManager.getGrid()[getCenterPiece()[0] - supportingPieces[6]
                     - 1][getCenterPiece()[1]] != ' ') {
                 return true;
-
-                // checks the if there are blocks on the left of position 1
             }
+
+            // checks the if there are blocks on the left of position 1
             if (getCenterPiece()[1] > 22) {
                 if (GameManager.getGrid()[getCenterPiece()[0] - supportingPieces[5] - 1][getCenterPiece()[1]
                         + 1] != ' ') {
                     return true;
                 }
-
-                // checks the if there are blocks on the left of position 0
             }
+
+            // checks the if there are blocks on the left of position 0
             if (supportingPieces[0] > supportingPieces[7]) {
                 for (int i = 0; i < supportingPieces[0]; i++) {
                     if (GameManager.getGrid()[getCenterPiece()[0] - 1][getCenterPiece()[1] - 1 - i] != ' ') {
                         return true;
                     }
                 }
-
-                // checks the if there are blocks on the left of position 4
             }
+
+            // checks the if there are blocks on the left of position 4
             if (supportingPieces[4] > supportingPieces[5]) {
                 for (int i = 0; i < supportingPieces[4]; i++) {
                     if (GameManager.getGrid()[getCenterPiece()[0] - 1][getCenterPiece()[1] + 1 + i] != ' ') {
@@ -488,18 +481,21 @@ public class Block extends Rectangle {
                 }
             }
 
+            // checks if there is a block to the left of supporting peice 5
             if (supportingPieces[5] != 0) {
                 if (GameManager.getGrid()[getCenterPiece()[0] - 2][getCenterPiece()[1] + 1] != ' ') {
                     return true;
                 }
             }
 
+            // checks if there is a block to the left of supporting peice 7
             if (supportingPieces[7] != 0) {
                 if (GameManager.getGrid()[getCenterPiece()[0] - 2][getCenterPiece()[1] - 1] != ' ') {
                     return true;
                 }
             }
 
+            // return result of the checks
             return false;
         } else {
             return true;
@@ -516,10 +512,6 @@ public class Block extends Rectangle {
                 if (holdingDown == false) {
                     move(0, 1);
                 }
-
-                // GameManager.updatePosition(0);
-                // System.out.println(checkVerticalCollision() + " collision");
-
             } else {
                 GameManager.generateNextBlock = true;
             }
@@ -532,6 +524,8 @@ public class Block extends Rectangle {
         int[] tempArray = new int[8];
 
         if (checkRotationVailidity()) {
+
+            // use temp array to rotate the block
             tempArray[0] = supportingPieces[6];
             tempArray[1] = supportingPieces[7];
             tempArray[2] = supportingPieces[0];
@@ -556,22 +550,14 @@ public class Block extends Rectangle {
         scoreMultiplier = status;
     }
 
-    private boolean checkPixel(int discountR, int discountC) {
-        char target = GameManager.getGrid()[centerPiece[0] + discountR][centerPiece[1] + discountC];
-        if (target != ' ' && target != GameManager.COLOURS[type]) {
-            return false;
-        }
-        return true;
-    }
-
     // checks if the block is restricted by the boarder for rotating
+    // true means that it is ok to rotate
     public boolean checkRotationVailidity() {
-
-        // true means that it is ok to rotate
 
         boolean canRotate = true;
         char[][] theGrid = GameManager.getGrid();
 
+        // checks if the block will rotate out of the grid
         if ((supportingPieces[7] + getCenterPiece()[0] < 11) && (supportingPieces[0] + getCenterPiece()[0] < 11)
                 && (supportingPieces[1] + getCenterPiece()[0] < 11) && (getCenterPiece()[0] - supportingPieces[3] > -1)
                 && (getCenterPiece()[0] - supportingPieces[4] > -1)
@@ -657,6 +643,7 @@ public class Block extends Rectangle {
                 }
             }
 
+            // return result of the checks
         } else {
             return false;
         }
@@ -774,7 +761,7 @@ public class Block extends Rectangle {
     }
 
     // draws the holding location of the block on the screen
-    public void drawHoldingPos(Graphics g) {
+    public void drawHoldPosition(Graphics g) {
 
         // Center Piece
         g.setColor(Color.black);
@@ -784,6 +771,7 @@ public class Block extends Rectangle {
         if (scoreMultiplier) {
             g.drawImage(scoreMultiplierImage, (holdCenterPos[0]) * 35 + 123, (holdCenterPos[1]) * 35 + 3,
                     null);
+
         }
 
         // Supporting Pieces

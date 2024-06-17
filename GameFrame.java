@@ -1,12 +1,13 @@
 /*
  * Description: child of JPanel and creates the window for displaying the game
  * Author: Corey Dai and Jeffrey Zhu
- * Date: June 16th 2024
+ * Date: June 17th 2024
  */
 
 //import libraries
-import java.awt.*;
-import javax.swing.*;
+import java.awt.Color;
+
+import javax.swing.JFrame;
 
 public class GameFrame extends JFrame {
 
