@@ -140,7 +140,7 @@ public class GameManager {
         if (notHeld > 1) {
             score += 10;
             if (GamePanel.gameRunning) {
-                PlaySound.PlayholdBlock();
+                PlaySound.playBlockPlace();
             }
         }
 
