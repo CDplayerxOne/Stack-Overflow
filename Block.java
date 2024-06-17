@@ -766,6 +766,7 @@ public class Block extends Rectangle {
         if (scoreMultiplier) {
             g.drawImage(scoreMultiplierImage, (holdCenterPos[0]) * 35 + 123, (holdCenterPos[1]) * 35 + 3,
                     null);
+            System.out.println("drew");
 
         }
 
