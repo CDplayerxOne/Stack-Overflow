@@ -223,11 +223,6 @@ public class Block extends Rectangle {
         }
     }
 
-    // sets the x-velocity of the center piece
-    public void setCenterPieceX(int xVel) {
-        centerPiece[0] += xVel;
-    }
-
     // moves the block according to its x and y velocity
     public void move(int xVel, int yVel) {
 
