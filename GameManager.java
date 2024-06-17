@@ -28,6 +28,7 @@ public class GameManager {
     public static int score = -10;
     public static int notHeld = 2;
     private Image scoreMultiplierImage;
+    public static boolean finished = true;
 
     // GameManager constructor
     public GameManager() {
@@ -149,6 +150,7 @@ public class GameManager {
 
     // updates the position of all blocks
     public static void updatePosition(int type) {
+
         // loop through all active blocks
         // Update the position of the center piece on the grid
 
@@ -179,7 +181,13 @@ public class GameManager {
             System.out.println("Right");
             System.out.println("x: " + (currentCenterPiece[0] - 1));
             System.out.println("y: " + currentCenterPiece[1]);
-            grid[currentCenterPiece[0] - 1][currentCenterPiece[1]] = ' ';
+            if (grid[currentCenterPiece[0] - 1][currentCenterPiece[1]] == ' ') {
+                grid[currentCenterPiece[0]][currentCenterPiece[1]] = ' ';
+
+            } else {
+                grid[currentCenterPiece[0] - 1][currentCenterPiece[1]] = ' ';
+            }
+            // grid[currentCenterPiece[0] - 1][currentCenterPiece[1]] = ' ';
             // System.out.println(grid[currentCenterPiece[0] - 1][currentCenterPiece[1]] + "
             // right");
         }
@@ -189,7 +197,13 @@ public class GameManager {
             System.out.println("Right");
             System.out.println("x: " + currentCenterPiece[0] + 1);
             System.out.println("y: " + currentCenterPiece[1]);
-            grid[currentCenterPiece[0] + 1][currentCenterPiece[1]] = ' ';
+            // grid[currentCenterPiece[0] + 1][currentCenterPiece[1]] = ' ';
+            if (grid[currentCenterPiece[0] + 1][currentCenterPiece[1]] == ' ') {
+                grid[currentCenterPiece[0]][currentCenterPiece[1]] = ' ';
+
+            } else {
+                grid[currentCenterPiece[0] + 1][currentCenterPiece[1]] = ' ';
+            }
             // System.out.println(grid[currentCenterPiece[0] + 1][currentCenterPiece[1]] + "
             // left");
         }

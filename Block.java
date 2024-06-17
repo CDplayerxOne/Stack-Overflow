@@ -34,6 +34,7 @@ public class Block extends Rectangle {
     private int internalCount = 0;
     private boolean scoreMultiplier;
     private Image scoreMultiplierImage;
+    public boolean holdingDown = false;
 
     // constructor for Block
     public Block(int type) {
@@ -162,6 +163,7 @@ public class Block extends Rectangle {
 
         // accelerate downwards
         if (e.getKeyCode() == KeyEvent.VK_DOWN) {
+            holdingDown = true;
             move(0, 1);
         }
 
@@ -188,6 +190,7 @@ public class Block extends Rectangle {
 
         if (e.getKeyCode() == KeyEvent.VK_DOWN) {
             move(0, 0);
+            holdingDown = false;
         }
 
         if (e.getKeyCode() == KeyEvent.VK_LEFT) {
@@ -368,13 +371,14 @@ public class Block extends Rectangle {
         }
 
         if (collision) {
+            System.out.println("collision");
             GameManager.generateNextBlock = true;
             return true;
         } else {
             // System.out.println("Validation for collision 5: "
             // + GameManager.getGrid()[centerPiece[0]][centerPiece[1] + 1 +
             // supportingPieces[4]]);
-            System.out.println(supportingPieces[4]);
+            // System.out.println(supportingPieces[4]);
             return false;
         }
     }
@@ -509,7 +513,9 @@ public class Block extends Rectangle {
             if (!checkVerticalCollision()) {
                 // Every 33 frames
                 // move down
-                move(0, 1);
+                if (holdingDown == false) {
+                    move(0, 1);
+                }
 
                 // GameManager.updatePosition(0);
                 // System.out.println(checkVerticalCollision() + " collision");
