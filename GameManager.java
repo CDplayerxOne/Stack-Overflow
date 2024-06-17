@@ -154,6 +154,10 @@ public class GameManager {
 
         // System.out.println("start of updatePosition");
         // System.out.println("past " + Arrays.toString(currentCenterPiece));
+        System.out.println("before");
+        for (int i = 10; i >= 0; i--) {
+            System.out.println(Arrays.toString(getGrid()[i]));
+        }
 
         for (int[] piece : currentSupportPieces) {
             grid[piece[0]][piece[1]] = ' ';
@@ -185,6 +189,7 @@ public class GameManager {
             // left");
         }
 
+        System.out.println("after");
         for (int i = 10; i >= 0; i--) {
             System.out.println(Arrays.toString(getGrid()[i]));
         }
