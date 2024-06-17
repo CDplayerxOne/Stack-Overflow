@@ -118,6 +118,8 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
         }
     }
 
+
+
     // draws elements depending on game state
     public void draw(Graphics g) {
 

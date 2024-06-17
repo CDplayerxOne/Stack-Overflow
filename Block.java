@@ -755,6 +755,11 @@ public class Block extends Rectangle {
 
     }
 
+//    Returns the hold center position
+    public int[] getHoldCenterPos(){
+        return holdCenterPos;
+    }
+
     // draws the holding location of the block on the screen
     public void drawHoldPosition(Graphics g) {
 
@@ -763,12 +768,10 @@ public class Block extends Rectangle {
         g.fillRect(120 + (holdCenterPos[0]) * 35, (holdCenterPos[1]) * 35, BLOCKLENGTH, BLOCKLENGTH);
         g.setColor(COLOURS[type]);
         g.fillRect((holdCenterPos[0]) * 35 + 123, (holdCenterPos[1]) * 35 + 3, BLOCKLENGTH - 6, BLOCKLENGTH - 6);
-        if (scoreMultiplier) {
-            g.drawImage(scoreMultiplierImage, (holdCenterPos[0]) * 35 + 123, (holdCenterPos[1]) * 35 + 3,
-                    null);
-            System.out.println("drew");
-
-        }
+//        if (scoreMultiplier) {
+//            g.drawImage(scoreMultiplierImage, (holdCenterPos[0]) * 35 + 123, (holdCenterPos[1]) * 35 + 3,
+//                    null);
+//        }
 
         // Supporting Pieces
         // 0 slot
