@@ -44,9 +44,9 @@ public class GameManager {
                 grid[i][j] = ' ';
             }
         }
-        for (char[] item : grid) {
-            System.out.println(Arrays.toString(item));
-        }
+        // for (char[] item : grid) {
+        // System.out.println(Arrays.toString(item));
+        // }
     }
 
     // resets the game for the next round of playin
@@ -80,7 +80,8 @@ public class GameManager {
             PlaySound.PlayholdBlock();
             if (hold == null) {
                 hold = new Block(blocks.get(blocks.size() - 1).getType());
-                System.out.println(blocks.get(blocks.size() - 1).hasScoreMultiplier() + "status");
+                // System.out.println(blocks.get(blocks.size() - 1).hasScoreMultiplier() +
+                // "status");
                 hold.setScoreMultiplier(blocks.get(blocks.size() - 1).hasScoreMultiplier());
                 for (int[] i : blocks.get(blocks.size() - 1).getSupportingPieces()) {
                     grid[i[0]][i[1]] = ' ';
@@ -98,7 +99,7 @@ public class GameManager {
     public static void switchBlock() {
 
         tempBlock = hold;
-        System.out.println(blocks.get(blocks.size() - 1).getType() + "please");
+        // System.out.println(blocks.get(blocks.size() - 1).getType() + "please");
         for (int[] i : blocks.get(blocks.size() - 1).getSupportingPieces()) {
             grid[i[0]][i[1]] = ' ';
         }
@@ -132,7 +133,7 @@ public class GameManager {
         }
 
         for (char[] item : grid) {
-            System.out.println(Arrays.toString(item));
+            // System.out.println(Arrays.toString(item));
         }
 
         notHeld++;
@@ -151,28 +152,44 @@ public class GameManager {
         // loop through all active blocks
         // Update the position of the center piece on the grid
 
-        System.out.println("start of updatePosition");
+        // System.out.println("start of updatePosition");
         // System.out.println("past " + Arrays.toString(currentCenterPiece));
 
+        for (int[] piece : currentSupportPieces) {
+            grid[piece[0]][piece[1]] = ' ';
+        }
         // Clear its old position
-        grid[currentCenterPiece[0]][currentCenterPiece[1] - 1] = ' ';
-        System.out.println(grid[currentCenterPiece[0]][currentCenterPiece[1] - 1]);
+        if (type == 0) {
+            System.out.println("Normal");
+            System.out.println("x: " + currentCenterPiece[0]);
+            System.out.println("y: " + (currentCenterPiece[1] - 1));
+            grid[currentCenterPiece[0]][currentCenterPiece[1] - 1] = ' ';
+        }
 
         if (type == 1 && currentCenterPiece[0] - 1 >= 0 && currentCenterPiece[1] >= 0) {
+            System.out.println("Right");
+            System.out.println("x: " + (currentCenterPiece[0] - 1));
+            System.out.println("y: " + currentCenterPiece[1]);
             grid[currentCenterPiece[0] - 1][currentCenterPiece[1]] = ' ';
-            System.out.println(grid[currentCenterPiece[0] - 1][currentCenterPiece[1]] + " right");
+            // System.out.println(grid[currentCenterPiece[0] - 1][currentCenterPiece[1]] + "
+            // right");
         }
 
         if (type == 2 && currentCenterPiece[0] + 1 < 11 && currentCenterPiece[1] < 21) {
 
+            System.out.println("Right");
+            System.out.println("x: " + currentCenterPiece[0] + 1);
+            System.out.println("y: " + currentCenterPiece[1]);
             grid[currentCenterPiece[0] + 1][currentCenterPiece[1]] = ' ';
-            System.out.println(grid[currentCenterPiece[0] + 1][currentCenterPiece[1]] + " left");
+            // System.out.println(grid[currentCenterPiece[0] + 1][currentCenterPiece[1]] + "
+            // left");
+        }
+
+        for (int i = 10; i >= 0; i--) {
+            System.out.println(Arrays.toString(getGrid()[i]));
         }
 
         // Clear the position of each supporting piece on the grid
-        for (int[] piece : currentSupportPieces) {
-            grid[piece[0]][piece[1]] = ' ';
-        }
 
         // Populate the grid with new position
         if (blocks.get(blocks.size() - 1).hasScoreMultiplier()) {
@@ -197,10 +214,7 @@ public class GameManager {
         // System.out.println(Arrays.toString(item));
         // }
 
-        for (int i = 10; i >= 0; i--) {
-            System.out.println(Arrays.toString(getGrid()[i]));
-        }
-        System.out.println("end of updatePosition");
+        // System.out.println("end of updatePosition");
     }
 
     // returns the grid of all occupied squares
@@ -212,7 +226,7 @@ public class GameManager {
     public static boolean checkEnd() {
         for (int i = 0; i < 11; i++) {
             if (getGrid()[i][5] != ' ') {
-                System.out.println("checkend");
+                // System.out.println("checkend");
                 return true;
             }
         }
@@ -239,8 +253,8 @@ public class GameManager {
             if (fullRow) {
                 PlaySound.PlayRowClear();
                 score += 100 * multiplier;
-                System.out.println("full row");
-                System.out.println(i);
+                // System.out.println("full row");
+                // System.out.println(i);
                 // temp array stores everything above.
                 char[][] temp = new char[11][i];
                 // Loop through the grid
@@ -255,7 +269,7 @@ public class GameManager {
                     temp[j][0] = ' ';
                 }
                 for (char[] array : temp) {
-                    System.out.println(Arrays.toString(array));
+                    // System.out.println(Arrays.toString(array));
                 }
                 for (int j = 0; j < 11; j++) {
                     // put them one row lower

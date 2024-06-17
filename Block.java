@@ -13,7 +13,6 @@ import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import javax.imageio.ImageIO;
 
@@ -217,7 +216,7 @@ public class Block extends Rectangle {
 
                 centerPiece[0] += xVel;
                 GameManager.updatePosition(1);
-                System.out.println(Arrays.toString(centerPiece));
+                // System.out.println(Arrays.toString(centerPiece));
             }
         }
         if (xVel < 0) {
@@ -227,7 +226,7 @@ public class Block extends Rectangle {
             }
         }
         if (!checkVerticalCollision()) {
-            System.out.println("no coollision");
+            // System.out.println("no coollision");
             centerPiece[1] += yVel;
             GameManager.updatePosition(0);
         } else {
@@ -255,6 +254,7 @@ public class Block extends Rectangle {
 
     // checks if the block collides with another block
     public boolean checkVerticalCollision() {
+        System.out.println("collision");
         System.out.println(type);
         System.out.println(supportingPieces[2]);
         System.out.println(supportingPieces[3]);
@@ -356,7 +356,7 @@ public class Block extends Rectangle {
             // checks the if there are blocks on the right of position 1
             if (GameManager.getGrid()[getCenterPiece()[0] + supportingPieces[1] + 1][getCenterPiece()[1] - 1] != ' ') {
                 for (char[] item : GameManager.getGrid()) {
-                    System.out.println(Arrays.toString(item));
+                    // System.out.println(Arrays.toString(item));
                 }
                 return true;
 
@@ -395,13 +395,13 @@ public class Block extends Rectangle {
             }
 
             if (supportingPieces[1] != 0) {
-                if (GameManager.getGrid()[getCenterPiece()[0] - 1][getCenterPiece()[1] - 1] != ' ') {
+                if (GameManager.getGrid()[getCenterPiece()[0] - 2][getCenterPiece()[1] - 1] != ' ') {
                     return true;
                 }
             }
 
             if (supportingPieces[3] != 0) {
-                if (GameManager.getGrid()[getCenterPiece()[0] - 1][getCenterPiece()[1] - 1] != ' ') {
+                if (GameManager.getGrid()[getCenterPiece()[0] - 2][getCenterPiece()[1] + 1] != ' ') {
                     return true;
                 }
             }
@@ -455,13 +455,13 @@ public class Block extends Rectangle {
             }
 
             if (supportingPieces[5] != 0) {
-                if (GameManager.getGrid()[getCenterPiece()[0] + 1][getCenterPiece()[1] + 1] != ' ') {
+                if (GameManager.getGrid()[getCenterPiece()[0] + 2][getCenterPiece()[1] + 1] != ' ') {
                     return true;
                 }
             }
 
             if (supportingPieces[7] != 0) {
-                if (GameManager.getGrid()[getCenterPiece()[0] + 1][getCenterPiece()[1] - 1] != ' ') {
+                if (GameManager.getGrid()[getCenterPiece()[0] + 2][getCenterPiece()[1] - 1] != ' ') {
                     return true;
                 }
             }
