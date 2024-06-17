@@ -84,9 +84,9 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
             scoreFont = new Font("Arial", Font.BOLD, 45);
             g.setFont(scoreFont);
             g.setColor(Color.white);
-            g.drawString("1. " + Files.findScore(1), 380, 370);
-            g.drawString("2. " + Files.findScore(2), 380, 430);
-            g.drawString("3. " + Files.findScore(3), 380, 490);
+            g.drawString("1. " + Files.findScore(1), 390, 370);
+            g.drawString("2. " + Files.findScore(2), 390, 430);
+            g.drawString("3. " + Files.findScore(3), 390, 490);
         }
 
         if (gameRunning) {
@@ -116,8 +116,9 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
             g.drawImage(menuScreenBackground.getScaledInstance(1025, 770, Image.SCALE_DEFAULT), 0, 0, null);
         }
 
-        if (infoScreen) {
-            g.drawImage(infoScreenBackground.getScaledInstance(1025, 770, Image.SCALE_DEFAULT), 0, 0, null);
+        if (helpScreen) {
+            // System.out.println("hello");
+            g.drawImage(helpScreenBackground.getScaledInstance(1025, 770, Image.SCALE_DEFAULT), 0, 0, null);
         }
 
         if (gameRunning || end) {
@@ -172,6 +173,10 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
         }
     }
 
+    // override method for keyTyped
+    public void keyTyped(KeyEvent e) {
+    }
+
     // calls other methods and objects for when the user presses their keyboard key
     public void keyPressed(KeyEvent e) {
         changeGameState(e);
@@ -185,10 +190,6 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
         if (gameRunning) {
             GameManager.blocks.get(GameManager.blocks.size() - 1).keyReleased(e);
         }
-    }
-
-    // override method for keyTyped
-    public void keyTyped(KeyEvent e) {
     }
 
     // Ends the game
@@ -207,6 +208,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 
     // method to change the state of the game
     public void changeGameState(KeyEvent e) {
+        boolean checkedHelp = false;
 
         // trasition from start info screen to menu screen
         if (infoScreen) {
@@ -217,25 +219,28 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
             }
         }
 
+        if (helpScreen) {
+            if (e.getKeyChar() == 'h') {
+                menuScreen = true;
+                helpScreen = false;
+                checkedHelp = true;
+            }
+        }
+
         // transition from menu to start game
-        if (menuScreen) {
+        if (menuScreen && !checkedHelp) {
             if (e.getKeyCode() == KeyEvent.VK_ENTER) {
                 PlaySound.stopMenuMusic();
                 PlaySound.playGameMusic();
                 PlaySound.playButtonClick();
                 menuScreen = false;
                 gameRunning = true;
-            } else if (e.getKeyChar() == 'h') {
+            }
+
+            if (e.getKeyChar() == 'h') {
                 menuScreen = false;
                 helpScreen = true;
 
-            }
-        }
-
-        if (helpScreen) {
-            if (e.getKeyChar() == 'h') {
-                menuScreen = true;
-                infoScreen = false;
             }
         }
 

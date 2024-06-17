@@ -167,7 +167,12 @@ public class GameManager {
             System.out.println("Normal");
             System.out.println("x: " + currentCenterPiece[0]);
             System.out.println("y: " + (currentCenterPiece[1] - 1));
-            grid[currentCenterPiece[0]][currentCenterPiece[1] - 1] = ' ';
+            if (grid[currentCenterPiece[0]][currentCenterPiece[1] - 1] == ' ') {
+                grid[currentCenterPiece[0]][currentCenterPiece[1]] = ' ';
+
+            } else {
+                grid[currentCenterPiece[0]][currentCenterPiece[1] - 1] = ' ';
+            }
         }
 
         if (type == 1 && currentCenterPiece[0] - 1 >= 0 && currentCenterPiece[1] >= 0) {

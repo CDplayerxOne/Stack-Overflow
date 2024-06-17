@@ -287,12 +287,14 @@ public class Block extends Rectangle {
                 }
             }
 
+            // edge case: blue block when it is c shaped to the right
             if (supportingPieces[1] != 0 && supportingPieces[3] != 0) {
                 if (GameManager.getGrid()[centerPiece[0] + 1][centerPiece[1]] != ' ') {
                     collision = true;
                 }
             }
 
+            // check if there is a block below position 2
             if (supportingPieces[2] > supportingPieces[3]) {
                 for (int i = 1; i <= supportingPieces[2]; i++) {
                     if (GameManager.getGrid()[centerPiece[0] + i][centerPiece[1] + 1] != ' ') {
@@ -301,8 +303,9 @@ public class Block extends Rectangle {
                     }
                 }
 
-                // check if there is a block below position 3
             }
+
+            // check if there is a block below position 3
             if (supportingPieces[3] != 0) {
                 if (GameManager.getGrid()[centerPiece[0] + 1][centerPiece[1] + 2] != ' ') {
                     collision = true;
@@ -310,24 +313,27 @@ public class Block extends Rectangle {
 
                 }
 
-                // check if there is a block below position 4
             }
+
+            // check if there is a block below position 4
             if (supportingPieces[4] != 0) {
                 if (GameManager.getGrid()[centerPiece[0]][centerPiece[1] + 1 + supportingPieces[4]] != ' ') {
                     collision = true;
                     // System.out.println("collision 5");
                 }
 
-                // check if there is a block below position 5
             }
+
+            // check if there is a block below position 5
             if (supportingPieces[5] != 0) {
                 if (GameManager.getGrid()[centerPiece[0] - 1][centerPiece[1] + 2] != ' ') {
                     collision = true;
                     // System.out.println("collision 6");
                 }
 
-                // check if there is a block below position 6
             }
+
+            // check if there is a position below position 6
             if (supportingPieces[6] > supportingPieces[5]) {
                 for (int i = 1; i <= supportingPieces[6]; i++) {
                     if (GameManager.getGrid()[centerPiece[0] - i][centerPiece[1] + 1] != ' ') {
@@ -337,12 +343,22 @@ public class Block extends Rectangle {
                 }
             }
 
+            // edge case: blue block when it is c shaped to the left
             if (supportingPieces[7] != 0 && supportingPieces[5] != 0) {
                 if (GameManager.getGrid()[centerPiece[0] - 1][centerPiece[1]] != ' ') {
                     collision = true;
                 }
             }
 
+            // check if there is a block under position 7
+            if (supportingPieces[7] > supportingPieces[6] && supportingPieces[7] > supportingPieces[5]) {
+                if (GameManager.getGrid()[centerPiece[0] - 1][centerPiece[1]] != ' ') {
+                    collision = true;
+
+                }
+            }
+
+            // check if there is a block below center piece
             if (supportingPieces[4] == 0) {
                 if (GameManager.getGrid()[centerPiece[0]][centerPiece[1] + 1] != ' ') {
                     collision = true;
